@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trolley BD Dashboard - SharePoint Login</title>
+
+  <!-- MSAL Browser: Microsoft Authentication Library for browser-based apps -->
+  <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+
+  <style>
+    :root {
+      --orange: #ff8200;
+      --black: #181818;
+      --bg: #f7f4ef;
+      --card: #ffffff;
+      --border: #e8e1d8;
+      --muted: #6b7280;
+      --green: #18a058;
+      --blue: #2563eb;
+      --red: #b91c1c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--black);
+    }
+
+    header {
+      background: var(--orange);
+      color: white;
+      padding: 18px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.12);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: .5px;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      opacity: .92;
+    }
+
+    .user-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .btn-dark { background: var(--black); color: white; }
+    .btn-light { background: white; color: var(--black); }
+    .btn-blue { background: var(--blue); color: white; }
+    .btn-orange { background: var(--orange); color: white; }
+    .btn-red { background: var(--red); color: white; }
+
+    main {
+      max-width: 1250px;
+      margin: 28px auto;
+      padding: 0 18px 40px;
+    }
+
+    .login-card,
+    .config-card,
+    .section,
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.06);
+    }
+
+    .login-card {
+      max-width: 720px;
+      margin: 70px auto;
+      padding: 34px;
+      text-align: center;
+    }
+
+    .login-card h2 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    .login-card p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .warning {
+      margin-top: 18px;
+      padding: 14px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 12px;
+      font-size: 13px;
+      color: #7c2d12;
+      text-align: left;
+    }
+
+    .hidden { display: none !important; }
+
+    .config-card {
+      padding: 22px;
+      margin-bottom: 22px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font-size: 14px;
+      background: white;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      align-items: center;
+    }
+
+    .status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .dot.ok { background: var(--green); }
+    .dot.error { background: var(--red); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .stat {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 28px;
+      color: var(--orange);
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 5px;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .7px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .tab {
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--black);
+    }
+
+    .tab.active {
+      background: var(--orange);
+      color: white;
+      border-color: var(--orange);
+    }
+
+    .section {
+      padding: 22px;
+      overflow-x: auto;
+    }
+
+    .section h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      letter-spacing: .7px;
+      text-transform: uppercase;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    th, td {
+      padding: 13px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: 13px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #fafafa;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--muted);
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 44px 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge.green { background: #dcfce7; color: #166534; }
+    .badge.blue { background: #dbeafe; color: #1e40af; }
+    .badge.orange { background: #ffedd5; color: #9a3412; }
+    .badge.red { background: #fee2e2; color: #991b1b; }
+
+    @media (max-width: 900px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .grid, .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>TROLLEY BD DASHBOARD</h1>
+      <p>GitHub Pages + Microsoft Login + SharePoint Lists</p>
+    </div>
+
+    <div class="user-box">
+      <span id="userInfo">Not signed in</span>
+      <button id="loginBtn" class="btn-light">Login with Microsoft</button>
+      <button id="logoutBtn" class="btn-dark hidden">Logout</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="loginView" class="login-card">
+      <h2>Login Required</h2>
+      <p>
+        This dashboard is designed to be published on GitHub Pages and securely read data
+        from SharePoint Lists using Microsoft Entra ID and Microsoft Graph API.
+      </p>
+      <button id="loginBtnMain" class="btn-orange">Login with Microsoft</button>
+
+      <div class="warning">
+        <strong>Important:</strong> Do not collect SharePoint username/password inside HTML.
+        The correct and secure way is Microsoft Login using MSAL. Before publishing, IT/Admin
+        must create an App Registration and replace the placeholders inside this file.
+      </div>
+    </section>
+
+    <section id="appView" class="hidden">
+      <div class="config-card">
+        <h2>SharePoint / Microsoft Graph Configuration</h2>
+
+        <div class="grid">
+          <div>
+            <label>Tenant ID</label>
+            <input id="tenantId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+          </div>
+
+          <div>
+            <label>Client ID / Application ID</label>
+            <input id="clientId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+          </div>
+
+          <div>
+            <label>SharePoint Hostname</label>
+            <input id="hostname" value="trolleykw.sharepoint.com" />
+          </div>
+
+          <div>
+            <label>Site Path</label>
+            <input id="sitePath" value="/sites/BusinessDevelopment" />
+          </div>
+
+          <div>
+            <label>Project Schedule List</label>
+            <input id="projectListName" value="Project Schedule" />
+          </div>
+
+          <div>
+            <label>Cost Performance List</label>
+            <input id="costListName" value="Cost Performance" />
+          </div>
+
+          <div>
+            <label>Schedule Performance List</label>
+            <input id="scheduleListName" value="Schedule Performance" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="saveConfigBtn" class="btn-orange">Save Configuration</button>
+          <button id="loadBtn" class="btn-blue">Load SharePoint Data</button>
+          <span class="status-dot"><span id="statusDot" class="dot"></span><span id="statusText">Waiting</span></span>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><strong id="totalProjects">0</strong><span>Project Schedule Items</span></div>
+        <div class="stat"><strong id="totalCost">0</strong><span>Cost Items</span></div>
+        <div class="stat"><strong id="totalSchedule">0</strong><span>Schedule Items</span></div>
+        <div class="stat"><strong id="lastUpdated">-</strong><span>Last Loaded</span></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="projects">Projects</button>
+        <button class="tab" data-tab="cost">Cost</button>
+        <button class="tab" data-tab="schedule">Schedule</button>
+      </div>
+
+      <section id="projectsTab" class="section">
+        <h2>Project Schedule</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Activity ID</th>
+              <th>Activity Name</th>
+              <th>Duration</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Actual Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="projectsBody"></tbody>
+        </table>
+      </section>
+
+      <section id="costTab" class="section hidden">
+        <h2>Cost Performance</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Store Name</th>
+              <th>Store Type</th>
+              <th>Meter</th>
+              <th>Planned</th>
+              <th>Actual</th>
+              <th>VO</th>
+              <th>Total</th>
+              <th>Var</th>
+              <th>CPI</th>
+            </tr>
+          </thead>
+          <tbody id="costBody"></tbody>
+        </table>
+      </section>
+
+      <section id="scheduleTab" class="section hidden">
+        <h2>Schedule Performance</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Store Name</th>
+              <th>Store Type</th>
+              <th>Planned Date</th>
+              <th>Actual Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleBody"></tbody>
+        </table>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    /*
+      BEFORE USING:
+      1. Create an App Registration in Microsoft Entra ID.
+      2. Platform type: Single-page application (SPA).
+      3. Add redirect URI:
+         - Local testing: http://localhost:5500/index.html
+         - GitHub Pages: https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/
+      4. API Permissions:
+         - Microsoft Graph delegated permission: Sites.Read.All
+         - or Sites.ReadWrite.All if you later need create/update/delete.
+      5. Replace tenantId and clientId below, or fill them on the page and Save Configuration.
+    */
+
+    const GRAPH_BASE = "https://graph.microsoft.com/v1.0";
+
+    const defaultConfig = {
+      tenantId: "REPLACE_WITH_TENANT_ID",
+      clientId: "REPLACE_WITH_CLIENT_ID",
+      hostname: "trolleykw.sharepoint.com",
+      sitePath: "/sites/BusinessDevelopment",
+      projectListName: "Project Schedule",
+      costListName: "Cost Performance",
+      scheduleListName: "Schedule Performance"
+    };
+
+    let msalInstance = null;
+    let activeAccount = null;
+    let siteId = null;
+
+    const scopes = ["User.Read", "Sites.Read.All"];
+
+    const el = (id) => document.getElementById(id);
+
+    function setStatus(message, type = "waiting") {
+      el("statusText").textContent = message;
+      el("statusDot").className = "dot";
+      if (type === "ok") el("statusDot").classList.add("ok");
+      if (type === "error") el("statusDot").classList.add("error");
+    }
+
+    function loadConfigFromStorage() {
+      const saved = JSON.parse(localStorage.getItem("bdDashboardConfig") || "{}");
+      const config = { ...defaultConfig, ...saved };
+
+      el("tenantId").value = config.tenantId;
+      el("clientId").value = config.clientId;
+      el("hostname").value = config.hostname;
+      el("sitePath").value = config.sitePath;
+      el("projectListName").value = config.projectListName;
+      el("costListName").value = config.costListName;
+      el("scheduleListName").value = config.scheduleListName;
+
+      return config;
+    }
+
+    function getConfigFromForm() {
+      return {
+        tenantId: el("tenantId").value.trim(),
+        clientId: el("clientId").value.trim(),
+        hostname: el("hostname").value.trim(),
+        sitePath: el("sitePath").value.trim(),
+        projectListName: el("projectListName").value.trim(),
+        costListName: el("costListName").value.trim(),
+        scheduleListName: el("scheduleListName").value.trim()
+      };
+    }
+
+    function saveConfig() {
+      const config = getConfigFromForm();
+      localStorage.setItem("bdDashboardConfig", JSON.stringify(config));
+      alert("Configuration saved locally in this browser.");
+      initializeMsal();
+    }
+
+    function initializeMsal() {
+      const config = getConfigFromForm();
+
+      if (!config.tenantId || !config.clientId || config.tenantId.startsWith("REPLACE") || config.clientId.startsWith("REPLACE")) {
+        console.warn("Tenant ID and Client ID are not configured yet.");
+        return false;
+      }
+
+      msalInstance = new msal.PublicClientApplication({
+        auth: {
+          clientId: config.clientId,
+          authority: `https://login.microsoftonline.com/${config.tenantId}`,
+          redirectUri: window.location.origin + window.location.pathname
+        },
+        cache: {
+          cacheLocation: "localStorage",
+          storeAuthStateInCookie: false
+        }
+      });
+
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length > 0) {
+        activeAccount = accounts[0];
+        msalInstance.setActiveAccount(activeAccount);
+        showApp();
+      }
+
+      return true;
+    }
+
+    async function login() {
+      if (!initializeMsal()) {
+        alert("Please enter Tenant ID and Client ID first, then click Save Configuration.");
+        return;
+      }
+
+      try {
+        const response = await msalInstance.loginPopup({ scopes });
+        activeAccount = response.account;
+        msalInstance.setActiveAccount(activeAccount);
+        showApp();
+      } catch (error) {
+        console.error(error);
+        alert("Login failed. Check App Registration, redirect URI, permissions, and popup blocker.");
+      }
+    }
+
+    function logout() {
+      if (!msalInstance) return;
+      msalInstance.logoutPopup({ account: activeAccount });
+    }
+
+    function showApp() {
+      el("loginView").classList.add("hidden");
+      el("appView").classList.remove("hidden");
+      el("loginBtn").classList.add("hidden");
+      el("logoutBtn").classList.remove("hidden");
+      el("userInfo").textContent = activeAccount?.username || activeAccount?.name || "Signed in";
+    }
+
+    async function getAccessToken() {
+      if (!msalInstance || !activeAccount) {
+        throw new Error("User is not logged in.");
+      }
+
+      try {
+        const silent = await msalInstance.acquireTokenSilent({
+          scopes,
+          account: activeAccount
+        });
+        return silent.accessToken;
+      } catch (silentError) {
+        const popup = await msalInstance.acquireTokenPopup({ scopes });
+        return popup.accessToken;
+      }
+    }
+
+    async function graphGet(url) {
+      const token = await getAccessToken();
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`${response.status} ${response.statusText}: ${errorText}`);
+      }
+
+      return await response.json();
+    }
+
+    async function getSiteId() {
+      const config = getConfigFromForm();
+
+      if (siteId) return siteId;
+
+      const url = `${GRAPH_BASE}/sites/${config.hostname}:${config.sitePath}`;
+      const site = await graphGet(url);
+      siteId = site.id;
+      return siteId;
+    }
+
+    async function getListItems(listName) {
+      const currentSiteId = await getSiteId();
+
+      /*
+        Microsoft Graph lets us get list items and expand their fields.
+        Spaces in list titles are encoded automatically by encodeURIComponent.
+      */
+      const url = `${GRAPH_BASE}/sites/${currentSiteId}/lists/${encodeURIComponent(listName)}/items?$expand=fields&$top=5000`;
+      const data = await graphGet(url);
+      return data.value || [];
+    }
+
+    function field(fields, names) {
+      for (const name of names) {
+        if (fields && fields[name] !== undefined && fields[name] !== null) return fields[name];
+      }
+      return "";
+    }
+
+    function formatValue(value) {
+      if (value === null || value === undefined || value === "") return "";
+      if (typeof value === "number") return value.toLocaleString();
+      return String(value);
+    }
+
+    function statusBadge(value) {
+      const text = formatValue(value);
+      const lower = text.toLowerCase();
+
+      let cls = "";
+      if (lower.includes("complete") || lower.includes("done")) cls = "green";
+      else if (lower.includes("progress")) cls = "blue";
+      else if (lower.includes("pending") || lower.includes("hold")) cls = "orange";
+      else if (lower.includes("delay") || lower.includes("risk")) cls = "red";
+
+      return `<span class="badge ${cls}">${text || "-"}</span>`;
+    }
+
+    function renderEmpty(tbody, colSpan, message) {
+      tbody.innerHTML = `<tr><td colspan="${colSpan}" class="empty">${message}</td></tr>`;
+    }
+
+    function renderProjects(items) {
+      const tbody = el("projectsBody");
+      if (!items.length) return renderEmpty(tbody, 7, "No Project Schedule items found.");
+
+      tbody.innerHTML = items.map(item => {
+        const f = item.fields || {};
+        return `
+          <tr>
+            <td>${formatValue(field(f, ["ActivityID", "Activity_x0020_ID", "Activity ID", "Title"]))}</td>
+            <td>${formatValue(field(f, ["ActivityName", "Activity_x0020_Name", "Activity Name"]))}</td>
+            <td>${formatValue(field(f, ["Duration"]))}</td>
+            <td>${formatValue(field(f, ["Start", "StartDate", "Start_x0020_Date"]))}</td>
+            <td>${formatValue(field(f, ["End", "EndDate", "End_x0020_Date"]))}</td>
+            <td>${formatValue(field(f, ["ActualDate", "Actual_x0020_Date", "Actual Date"]))}</td>
+            <td>${statusBadge(field(f, ["Status"]))}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderCost(items) {
+      const tbody = el("costBody");
+      if (!items.length) return renderEmpty(tbody, 9, "No Cost Performance items found.");
+
+      tbody.innerHTML = items.map(item => {
+        const f = item.fields || {};
+        return `
+          <tr>
+            <td>${formatValue(field(f, ["StoreName", "Store_x0020_Name", "Store Name", "Title"]))}</td>
+            <td>${formatValue(field(f, ["StoreType", "Store_x0020_Type", "Store Type"]))}</td>
+            <td>${formatValue(field(f, ["Meter"]))}</td>
+            <td>${formatValue(field(f, ["Planned"]))}</td>
+            <td>${formatValue(field(f, ["Actual"]))}</td>
+            <td>${formatValue(field(f, ["VO"]))}</td>
+            <td>${formatValue(field(f, ["Total"]))}</td>
+            <td>${formatValue(field(f, ["Var"]))}</td>
+            <td>${formatValue(field(f, ["CPI"]))}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderSchedule(items) {
+      const tbody = el("scheduleBody");
+      if (!items.length) return renderEmpty(tbody, 5, "No Schedule Performance items found.");
+
+      tbody.innerHTML = items.map(item => {
+        const f = item.fields || {};
+        return `
+          <tr>
+            <td>${formatValue(field(f, ["StoreName", "Store_x0020_Name", "Store Name", "Title"]))}</td>
+            <td>${formatValue(field(f, ["StoreType", "Store_x0020_Type", "Store Type"]))}</td>
+            <td>${formatValue(field(f, ["PlannedDate", "Planned_x0020_Date", "Planned Date"]))}</td>
+            <td>${formatValue(field(f, ["ActualDate", "Actual_x0020_Date", "Actual Date"]))}</td>
+            <td>${statusBadge(field(f, ["Status"]))}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadAllData() {
+      try {
+        setStatus("Loading SharePoint data...");
+        siteId = null;
+
+        const config = getConfigFromForm();
+
+        const [projects, cost, schedule] = await Promise.all([
+          getListItems(config.projectListName),
+          getListItems(config.costListName),
+          getListItems(config.scheduleListName)
+        ]);
+
+        renderProjects(projects);
+        renderCost(cost);
+        renderSchedule(schedule);
+
+        el("totalProjects").textContent = projects.length;
+        el("totalCost").textContent = cost.length;
+        el("totalSchedule").textContent = schedule.length;
+        el("lastUpdated").textContent = new Date().toLocaleString();
+
+        setStatus("Connected and data loaded", "ok");
+      } catch (error) {
+        console.error(error);
+        setStatus("Error loading data", "error");
+        alert("Error loading SharePoint data. Check console for details. Most common issues: permissions, wrong list name, wrong internal fields, or missing admin consent.");
+      }
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll(".tab").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tabName);
+      });
+
+      el("projectsTab").classList.toggle("hidden", tabName !== "projects");
+      el("costTab").classList.toggle("hidden", tabName !== "cost");
+      el("scheduleTab").classList.toggle("hidden", tabName !== "schedule");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadConfigFromStorage();
+      initializeMsal();
+
+      el("loginBtn").addEventListener("click", login);
+      el("loginBtnMain").addEventListener("click", login);
+      el("logoutBtn").addEventListener("click", logout);
+      el("saveConfigBtn").addEventListener("click", saveConfig);
+      el("loadBtn").addEventListener("click", loadAllData);
+
+      document.querySelectorAll(".tab").forEach(btn => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+      });
+    });
+  </script>
+</body>
+</html>
