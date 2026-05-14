@@ -893,6 +893,7 @@ function normalizeFieldName(name) {
 
       const activeProjects = items.filter(item => {
         const f = item.fields || {};
+        console.log("FIELDS:", f);
         console.log("Project Fields:", f);
         const status = field(f, ["Status"]);
         return !String(status).toLowerCase().includes("complete");
