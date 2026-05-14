@@ -531,7 +531,10 @@
 
     </div>
      
-    
+    <div class="user-box">
+       <p>Developed by Data Science Department</p>
+    </div>  
+
   </header>
 
   <main>
@@ -842,11 +845,26 @@
       tbody.innerHTML = `<tr><td colspan="${colSpan}" class="empty">${message}</td></tr>`;
     }
 
+      function formatSPDate(value) {
+      if (!value) return "";
+
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+
+      return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }).replace(/ /g, "-");
+    }
+
+
     function renderProjects(items) {
       const container = el("projectsBody");
 
       const activeProjects = items.filter(item => {
         const f = item.fields || {};
+        console.log("Project Fields:", f);
         const status = field(f, ["Status"]);
         return !String(status).toLowerCase().includes("complete");
       });
@@ -855,10 +873,29 @@
 
       el("projectPercentSummary").innerHTML = activeProjects.slice(0, 4).map(item => {
         const f = item.fields || {};
-
+        <!--
         const activityName = field(f, ["Activity_x0020_Name", "ActivityName"]);
-        const activityId = field(f, ["Title"]);
         const pct = Number(field(f, ["Progress_x0020__x0025_", "Progress", "Progress %"])) || 0;
+        -->
+        const activityName = field(f, [
+          "ActivityName",
+          "Activity_x0020_Name",
+          "Activity_x0020_Name0",
+          "Activity Name"
+        ]);
+
+        const pctRaw = field(f, [
+          "Progress",
+          "Progress_x0020__x0025_",
+          "Progress_x0020_",
+          "Progress0",
+          "Progress %"
+        ]);
+
+        const pct = Number(String(pctRaw).replace("%", "")) || 0; 
+
+        const activityId = field(f, ["Title"]);
+        
 
         let cls = "yellow";
         if (pct >= 90) cls = "green";
@@ -881,16 +918,51 @@
         const f = item.fields || {};
 
         const activityId = field(f, ["Title"]);
-        const activityName = field(f, ["Activity_x0020_Name", "ActivityName"]);
-        const duration = field(f, ["Duration"]);
-        const start = formatValue(field(f, ["Start"]));
-        const end = formatValue(field(f, ["End"]));
-        const actualDate = formatValue(field(f, ["Actual_x0020_Date", "ActualDate"]));
+
+      const activityName = field(f, [
+        "ActivityName",
+        "Activity_x0020_Name",
+        "Activity_x0020_Name0",
+        "Activity Name"
+      ]);
+
+      const meterArea = field(f, [
+        "MeterArea",
+        "Meter_x0020__x002f__x0020_Area",
+        "Meter_x0020_Area",
+        "Meter_x002f_Area",
+        "Meter / Area"
+      ]);
+
+      const pctRaw = field(f, [
+        "Progress",
+        "Progress_x0020__x0025_",
+        "Progress_x0020_",
+        "Progress0",
+        "Progress %"
+      ]);
+
+      const pct = Number(String(pctRaw).replace("%", "")) || 0;
+
+      const start = formatSPDate(field(f, ["Start"]));
+      const end = formatSPDate(field(f, ["End"]));
+      const actualDate = formatSPDate(field(f, [
+        "ActualDate",
+        "Actual_x0020_Date",
+        "Actual Date"
+      ]));
+
+
         const status = field(f, ["Status"]);
         const contractor = field(f, ["Contractor"]);
         const storeType = field(f, ["Store_x0020_Type", "StoreType"]);
-        const meterArea = field(f, ["Meter_x0020__x002f__x0020_Area", "MeterArea"]);
+
+        <!--        const meterArea = field(f, ["Meter_x0020__x002f__x0020_Area", "MeterArea"]);
         const pct = Number(field(f, ["Progress_x0020__x0025_", "Progress", "Progress %"])) || 0;
+
+        -->
+
+
         const stage = field(f, ["Stage"]);
         const plannedBudget = field(f, ["Planned_x0020_Budget", "PlannedBudget"]);
         const actualCost = field(f, ["Actual_x0020_Cost", "ActualCost"]);
