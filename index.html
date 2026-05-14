@@ -282,6 +282,237 @@
       header { flex-direction: column; align-items: flex-start; }
       .grid, .stats { grid-template-columns: 1fr; }
     }
+
+    .project-summary-bar {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      background: #181818;
+      border-bottom: 4px solid var(--orange);
+      margin-bottom: 22px;
+    }
+
+    .summary-item,
+    .project-percent-card {
+      padding: 20px;
+      text-align: center;
+      border-right: 1px solid #2d2d2d;
+    }
+
+    .summary-item strong,
+    .project-percent-card strong {
+      display: block;
+      font-size: 30px;
+      color: var(--orange);
+    }
+
+    .project-percent-card strong.green { color: #22c55e; }
+    .project-percent-card strong.blue { color: #3b82f6; }
+    .project-percent-card strong.yellow { color: #facc15; }
+
+    .summary-item span,
+    .project-percent-card span {
+      display: block;
+      color: #888;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .project-percent-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .hint-text {
+      color: #777;
+      font-size: 13px;
+      letter-spacing: 4px;
+      font-weight: 700;
+    }
+
+    .project-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .project-card {
+      background: white;
+      border: 1px solid #eadfd4;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .project-card-main {
+      display: grid;
+      grid-template-columns: 70px 90px 1fr 330px 40px;
+      gap: 16px;
+      align-items: center;
+      padding: 22px;
+    }
+
+    .status-dot-big {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #facc15;
+      margin: auto;
+    }
+
+    .status-dot-big.green { background: #22c55e; }
+    .status-dot-big.blue { background: #3b82f6; }
+    .status-dot-big.red { background: #ef4444; }
+
+    .progress-circle {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 8px solid #eee4d8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #111;
+      flex-direction: column;
+    }
+
+    .progress-circle small {
+      font-size: 10px;
+      font-weight: 400;
+      color: #777;
+    }
+
+    .project-title h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .project-title p {
+      margin: 0 0 8px;
+      color: #777;
+      font-size: 13px;
+    }
+
+    .project-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .project-date-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      text-align: center;
+      gap: 14px;
+    }
+
+    .project-date-grid strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .project-date-grid span {
+      display: block;
+      font-size: 11px;
+      color: #777;
+    }
+
+    .expand-icon {
+      background: #fff3df;
+      color: var(--orange);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    .project-details {
+      display: none;
+      border-top: 3px solid var(--orange);
+      padding: 22px;
+      grid-template-columns: 260px 1fr;
+      gap: 22px;
+    }
+
+    .project-card.expanded .project-details {
+      display: grid;
+    }
+
+    .details-box {
+      border: 1px solid #eadfd4;
+      border-radius: 12px;
+      padding: 16px;
+      background: #fffaf5;
+    }
+
+    .details-box h4 {
+      margin: 0 0 14px;
+      color: var(--orange);
+      letter-spacing: 3px;
+      font-size: 12px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #eadfd4;
+      padding: 8px 0;
+      gap: 10px;
+    }
+
+    .detail-row span {
+      color: #777;
+    }
+
+    .detail-row strong {
+      text-align: right;
+    }
+
+    .notes-box {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #ecfdf5;
+      border-left: 4px solid #22c55e;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .blocker-box {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #fffbeb;
+      border-left: 4px solid var(--orange);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .project-photos h4 {
+      margin: 0 0 14px;
+      color: #777;
+      letter-spacing: 4px;
+      font-size: 12px;
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .photo-placeholder {
+      height: 210px;
+      border-radius: 12px;
+      background: #f3f4f6;
+      display: grid;
+      place-items: center;
+      color: #999;
+      font-weight: 700;
+    }
+
   </style>
 </head>
 <body>
@@ -351,21 +582,19 @@
       </div>
 
       <section id="projectsTab" class="section">
-        <h2>Project Schedule</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Activity ID</th>
-              <th>Activity Name</th>
-              <th>Duration</th>
-              <th>Start</th>
-              <th>End</th>
-              <th>Actual Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="projectsBody"></tbody>
-        </table>
+        <div class="project-summary-bar">
+          <div class="summary-item">
+            <strong id="activeProjectsCount">0</strong>
+            <span>Active Projects</span>
+          </div>
+          <div id="projectPercentSummary" class="project-percent-summary"></div>
+        </div>
+
+        <p class="hint-text">
+          CLICK ANY CARD TO EXPAND · CLICK AGAIN TO COLLAPSE
+        </p>
+
+        <div id="projectsBody" class="project-list"></div>
       </section>
 
       <section id="costTab" class="section hidden">
@@ -610,24 +839,146 @@
     }
 
     function renderProjects(items) {
-      const tbody = el("projectsBody");
-      if (!items.length) return renderEmpty(tbody, 7, "No Project Schedule items found.");
+      const container = el("projectsBody");
 
-      tbody.innerHTML = items.map(item => {
+      const activeProjects = items.filter(item => {
         const f = item.fields || {};
+        const status = field(f, ["Status"]);
+        return !String(status).toLowerCase().includes("complete");
+      });
+
+      el("activeProjectsCount").textContent = activeProjects.length;
+
+      el("projectPercentSummary").innerHTML = activeProjects.slice(0, 4).map(item => {
+        const f = item.fields || {};
+
+        const activityName = field(f, ["Activity_x0020_Name", "ActivityName"]);
+        const activityId = field(f, ["Title"]);
+        const pct = Number(field(f, ["Progress_x0020__x0025_", "Progress", "Progress %"])) || 0;
+
+        let cls = "yellow";
+        if (pct >= 90) cls = "green";
+        else if (pct >= 70) cls = "blue";
+
         return `
-          <tr>
-            <td>${formatValue(field(f, ["ActivityID", "Activity_x0020_ID", "Activity ID", "Title"]))}</td>
-            <td>${formatValue(field(f, ["ActivityName", "Activity_x0020_Name", "Activity Name"]))}</td>
-            <td>${formatValue(field(f, ["Duration"]))}</td>
-            <td>${formatValue(field(f, ["Start", "StartDate", "Start_x0020_Date"]))}</td>
-            <td>${formatValue(field(f, ["End", "EndDate", "End_x0020_Date"]))}</td>
-            <td>${formatValue(field(f, ["ActualDate", "Actual_x0020_Date", "Actual Date"]))}</td>
-            <td>${statusBadge(field(f, ["Status"]))}</td>
-          </tr>
+          <div class="project-percent-card">
+            <strong class="${cls}">${pct}%</strong>
+            <span>${formatValue(activityName || activityId)}</span>
+          </div>
+        `;
+      }).join("");
+
+      if (!activeProjects.length) {
+        container.innerHTML = `<div class="empty">No active projects found.</div>`;
+        return;
+      }
+
+      container.innerHTML = activeProjects.map(item => {
+        const f = item.fields || {};
+
+        const activityId = field(f, ["Title"]);
+        const activityName = field(f, ["Activity_x0020_Name", "ActivityName"]);
+        const duration = field(f, ["Duration"]);
+        const start = formatValue(field(f, ["Start"]));
+        const end = formatValue(field(f, ["End"]));
+        const actualDate = formatValue(field(f, ["Actual_x0020_Date", "ActualDate"]));
+        const status = field(f, ["Status"]);
+        const contractor = field(f, ["Contractor"]);
+        const storeType = field(f, ["Store_x0020_Type", "StoreType"]);
+        const meterArea = field(f, ["Meter_x0020__x002f__x0020_Area", "MeterArea"]);
+        const pct = Number(field(f, ["Progress_x0020__x0025_", "Progress", "Progress %"])) || 0;
+        const stage = field(f, ["Stage"]);
+        const plannedBudget = field(f, ["Planned_x0020_Budget", "PlannedBudget"]);
+        const actualCost = field(f, ["Actual_x0020_Cost", "ActualCost"]);
+        const notes = field(f, ["Notes"]);
+
+        let dotClass = "";
+        if (pct >= 90) dotClass = "green";
+        else if (pct >= 70) dotClass = "blue";
+        else if (String(status).toLowerCase().includes("delay")) dotClass = "red";
+
+        return `
+          <article class="project-card" onclick="this.classList.toggle('expanded')">
+            <div class="project-card-main">
+              <div class="status-dot-big ${dotClass}"></div>
+
+              <div class="progress-circle">
+                ${pct}%
+                <small>done</small>
+              </div>
+
+              <div class="project-title">
+                <h3>${formatValue(activityName || activityId)}</h3>
+                <p>
+                  ${formatValue(stage)}
+                  ${contractor ? " · " + formatValue(contractor) : ""}
+                  ${activityId ? " · " + formatValue(activityId) : ""}
+                </p>
+
+                <div class="project-badges">
+                  <span class="badge orange">${formatValue(status || "No Status")}</span>
+                  <span class="badge">${formatValue(storeType || "Store Type N/A")}</span>
+                  <span class="badge">${formatValue(meterArea || "Meter / Area N/A")}</span>
+                  <span class="badge">${formatValue(duration)} days</span>
+                  <span class="badge">Budget: ${formatValue(plannedBudget)}</span>
+                </div>
+              </div>
+
+              <div class="project-date-grid">
+                <div>
+                  <strong>${formatValue(start)}</strong>
+                  <span>Start</span>
+                </div>
+                <div>
+                  <strong>${formatValue(end)}</strong>
+                  <span>Finish</span>
+                </div>
+                <div>
+                  <strong>${formatValue(actualDate)}</strong>
+                  <span>Actual</span>
+                </div>
+              </div>
+
+              <div class="expand-icon">▼</div>
+            </div>
+
+            <div class="project-details">
+              <div>
+                <div class="details-box">
+                  <h4>PROJECT DETAILS</h4>
+                  <div class="detail-row"><span>Activity ID</span><strong>${formatValue(activityId)}</strong></div>
+                  <div class="detail-row"><span>Activity Name</span><strong>${formatValue(activityName)}</strong></div>
+                  <div class="detail-row"><span>Contractor</span><strong>${formatValue(contractor)}</strong></div>
+                  <div class="detail-row"><span>Store Type</span><strong>${formatValue(storeType)}</strong></div>
+                  <div class="detail-row"><span>Meter / Area</span><strong>${formatValue(meterArea)}</strong></div>
+                  <div class="detail-row"><span>Duration</span><strong>${formatValue(duration)} days</strong></div>
+                  <div class="detail-row"><span>Stage</span><strong>${formatValue(stage)}</strong></div>
+                  <div class="detail-row"><span>Progress</span><strong>${pct}%</strong></div>
+                  <div class="detail-row"><span>Planned Budget</span><strong>${formatValue(plannedBudget)}</strong></div>
+                  <div class="detail-row"><span>Actual Cost</span><strong>${formatValue(actualCost)}</strong></div>
+                  <div class="detail-row"><span>Status</span><strong>${formatValue(status)}</strong></div>
+                </div>
+
+                <div class="notes-box">
+                  <strong>SITE NOTES</strong><br>
+                  ${formatValue(notes || "No notes available")}
+                </div>
+              </div>
+
+              <div class="project-photos">
+                <h4>SITE PHOTOS — ${formatValue(activityName || activityId)}</h4>
+                <div class="photos-grid">
+                  <div class="photo-placeholder">Attachment / Photo 1</div>
+                  <div class="photo-placeholder">Attachment / Photo 2</div>
+                  <div class="photo-placeholder">Attachment / Photo 3</div>
+                </div>
+              </div>
+            </div>
+          </article>
         `;
       }).join("");
     }
+          
 
     function renderCost(items) {
       const tbody = el("costBody");
