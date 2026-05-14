@@ -61,11 +61,28 @@
 
     .user-box {
       display: flex;
-      align-items: center;
-      gap: 10px;
+      align-items: flex-end;
+      gap: 14px;
       font-size: 13px;
     }
+  .user-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+  }
 
+  .dev-text {
+    font-size: 10px;
+    color: rgba(255,255,255,0.85);
+    text-align: center;
+    white-space: nowrap;
+}
+
+
+#userInfo {
+    font-size: 13px;
+}
     button {
       border: 0;
       border-radius: 10px;
@@ -486,6 +503,30 @@
       line-height: 1.6;
     }
 
+    .user-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    }
+    .user-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    }
+
+    .user-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.2;
+    }
+
+    .dev-text {
+    font-size: 11px;
+    color: rgba(255,255,255,0.8);
+    margin-top: 2px;
+    }
+
     .blocker-box {
       margin-top: 12px;
       padding: 14px;
@@ -527,13 +568,22 @@
       <h1>Troley Business Development Dashboard</h1>
       <p>GitHub Pages + Microsoft Login + SharePoint Lists</p>
       <p>Developed by Data Science Department</p>
-      <p>version 0.6 2026-05-14</p>
+      <p>version 0.8 2026-05-14</p>
     </div>
 
     <div class="user-box">
-      <span id="userInfo">Not signed in</span>
-      <button id="loginBtn" class="btn-light">Login with Microsoft</button>
-      <button id="logoutBtn" class="btn-dark hidden">Logout</button>
+
+    <div class="user-actions">
+        <button id="loginBtn">Login with Microsoft</button>
+        <button id="logoutBtn" class="hidden">Logout</button>
+
+        <small class="dev-text">
+            Developed by Data Science Department
+        </small>
+    </div>
+
+    <span id="userInfo">Not signed in</span>
+      
     </div>
 
   </header>
@@ -905,13 +955,14 @@ function normalizeFieldName(name) {
         const f = item.fields || {};
 /*
         const activityName = field(f, [
+          "Activity",
           "Activity Name",
           "Activity_x0020_Name",
           "Activity_x0020_Name0",
           "ActivityName"
         ]);
 */
-        const activityName = field(f, ["Activity Name"]);
+        const activityName = field(f, ["Activity"]);
         const meterArea = field(f, ["Meter / Area"]);
 
         const pctRaw = field(f, ["Progress %"]);
@@ -944,7 +995,7 @@ function normalizeFieldName(name) {
         const activityId = field(f, ["Title"]);
         const duration = field(f, ["Duration"]);
         
-      const activityName = field(f, ["Activity Name"]);
+      const activityName = field(f, ["Activity"]);
       const pctRaw = field(f, ["Progress %"]);
 
       const meterArea = field(f, ["Meter / Area"]);
