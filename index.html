@@ -524,7 +524,7 @@
 <body>
   <header>
     <div class="brand">
-      <h1>TROLLEY Business Development DASHBOARD</h1>
+      <h1>Troley Business Development Dashboard</h1>
       <p>GitHub Pages + Microsoft Login + SharePoint Lists</p>
       <p>Developed by Data Science Department</p>
       <p>version 0.5 2026-05-14</p>
@@ -874,10 +874,7 @@
 
       el("projectPercentSummary").innerHTML = activeProjects.slice(0, 4).map(item => {
         const f = item.fields || {};
-        <!--
-        const activityName = field(f, ["Activity_x0020_Name", "ActivityName"]);
-        const pct = Number(field(f, ["Progress_x0020__x0025_", "Progress", "Progress %"])) || 0;
-        -->
+
         const activityName = field(f, [
           "ActivityName",
           "Activity_x0020_Name",
@@ -919,7 +916,8 @@
         const f = item.fields || {};
 
         const activityId = field(f, ["Title"]);
-
+        const duration = field(f, ["Duration"]);
+        
       const activityName = field(f, [
         "ActivityName",
         "Activity_x0020_Name",
@@ -958,10 +956,7 @@
         const contractor = field(f, ["Contractor"]);
         const storeType = field(f, ["Store_x0020_Type", "StoreType"]);
 
-        <!--        const meterArea = field(f, ["Meter_x0020__x002f__x0020_Area", "MeterArea"]);
-        const pct = Number(field(f, ["Progress_x0020__x0025_", "Progress", "Progress %"])) || 0;
 
-        -->
 
 
         const stage = field(f, ["Stage"]);
