@@ -816,12 +816,40 @@
       return data.value || [];
     }
 
-    function field(fields, names) {
-      for (const name of names) {
-        if (fields && fields[name] !== undefined && fields[name] !== null) return fields[name];
+function normalizeFieldName(name) {
+  return String(name || "")
+    .replace(/_x0020_/gi, " ")
+    .replace(/_x0025_/gi, "%")
+    .replace(/_x002f_/gi, "/")
+    .replace(/[^a-zA-Z0-9%]/g, "")
+    .toLowerCase();
+}
+
+  function field(fields, names) {
+    if (!fields) return "";
+
+    for (const name of names) {
+      if (fields[name] !== undefined && fields[name] !== null && fields[name] !== "") {
+        return fields[name];
       }
-      return "";
     }
+
+    const fieldKeys = Object.keys(fields);
+
+    for (const requestedName of names) {
+      const requestedNormalized = normalizeFieldName(requestedName);
+
+      const matchedKey = fieldKeys.find(key =>
+        normalizeFieldName(key) === requestedNormalized
+      );
+
+      if (matchedKey && fields[matchedKey] !== undefined && fields[matchedKey] !== null && fields[matchedKey] !== "") {
+        return fields[matchedKey];
+      }
+    }
+
+    return "";
+  }
 
     function formatValue(value) {
       if (value === null || value === undefined || value === "") return "";
@@ -874,21 +902,18 @@
 
       el("projectPercentSummary").innerHTML = activeProjects.slice(0, 4).map(item => {
         const f = item.fields || {};
-
+/*
         const activityName = field(f, [
-          "ActivityName",
+          "Activity Name",
           "Activity_x0020_Name",
           "Activity_x0020_Name0",
-          "Activity Name"
+          "ActivityName"
         ]);
+*/
+        const activityName = field(f, ["Activity Name"]);
+        const meterArea = field(f, ["Meter / Area"]);
 
-        const pctRaw = field(f, [
-          "Progress",
-          "Progress_x0020__x0025_",
-          "Progress_x0020_",
-          "Progress0",
-          "Progress %"
-        ]);
+        const pctRaw = field(f, ["Progress %"]);
 
         const pct = Number(String(pctRaw).replace("%", "")) || 0; 
 
@@ -918,29 +943,12 @@
         const activityId = field(f, ["Title"]);
         const duration = field(f, ["Duration"]);
         
-      const activityName = field(f, [
-        "ActivityName",
-        "Activity_x0020_Name",
-        "Activity_x0020_Name0",
-        "Activity Name"
-      ]);
+      const activityName = field(f, ["Activity Name"]);
+      const pctRaw = field(f, ["Progress %"]);
 
-      const meterArea = field(f, [
-        "MeterArea",
-        "Meter_x0020__x002f__x0020_Area",
-        "Meter_x0020_Area",
-        "Meter_x002f_Area",
-        "Meter / Area"
-      ]);
+      const meterArea = field(f, ["Meter / Area"]);
 
-      const pctRaw = field(f, [
-        "Progress",
-        "Progress_x0020__x0025_",
-        "Progress_x0020_",
-        "Progress0",
-        "Progress %"
-      ]);
-
+ 
       const pct = Number(String(pctRaw).replace("%", "")) || 0;
 
       const start = formatSPDate(field(f, ["Start"]));
