@@ -307,34 +307,60 @@
         from SharePoint Lists using Microsoft Entra ID and Microsoft Graph API.
       </p>
       <button id="loginBtnMain" class="btn-orange">Login with Microsoft</button>
-<!-- 
+
       <div class="warning">
         <strong>Important:</strong> Do not collect SharePoint username/password inside HTML.
         The correct and secure way is Microsoft Login using MSAL. Before publishing, IT/Admin
         must create an App Registration and replace the placeholders inside this file.
       </div>
     </section>
--->
 
     <section id="appView" class="hidden">
       <div class="config-card">
         <h2>SharePoint / Microsoft Graph Configuration</h2>
 
-          <input id="tenantId" value="7a553754-2e8d-4a1f-b57a-56d5f9d1cb13" />
-          <input id="clientId" value="718a9b01-633b-4492-83d5-03634ea62d8e" />
-          <input id="hostname" value="trolleykw.sharepoint.com" />
-          <input id="sitePath" value="/sites/BusinessDevelopment" />
-          <input id="projectListName" value="Project Schedule" />
-          <input id="costListName" value="Cost Performance" />
-          <input id="scheduleListName" value="Schedule Performance" />
+        <div class="grid">
+          <div>
+            <label>Tenant ID</label>
+            <input id="tenantId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+          </div>
+
+          <div>
+            <label>Client ID / Application ID</label>
+            <input id="clientId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+          </div>
+
+          <div>
+            <label>SharePoint Hostname</label>
+            <input id="hostname" value="trolleykw.sharepoint.com" />
+          </div>
+
+          <div>
+            <label>Site Path</label>
+            <input id="sitePath" value="/sites/BusinessDevelopment" />
+          </div>
+
+          <div>
+            <label>Project Schedule List</label>
+            <input id="projectListName" value="Project Schedule" />
+          </div>
+
+          <div>
+            <label>Cost Performance List</label>
+            <input id="costListName" value="Cost Performance" />
+          </div>
+
+          <div>
+            <label>Schedule Performance List</label>
+            <input id="scheduleListName" value="Schedule Performance" />
+          </div>
+        </div>
+
+        <div class="actions">
           <button id="saveConfigBtn" class="btn-orange">Save Configuration</button>
           <button id="loadBtn" class="btn-blue">Load SharePoint Data</button>
-          <span class="status-dot">
-            <span id="statusDot" class="dot"></span>
-            <span id="statusText">Waiting</span>
-          </span>
- 
- 
+          <span class="status-dot"><span id="statusDot" class="dot"></span><span id="statusText">Waiting</span></span>
+        </div>
       </div>
 
       <div class="stats">
@@ -448,14 +474,36 @@
     }
 
     function loadConfigFromStorage() {
-      return { ...defaultConfig };
+      const saved = JSON.parse(localStorage.getItem("bdDashboardConfig") || "{}");
+      const config = { ...defaultConfig, ...saved };
+
+      el("tenantId").value = config.tenantId;
+      el("clientId").value = config.clientId;
+      el("hostname").value = config.hostname;
+      el("sitePath").value = config.sitePath;
+      el("projectListName").value = config.projectListName;
+      el("costListName").value = config.costListName;
+      el("scheduleListName").value = config.scheduleListName;
+
+      return config;
     }
 
     function getConfigFromForm() {
-      return { ...defaultConfig };
+      return {
+        tenantId: el("tenantId").value.trim(),
+        clientId: el("clientId").value.trim(),
+        hostname: el("hostname").value.trim(),
+        sitePath: el("sitePath").value.trim(),
+        projectListName: el("projectListName").value.trim(),
+        costListName: el("costListName").value.trim(),
+        scheduleListName: el("scheduleListName").value.trim()
+      };
     }
-    
+
     function saveConfig() {
+      const config = getConfigFromForm();
+      localStorage.setItem("bdDashboardConfig", JSON.stringify(config));
+      alert("Configuration saved locally in this browser.");
       initializeMsal();
     }
 
@@ -517,8 +565,6 @@
       el("loginBtn").classList.add("hidden");
       el("logoutBtn").classList.remove("hidden");
       el("userInfo").textContent = activeAccount?.username || activeAccount?.name || "Signed in";
-
-      loadAllData();
     }
 
     async function getAccessToken() {
