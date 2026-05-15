@@ -954,6 +954,157 @@
       .executive-table tbody tr:hover{
           background:#fffaf3;
       }
+
+
+
+      .cost-kpis {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+      .cost-kpi {
+        background: #fff;
+        border: 1px solid #eadfd4;
+        border-radius: 12px;
+        padding: 14px 12px;
+        text-align: center;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+      }
+
+      .cost-kpi strong {
+        display: block;
+        font-size: 22px;
+        color: var(--orange);
+        line-height: 1.2;
+        font-weight: 900;
+      }
+
+      .cost-kpi.green strong {
+        color: #22c55e;
+      }
+
+      .cost-kpi.orange strong {
+        color: var(--orange);
+      }
+
+      .cost-kpi span {
+        display: block;
+        margin-top: 5px;
+        font-size: 11px;
+        color: #777;
+      }
+
+      .cost-table-card {
+        border: 1px solid #eadfd4;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+      }
+
+      .cost-table-header {
+        background: var(--orange);
+        color: #fff;
+        padding: 14px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .cost-table-header h2 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 900;
+        letter-spacing: 0;
+      }
+
+      .cost-table-header span {
+        font-size: 11px;
+        opacity: 0.95;
+      }
+
+      .cost-table-wrap {
+        overflow-x: auto;
+      }
+
+      .cost-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1150px;
+      }
+
+      .cost-table th {
+        background: #fff4e6;
+        color: #a34b00;
+        padding: 9px 10px;
+        font-size: 11px;
+        font-weight: 900;
+        text-align: left;
+        border-bottom: 1px solid #eadfd4;
+      }
+
+      .cost-table td {
+        padding: 9px 10px;
+        font-size: 12px;
+        border-bottom: 1px solid #eadfd4;
+      }
+
+      .cost-table tbody tr:hover {
+        background: #fffaf3;
+      }
+
+      .cost-store-name {
+        font-weight: 900;
+      }
+
+      .cost-good {
+        color: #16a34a;
+        font-weight: 900;
+      }
+
+      .cost-bad {
+        color: #ef4444;
+        font-weight: 900;
+      }
+
+      .cost-muted {
+        color: #b8b8b8;
+        font-weight: 700;
+      }
+
+      .cost-bar {
+        width: 120px;
+        height: 8px;
+        background: #efe5d7;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .cost-bar-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: #22c55e;
+      }
+
+      .cost-bar-fill.red {
+        background: #ef4444;
+      }
+
+      .cost-table tfoot td {
+        background: #fff4e6;
+        font-size: 13px;
+        font-weight: 900;
+        border-top: 2px solid var(--orange);
+      }
+
+      @media (max-width: 1000px) {
+        .cost-kpis {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
   </style>
 </head>
 <body>
@@ -962,7 +1113,7 @@
       <h1>Troley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 2.1 2026-05-15</p>
+      <p>version 2.2 2026-05-15</p>
     </div>
 
     <div class="user-section">
@@ -1146,81 +1297,80 @@
       </div>
 
     </section>
-      
-      
-      <section id="costTab" class="section hidden">
+              
+              
+        <section id="costTab" class="section hidden">
 
-          <!-- KPI CARDS -->
-          <div class="executive-kpi-grid">
+          <div class="cost-kpis">
+            <div class="cost-kpi">
+              <strong id="costStoresCount">0</strong>
+              <span>Costed Stores</span>
+            </div>
 
-              <div class="executive-kpi-card">
-                  <div class="executive-kpi-value" id="costStoresCount">0</div>
-                  <div class="executive-kpi-label">Costed Stores</div>
-              </div>
+            <div class="cost-kpi">
+              <strong id="totalPlannedKWD">KWD 0</strong>
+              <span>Total Planned</span>
+            </div>
 
-              <div class="executive-kpi-card">
-                  <div class="executive-kpi-value dark" id="totalPlannedKWD">KWD 0</div>
-                  <div class="executive-kpi-label">Total Planned</div>
-              </div>
+            <div class="cost-kpi green">
+              <strong id="totalActualKWD">KWD 0</strong>
+              <span>Actual (incl. VO)</span>
+            </div>
 
-              <div class="executive-kpi-card">
-                  <div class="executive-kpi-value green" id="totalActualKWD">KWD 0</div>
-                  <div class="executive-kpi-label">Actual (incl. VO)</div>
-              </div>
+            <div class="cost-kpi orange">
+              <strong id="totalVOKWD">KWD 0</strong>
+              <span>Variation Orders</span>
+            </div>
 
-              <div class="executive-kpi-card">
-                  <div class="executive-kpi-value orange" id="totalVOKWD">KWD 0</div>
-                  <div class="executive-kpi-label">Variation Orders</div>
-              </div>
-
-              <div class="executive-kpi-card">
-                  <div class="executive-kpi-value green" id="portfolioSaving">KWD 0</div>
-                  <div class="executive-kpi-label">Portfolio Saving</div>
-              </div>
-
+            <div class="cost-kpi green">
+              <strong id="portfolioSaving">KWD 0</strong>
+              <span>Portfolio Saving</span>
+            </div>
           </div>
 
-          <!-- HEADER -->
-          <div class="executive-section-header">
+          <div class="cost-table-card">
+            <div class="cost-table-header">
+              <h2>💰 Store Cost Summary — All Stores</h2>
+              <span>CPI = Planned ÷ Total · Green = good · Red = over</span>
+            </div>
 
-              <div class="executive-header-left">
-                  💰 Cost Performance — Planned vs Actual
-              </div>
+            <div class="cost-table-wrap">
+              <table class="cost-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Store Name</th>
+                    <th>Type</th>
+                    <th>m²</th>
+                    <th>Planned (KWD)</th>
+                    <th>Actual (KWD)</th>
+                    <th>VO (KWD)</th>
+                    <th>Total A+VO</th>
+                    <th>Variance</th>
+                    <th>CPI</th>
+                    <th>Bar</th>
+                  </tr>
+                </thead>
 
-              <div class="executive-header-right">
-                  Portfolio Cost Overview
-              </div>
+                <tbody id="costBody"></tbody>
 
-          </div>
-
-          <!-- TABLE -->
-          <div class="executive-table-container">
-
-              <table class="executive-table">
-
-                  <thead>
-                      <tr>
-                          <th>#</th>
-                          <th>Store Name</th>
-                          <th>Type</th>
-                          <th>m²</th>
-                          <th>Planned</th>
-                          <th>Actual</th>
-                          <th>VO</th>
-                          <th>Total</th>
-                          <th>Variance</th>
-                          <th>CPI</th>
-                      </tr>
-                  </thead>
-
-                  <tbody id="costBody">
-                  </tbody>
-
+                <tfoot>
+                  <tr>
+                    <td colspan="4">PORTFOLIO TOTAL</td>
+                    <td id="footerPlanned">KWD 0</td>
+                    <td id="footerActual">KWD 0</td>
+                    <td id="footerVO">KWD 0</td>
+                    <td id="footerTotal">KWD 0</td>
+                    <td id="footerVariance">KWD 0</td>
+                    <td id="footerCPI">0.00</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
               </table>
-
+            </div>
           </div>
 
-      </section>
+        </section>
       
       </section>
     </section>
@@ -1651,12 +1801,13 @@ function normalizeFieldName(name) {
     function formatKWD(value) {
       return "KWD " + Number(value || 0).toLocaleString();
     }                
-      function renderCost(items) {
+      
+      
+    function renderCost(items) {
         const tbody = el("costBody");
-        
 
         if (!items.length) {
-          tbody.innerHTML = `<tr><td colspan="10" class="empty">No Cost Performance items found.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="11" class="empty">No Cost Performance items found.</td></tr>`;
           return;
         }
 
@@ -1683,28 +1834,50 @@ function normalizeFieldName(name) {
           totalVO += vo;
           totalCost += total;
 
+          const cpiWidth = Math.min(100, Math.max(5, cpi * 55));
+          const barClass = cpi >= 1 ? "" : "red";
+
           return `
             <tr>
               <td>${index + 1}</td>
-              <td><strong>${formatValue(storeName)}</strong></td>
+              <td class="cost-store-name">${formatValue(storeName)}</td>
               <td><span class="type-pill">${formatValue(storeType)}</span></td>
               <td>${formatNumber(meter)}</td>
-              <td>${formatKWD(planned)}</td>
-              <td>${formatKWD(actual)}</td>
-              <td>${vo ? formatKWD(vo) : "—"}</td>
-              <td><strong>${formatKWD(total)}</strong></td>
-              <td class="${variance >= 0 ? "cost-good" : "cost-bad"}">${formatKWD(variance)}</td>
+              <td>${formatNumber(planned)}</td>
+              <td>${formatNumber(actual)}</td>
+              <td>${vo ? formatNumber(vo) : "—"}</td>
+              <td><strong>${formatNumber(total)}</strong></td>
+              <td class="${variance >= 0 ? "cost-good" : "cost-bad"}">${formatNumber(variance)}</td>
               <td class="${cpi >= 1 ? "cost-good" : "cost-bad"}">${cpi ? cpi.toFixed(2) : "—"}</td>
+              <td>
+                <div class="cost-bar">
+                  <div class="cost-bar-fill ${barClass}" style="width:${cpiWidth}%"></div>
+                </div>
+              </td>
             </tr>
           `;
         }).join("");
+
+        const saving = totalPlanned - totalCost;
+        const portfolioCPI = totalCost ? totalPlanned / totalCost : 0;
 
         el("costStoresCount").textContent = items.length;
         el("totalPlannedKWD").textContent = formatKWD(totalPlanned);
         el("totalActualKWD").textContent = formatKWD(totalCost);
         el("totalVOKWD").textContent = formatKWD(totalVO);
-        el("portfolioSaving").textContent = formatKWD(totalPlanned - totalCost);
+        el("portfolioSaving").textContent = formatKWD(saving);
+
+        el("footerPlanned").textContent = formatKWD(totalPlanned);
+        el("footerActual").textContent = formatKWD(totalActual);
+        el("footerVO").textContent = formatKWD(totalVO);
+        el("footerTotal").textContent = formatKWD(totalCost);
+        el("footerVariance").textContent = formatKWD(saving);
+        el("footerVariance").className = saving >= 0 ? "cost-good" : "cost-bad";
+        el("footerCPI").textContent = portfolioCPI.toFixed(2);
+        el("footerCPI").className = portfolioCPI >= 1 ? "cost-good" : "cost-bad";
       }
+
+
     function renderSchedule(items) {
       const tbody = el("scheduleBody");
 
