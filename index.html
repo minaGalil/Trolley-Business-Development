@@ -603,6 +603,202 @@
       font-weight: 700;
     }
 
+    .schedule-kpis {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .schedule-kpi {
+      background: #fff;
+      border: 1px solid #eadfd4;
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+    }
+
+    .schedule-kpi strong {
+      display: block;
+      font-size: 28px;
+      color: var(--orange);
+      line-height: 1.1;
+    }
+
+    .schedule-kpi span {
+      display: block;
+      margin-top: 6px;
+      color: #777;
+      font-size: 12px;
+    }
+
+    .schedule-kpi.green strong { color: #22c55e; }
+    .schedule-kpi.blue strong { color: #3b82f6; }
+    .schedule-kpi.red strong { color: #ef4444; }
+    .schedule-kpi.yellow strong { color: #facc15; }
+
+    .schedule-card {
+      border: 1px solid #eadfd4;
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+    }
+
+    .schedule-header {
+      background: var(--orange);
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .schedule-header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .schedule-header span {
+      font-size: 12px;
+      opacity: 0.95;
+    }
+
+    .schedule-table-wrap {
+      overflow-x: auto;
+    }
+
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1050px;
+    }
+
+    .schedule-table th {
+      background: #fff7ed;
+      color: #9a4b00;
+      font-size: 12px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .schedule-table td,
+    .schedule-table th {
+      padding: 12px;
+      border-bottom: 1px solid #eadfd4;
+      font-size: 13px;
+    }
+
+    .schedule-row-store {
+      font-weight: 800;
+    }
+
+    .type-pill,
+    .status-pill {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .type-pill {
+      background: #fff3df;
+      color: #9a4b00;
+    }
+
+    .status-pill.late {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+    }
+
+    .status-pill.early {
+      background: #dcfce7;
+      color: #16a34a;
+      border: 1px solid #86efac;
+    }
+
+    .status-pill.ontime {
+      background: #dbeafe;
+      color: #2563eb;
+      border: 1px solid #93c5fd;
+    }
+
+    .status-pill.pending {
+      background: #ffedd5;
+      color: #ea580c;
+      border: 1px solid #fdba74;
+    }
+
+    .delay-late {
+      color: #ef4444;
+      font-weight: 800;
+    }
+
+    .delay-early {
+      color: #22c55e;
+      font-weight: 800;
+    }
+
+    .delay-ontime {
+      color: #2563eb;
+      font-weight: 800;
+    }
+
+    .timeline-track {
+      position: relative;
+      width: 260px;
+      height: 20px;
+      background: #f1e8dd;
+      border-radius: 5px;
+    }
+
+    .timeline-marker {
+      position: absolute;
+      top: 2px;
+      width: 14px;
+      height: 16px;
+      border-radius: 4px;
+    }
+
+    .timeline-marker.planned {
+      background: transparent;
+      border: 2px solid #f97316;
+    }
+
+    .timeline-marker.actual.late {
+      background: #ef4444;
+    }
+
+    .timeline-marker.actual.early {
+      background: #22c55e;
+    }
+
+    .timeline-marker.actual.ontime {
+      background: #3b82f6;
+    }
+
+    .timeline-marker.actual.pending {
+      background: transparent;
+      border: 2px solid #f59e0b;
+    }
+
+    .timeline-today {
+      position: absolute;
+      top: -2px;
+      bottom: -2px;
+      width: 2px;
+      background: #ef4444;
+      left: 40%;
+    }
+
+    @media (max-width: 1000px) {
+      .schedule-kpis {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
   </style>
 </head>
 <body>
@@ -747,20 +943,65 @@
         </table>
       </section>
 
-      <section id="scheduleTab" class="section hidden">
-        <h2>Schedule Performance</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Store Name</th>
-              <th>Store Type</th>
-              <th>Planned Date</th>
-              <th>Actual Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="scheduleBody"></tbody>
-        </table>
+    <section id="scheduleTab" class="section hidden">
+
+      <div class="schedule-kpis">
+        <div class="schedule-kpi">
+          <strong id="scheduleTotalStores">0</strong>
+          <span>Total Stores</span>
+        </div>
+
+        <div class="schedule-kpi green">
+          <strong id="scheduleCompleted">0</strong>
+          <span>Completed</span>
+        </div>
+
+        <div class="schedule-kpi blue">
+          <strong id="scheduleOnTime">0</strong>
+          <span>On Time / Early</span>
+        </div>
+
+        <div class="schedule-kpi red">
+          <strong id="scheduleDelayed">0</strong>
+          <span>Delayed</span>
+        </div>
+
+        <div class="schedule-kpi yellow">
+          <strong id="schedulePending">0</strong>
+          <span>Pending / TBD</span>
+        </div>
+      </div>
+
+      <div class="schedule-card">
+        <div class="schedule-header">
+          <h2>Schedule Performance — Planned vs Actual</h2>
+          <span id="scheduleDateLabel">Live Data from SharePoint</span>
+        </div>
+
+        <div class="schedule-table-wrap">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Store Name</th>
+                <th>Type</th>
+                <th>Planned Date</th>
+                <th>Actual Date</th>
+                <th>Delay</th>
+                <th>Status</th>
+                <th>Timeline</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+      
+      
+      
+      
       </section>
     </section>
   </main>
@@ -1208,21 +1449,184 @@ function normalizeFieldName(name) {
 
     function renderSchedule(items) {
       const tbody = el("scheduleBody");
-      if (!items.length) return renderEmpty(tbody, 5, "No Schedule Performance items found.");
 
-      tbody.innerHTML = items.map(item => {
+      if (!items.length) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty">No Schedule Performance items found.</td></tr>`;
+        return;
+      }
+
+      const rows = items.map((item, index) => {
         const f = item.fields || {};
+
+        const storeName = field(f, ["Title", "Store Name"]);
+        const storeType = field(f, ["Store Type"]);
+        const plannedRaw = field(f, ["Planned Date"]);
+        const actualRaw = field(f, ["Actual Date"]);
+        const statusRaw = field(f, ["Status"]);
+
+        const plannedDate = parseDateValue(plannedRaw);
+        const actualDate = parseDateValue(actualRaw);
+
+        const plannedText = formatSPDate(plannedRaw) || "TBD";
+        const actualText = formatSPDate(actualRaw) || "TBD";
+
+        const delayDays = calculateDelayDays(plannedDate, actualDate);
+        const statusInfo = getScheduleStatus(statusRaw, plannedDate, actualDate, delayDays);
+
+        return {
+          index: index + 1,
+          storeName,
+          storeType,
+          plannedDate,
+          actualDate,
+          plannedText,
+          actualText,
+          delayDays,
+          statusInfo
+        };
+      });
+
+      updateScheduleKpis(rows);
+
+      tbody.innerHTML = rows.map(row => {
+        const delayText = getDelayText(row.delayDays, row.statusInfo.key);
+        const timeline = buildTimeline(row.plannedDate, row.actualDate, row.statusInfo.key);
+
         return `
           <tr>
-            <td>${formatValue(field(f, ["StoreName", "Store_x0020_Name", "Store Name", "Title"]))}</td>
-            <td>${formatValue(field(f, ["StoreType", "Store_x0020_Type", "Store Type"]))}</td>
-            <td>${formatValue(field(f, ["PlannedDate", "Planned_x0020_Date", "Planned Date"]))}</td>
-            <td>${formatValue(field(f, ["ActualDate", "Actual_x0020_Date", "Actual Date"]))}</td>
-            <td>${statusBadge(field(f, ["Status"]))}</td>
+            <td>${row.index}</td>
+            <td class="schedule-row-store">${formatValue(row.storeName)}</td>
+            <td><span class="type-pill">${formatValue(row.storeType)}</span></td>
+            <td>${row.plannedText}</td>
+            <td>${row.actualText}</td>
+            <td class="${row.statusInfo.delayClass}">${delayText}</td>
+            <td><span class="status-pill ${row.statusInfo.key}">${row.statusInfo.label}</span></td>
+            <td>${timeline}</td>
           </tr>
         `;
       }).join("");
     }
+
+    function parseDateValue(value) {
+      if (!value) return null;
+
+      const date = new Date(value);
+
+      if (!Number.isNaN(date.getTime())) {
+        return date;
+      }
+
+      return null;
+    }
+
+    function calculateDelayDays(plannedDate, actualDate) {
+      if (!plannedDate || !actualDate) return null;
+
+      const oneDay = 1000 * 60 * 60 * 24;
+      const planned = Date.UTC(plannedDate.getFullYear(), plannedDate.getMonth(), plannedDate.getDate());
+      const actual = Date.UTC(actualDate.getFullYear(), actualDate.getMonth(), actualDate.getDate());
+
+      return Math.round((actual - planned) / oneDay);
+    }
+
+    function getScheduleStatus(statusRaw, plannedDate, actualDate, delayDays) {
+      const status = String(statusRaw || "").toLowerCase();
+
+      if (status.includes("pending") || !actualDate) {
+        return {
+          key: "pending",
+          label: "Pending",
+          delayClass: ""
+        };
+      }
+
+      if (status.includes("complete") || status.includes("done")) {
+        return {
+          key: "ontime",
+          label: "Completed",
+          delayClass: "delay-ontime"
+        };
+      }
+
+      if (delayDays === null) {
+        return {
+          key: "pending",
+          label: "Pending",
+          delayClass: ""
+        };
+      }
+
+      if (delayDays > 0) {
+        return {
+          key: "late",
+          label: "Late",
+          delayClass: "delay-late"
+        };
+      }
+
+      if (delayDays < 0) {
+        return {
+          key: "early",
+          label: "Early",
+          delayClass: "delay-early"
+        };
+      }
+
+      return {
+        key: "ontime",
+        label: "On Time",
+        delayClass: "delay-ontime"
+      };
+    }
+
+    function getDelayText(delayDays, statusKey) {
+      if (statusKey === "pending") return "—";
+      if (delayDays === null) return "—";
+      if (delayDays > 0) return `+${delayDays}d late`;
+      if (delayDays < 0) return `${Math.abs(delayDays)}d early`;
+      return "✓ On Time";
+    }
+
+    function updateScheduleKpis(rows) {
+      const total = rows.length;
+      const completed = rows.filter(r => r.actualDate).length;
+      const pending = rows.filter(r => r.statusInfo.key === "pending").length;
+      const delayed = rows.filter(r => r.statusInfo.key === "late").length;
+      const onTime = rows.filter(r => r.statusInfo.key === "early" || r.statusInfo.key === "ontime").length;
+
+      el("scheduleTotalStores").textContent = total;
+      el("scheduleCompleted").textContent = completed;
+      el("scheduleOnTime").textContent = onTime;
+      el("scheduleDelayed").textContent = delayed;
+      el("schedulePending").textContent = pending;
+
+      el("scheduleDateLabel").textContent = `Live Data · ${new Date().toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }).replace(/ /g, "-")}`;
+    }
+
+function buildTimeline(plannedDate, actualDate, statusKey) {
+  if (!plannedDate && !actualDate) {
+    return `<div class="timeline-track"><span style="color:#999; padding-left:8px;">TBD</span></div>`;
+  }
+
+  const baseStart = new Date("2026-01-01");
+  const baseEnd = new Date("2026-12-31");
+  const total = baseEnd - baseStart;
+
+  const plannedPos = plannedDate ? Math.max(0, Math.min(95, ((plannedDate - baseStart) / total) * 100)) : 50;
+  const actualPos = actualDate ? Math.max(0, Math.min(95, ((actualDate - baseStart) / total) * 100)) : plannedPos;
+
+  return `
+    <div class="timeline-track">
+      <div class="timeline-today"></div>
+      <span class="timeline-marker planned" style="left:${plannedPos}%"></span>
+      <span class="timeline-marker actual ${statusKey}" style="left:${actualPos}%"></span>
+    </div>
+  `;
+}
 
     async function loadAllData() {
       try {
