@@ -857,6 +857,103 @@
       overflow: hidden;
     }
 
+      .executive-kpi-grid{
+          display:grid;
+          grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+          gap:18px;
+          margin-bottom:24px;
+      }
+
+      .executive-kpi-card{
+          background:#ffffff;
+          border-radius:18px;
+          padding:26px;
+          text-align:center;
+          border:1px solid #eadfd4;
+          box-shadow:0 8px 20px rgba(0,0,0,0.05);
+      }
+
+      .executive-kpi-value{
+          font-size:42px;
+          font-weight:800;
+          color:#ff8500;
+          margin-bottom:8px;
+      }
+
+      .executive-kpi-value.dark{
+          color:#101010;
+      }
+
+      .executive-kpi-value.green{
+          color:#4cd46f;
+      }
+
+      .executive-kpi-value.orange{
+          color:#ff8500;
+      }
+
+      .executive-kpi-label{
+          font-size:14px;
+          color:#777;
+          letter-spacing:1px;
+          text-transform:uppercase;
+      }
+      .executive-section-header{
+          background:#121212;
+          color:#fff;
+          padding:22px 28px;
+          border-radius:18px 18px 0 0;
+
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+      }
+
+      .executive-header-left{
+          font-size:28px;
+          font-weight:700;
+      }
+
+      .executive-header-right{
+          font-size:14px;
+          opacity:.85;
+      }
+
+            
+      .executive-table-container{
+          background:#fff;
+          border-radius:0 0 18px 18px;
+          overflow:hidden;
+          border:1px solid #eadfd4;
+      }
+
+      .executive-table{
+          width:100%;
+          border-collapse:collapse;
+      }
+
+      .executive-table thead{
+          background:#f7f7f7;
+      }
+
+      .executive-table th{
+          padding:18px;
+          text-align:left;
+          font-size:13px;
+          text-transform:uppercase;
+          letter-spacing:1px;
+          color:#666;
+      }
+
+      .executive-table td{
+          padding:18px;
+          border-top:1px solid #eee;
+          font-size:15px;
+      }
+
+      .executive-table tbody tr:hover{
+          background:#fffaf3;
+      }
   </style>
 </head>
 <body>
@@ -865,7 +962,7 @@
       <h1>Troley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 1.8 2026-05-15</p>
+      <p>version 1.9 2026-05-15</p>
     </div>
 
     <div class="user-section">
@@ -1069,7 +1166,79 @@
     </section>
       
       
-      
+      <div id="costSection" class="tab-section" style="display:none;">
+
+          <!-- KPI CARDS -->
+          <div class="executive-kpi-grid">
+
+              <div class="executive-kpi-card">
+                  <div class="executive-kpi-value" id="costStoresCount">0</div>
+                  <div class="executive-kpi-label">Costed Stores</div>
+              </div>
+
+              <div class="executive-kpi-card">
+                  <div class="executive-kpi-value dark" id="totalPlannedKWD">KWD 0</div>
+                  <div class="executive-kpi-label">Total Planned</div>
+              </div>
+
+              <div class="executive-kpi-card">
+                  <div class="executive-kpi-value green" id="totalActualKWD">KWD 0</div>
+                  <div class="executive-kpi-label">Actual (incl. VO)</div>
+              </div>
+
+              <div class="executive-kpi-card">
+                  <div class="executive-kpi-value orange" id="totalVOKWD">KWD 0</div>
+                  <div class="executive-kpi-label">Variation Orders</div>
+              </div>
+
+              <div class="executive-kpi-card">
+                  <div class="executive-kpi-value green" id="portfolioSaving">KWD 0</div>
+                  <div class="executive-kpi-label">Portfolio Saving</div>
+              </div>
+
+          </div>
+
+          <!-- HEADER -->
+          <div class="executive-section-header">
+
+              <div class="executive-header-left">
+                  💰 Cost Performance — Planned vs Actual
+              </div>
+
+              <div class="executive-header-right">
+                  Portfolio Cost Overview
+              </div>
+
+          </div>
+
+          <!-- TABLE -->
+          <div class="executive-table-container">
+
+              <table class="executive-table">
+
+                  <thead>
+                      <tr>
+                          <th>#</th>
+                          <th>Store Name</th>
+                          <th>Type</th>
+                          <th>m²</th>
+                          <th>Planned</th>
+                          <th>Actual</th>
+                          <th>VO</th>
+                          <th>Total</th>
+                          <th>Variance</th>
+                          <th>CPI</th>
+                      </tr>
+                  </thead>
+
+                  <tbody id="costTableBody">
+                  </tbody>
+
+              </table>
+
+          </div>
+
+      </div>
       
       </section>
     </section>
@@ -1491,31 +1660,68 @@ function normalizeFieldName(name) {
           </article>
         `;
       }).join("");
-    }
-          
+          }
 
-    function renderCost(items) {
-      const tbody = el("costBody");
-      if (!items.length) return renderEmpty(tbody, 9, "No Cost Performance items found.");
-
-      tbody.innerHTML = items.map(item => {
-        const f = item.fields || {};
-        return `
-          <tr>
-            <td>${formatValue(field(f, ["StoreName", "Store_x0020_Name", "Store Name", "Title"]))}</td>
-            <td>${formatValue(field(f, ["StoreType", "Store_x0020_Type", "Store Type"]))}</td>
-            <td>${formatValue(field(f, ["Meter"]))}</td>
-            <td>${formatValue(field(f, ["Planned"]))}</td>
-            <td>${formatValue(field(f, ["Actual"]))}</td>
-            <td>${formatValue(field(f, ["VO"]))}</td>
-            <td>${formatValue(field(f, ["Total"]))}</td>
-            <td>${formatValue(field(f, ["Var"]))}</td>
-            <td>${formatValue(field(f, ["CPI"]))}</td>
-          </tr>
-        `;
-      }).join("");
+    function formatNumber(value) {
+      return Number(value || 0).toLocaleString();
     }
 
+    function formatKWD(value) {
+      return "KWD " + Number(value || 0).toLocaleString();
+    }                
+      function renderCost(items) {
+        const tbody = el("costBody");
+
+        if (!items.length) {
+          tbody.innerHTML = `<tr><td colspan="10" class="empty">No Cost Performance items found.</td></tr>`;
+          return;
+        }
+
+        let totalPlanned = 0;
+        let totalActual = 0;
+        let totalVO = 0;
+        let totalCost = 0;
+
+        tbody.innerHTML = items.map((item, index) => {
+          const f = item.fields || {};
+
+          const storeName = field(f, ["Title", "Store Name"]);
+          const storeType = field(f, ["Store Type"]);
+          const meter = Number(field(f, ["Meter"])) || 0;
+          const planned = Number(field(f, ["Planned"])) || 0;
+          const actual = Number(field(f, ["Actual"])) || 0;
+          const vo = Number(field(f, ["VO"])) || 0;
+          const total = Number(field(f, ["Total"])) || actual + vo;
+          const variance = Number(field(f, ["Var"])) || planned - total;
+          const cpi = Number(field(f, ["CPI"])) || (total ? planned / total : 0);
+
+          totalPlanned += planned;
+          totalActual += actual;
+          totalVO += vo;
+          totalCost += total;
+
+          return `
+            <tr>
+              <td>${index + 1}</td>
+              <td><strong>${formatValue(storeName)}</strong></td>
+              <td><span class="type-pill">${formatValue(storeType)}</span></td>
+              <td>${formatNumber(meter)}</td>
+              <td>${formatKWD(planned)}</td>
+              <td>${formatKWD(actual)}</td>
+              <td>${vo ? formatKWD(vo) : "—"}</td>
+              <td><strong>${formatKWD(total)}</strong></td>
+              <td class="${variance >= 0 ? "cost-good" : "cost-bad"}">${formatKWD(variance)}</td>
+              <td class="${cpi >= 1 ? "cost-good" : "cost-bad"}">${cpi ? cpi.toFixed(2) : "—"}</td>
+            </tr>
+          `;
+        }).join("");
+
+        el("costStoresCount").textContent = items.length;
+        el("totalPlannedKWD").textContent = formatKWD(totalPlanned);
+        el("totalActualKWD").textContent = formatKWD(totalCost);
+        el("totalVOKWD").textContent = formatKWD(totalVO);
+        el("portfolioSaving").textContent = formatKWD(totalPlanned - totalCost);
+      }
     function renderSchedule(items) {
       const tbody = el("scheduleBody");
 
@@ -1727,6 +1933,111 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       }
     }
 
+
+    async function loadCostPerformance(){
+
+        const endpoint = `
+    https://${SHAREPOINT_HOSTNAME}${SITE_PATH}/_api/web/lists/getbytitle('${COST_LIST_NAME}')/items
+    ?$top=5000
+    `;
+
+        const response = await fetch(endpoint,{
+            headers:{
+                "Accept":"application/json;odata=verbose",
+                "Authorization":"Bearer " + accessToken
+            }
+        });
+
+        const data = await response.json();
+
+        const items = data.d.results;
+
+        renderCostPerformance(items);
+
+    }
+
+    function formatKWD(value){
+
+        return "KWD " + Number(value).toLocaleString();
+
+    }
+
+    function renderCostPerformance(items){
+
+        const tbody = document.getElementById("costTableBody");
+
+        tbody.innerHTML = "";
+
+        let totalPlanned = 0;
+        let totalActual = 0;
+        let totalVO = 0;
+
+        items.forEach((item,index)=>{
+
+            const planned = Number(item.Planned || 0);
+            const actual = Number(item.Actual || 0);
+            const vo = Number(item.VO || 0);
+            const total = Number(item.Total || 0);
+            const variance = Number(item.Var || 0);
+            const cpi = Number(item.CPI || 0);
+
+            totalPlanned += planned;
+            totalActual += total;
+            totalVO += vo;
+
+            tbody.innerHTML += `
+            <tr>
+
+                <td>${index+1}</td>
+
+                <td>
+                    <strong>${item.Title || "-"}</strong>
+                </td>
+
+                <td>${item["Store_x0020_Type"] || "-"}</td>
+
+                <td>${item.Meter || "-"}</td>
+
+                <td>${formatKWD(planned)}</td>
+
+                <td>${formatKWD(actual)}</td>
+
+                <td>${formatKWD(vo)}</td>
+
+                <td>
+                    <strong>${formatKWD(total)}</strong>
+                </td>
+
+                <td style="color:${variance < 0 ? '#16a34a' : '#ef4444'}">
+                    ${formatKWD(variance)}
+                </td>
+
+                <td style="font-weight:700;color:${cpi >= 1 ? '#16a34a' : '#ef4444'}">
+                    ${cpi}
+                </td>
+
+            </tr>
+            `;
+
+        });
+
+        document.getElementById("costStoresCount").innerText =
+            items.length;
+
+        document.getElementById("totalPlannedKWD").innerText =
+            formatKWD(totalPlanned);
+
+        document.getElementById("totalActualKWD").innerText =
+            formatKWD(totalActual);
+
+        document.getElementById("totalVOKWD").innerText =
+            formatKWD(totalVO);
+
+        document.getElementById("portfolioSaving").innerText =
+            formatKWD(totalPlanned - totalActual);
+
+    }
+
     function switchTab(tabName) {
       document.querySelectorAll(".dash-tab").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.tab === tabName);
@@ -1736,6 +2047,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       el("costTab").classList.toggle("hidden", tabName !== "cost");
       el("scheduleTab").classList.toggle("hidden", tabName !== "schedule");
     }
+
 
     document.addEventListener("DOMContentLoaded", () => {
       loadConfigFromStorage();
@@ -1750,6 +2062,8 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       document.querySelectorAll(".dash-tab").forEach(btn => {
         btn.addEventListener("click", () => switchTab(btn.dataset.tab));
       });
+    
+    
     });
   </script>
 </body>
