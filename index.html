@@ -359,22 +359,26 @@
     .project-summary-bar {
       display: grid;
       grid-template-columns: 220px 1fr;
-      background: #181818;
-      border-bottom: 4px solid var(--orange);
+      background: linear-gradient(135deg, #151515 0%, #242424 100%);
+      border: 1px solid #2e2e2e;
+      border-bottom: 5px solid var(--orange);
+      border-radius: 18px 18px 0 0;
+      overflow: hidden;
       margin-bottom: 22px;
     }
 
     .summary-item,
     .project-percent-card {
-      padding: 20px;
+      padding: 24px 18px;
       text-align: center;
-      border-right: 1px solid #2d2d2d;
+      border-right: 1px solid rgba(255,255,255,0.08);
     }
 
     .summary-item strong,
     .project-percent-card strong {
       display: block;
-      font-size: 30px;
+      font-size: 34px;
+      line-height: 1;
       color: var(--orange);
     }
 
@@ -385,9 +389,10 @@
     .summary-item span,
     .project-percent-card span {
       display: block;
-      color: #888;
-      font-size: 12px;
-      margin-top: 4px;
+      color: #b9b9b9;
+      font-size: 13px;
+      margin-top: 9px;
+      letter-spacing: 0.3px;
     }
 
     .project-percent-summary {
@@ -799,6 +804,57 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
+      
+      .dashboard-tabs {
+      display: flex;
+      gap: 12px;
+      margin: 26px 0 18px;
+      padding: 8px;
+      background: #ffffff;
+      border: 1px solid #eadfd4;
+      border-radius: 18px;
+      width: fit-content;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+    }
+
+    .dash-tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 130px;
+      justify-content: center;
+      padding: 13px 18px;
+      border-radius: 14px;
+      background: transparent;
+      color: #1f2937;
+      border: 1px solid transparent;
+      font-weight: 800;
+    }
+
+    .dash-tab:hover {
+      background: #fff7ed;
+      color: var(--orange);
+    }
+
+    .dash-tab.active {
+      background: var(--orange);
+      color: white;
+      border-color: var(--orange);
+      box-shadow: 0 8px 20px rgba(255,130,0,0.25);
+    }
+
+    .tab-icon {
+      font-size: 15px;
+    }
+  
+    .dashboard-black-bar {
+      background: linear-gradient(135deg, #151515 0%, #242424 100%);
+      border: 1px solid #2e2e2e;
+      border-bottom: 5px solid var(--orange);
+      border-radius: 18px 18px 0 0;
+      overflow: hidden;
+    }
+
   </style>
 </head>
 <body>
@@ -807,7 +863,7 @@
       <h1>Troley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 1.6 2026-05-15</p>
+      <p>version 1.7 2026-05-15</p>
     </div>
 
     <div class="user-section">
@@ -901,11 +957,22 @@
         </div>
       </div>
 
-      <div class="tabs">
-        <button class="tab active" data-tab="projects">Projects</button>
-        <button class="tab" data-tab="cost">Cost</button>
-        <button class="tab" data-tab="schedule">Schedule</button>
-      </div>
+    <div class="dashboard-tabs">
+      <button class="dash-tab active" data-tab="projects">
+        <span class="tab-icon">📋</span>
+        <span>Projects</span>
+      </button>
+
+      <button class="dash-tab" data-tab="cost">
+        <span class="tab-icon">💰</span>
+        <span>Cost</span>
+      </button>
+
+      <button class="dash-tab" data-tab="schedule">
+        <span class="tab-icon">📅</span>
+        <span>Schedule</span>
+      </button>
+    </div>
 
       <section id="projectsTab" class="section">
         <div class="project-summary-bar">
@@ -1659,7 +1726,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
     }
 
     function switchTab(tabName) {
-      document.querySelectorAll(".tab").forEach(btn => {
+      document.querySelectorAll(".dash-tab").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.tab === tabName);
       });
 
@@ -1678,7 +1745,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       el("saveConfigBtn").addEventListener("click", saveConfig);
       el("loadBtn").addEventListener("click", loadAllData);
 
-      document.querySelectorAll(".tab").forEach(btn => {
+      document.querySelectorAll(".dash-tab").forEach(btn => {
         btn.addEventListener("click", () => switchTab(btn.dataset.tab));
       });
     });
