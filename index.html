@@ -962,7 +962,7 @@
       <h1>Troley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 2.0 2026-05-15</p>
+      <p>version 2.1 2026-05-15</p>
     </div>
 
     <div class="user-section">
@@ -1089,25 +1089,7 @@
         <div id="projectsBody" class="project-list"></div>
       </section>
 
-      <section id="costTab" class="section hidden">
-        <h2>Cost Performance</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Store Name</th>
-              <th>Store Type</th>
-              <th>Meter</th>
-              <th>Planned</th>
-              <th>Actual</th>
-              <th>VO</th>
-              <th>Total</th>
-              <th>Var</th>
-              <th>CPI</th>
-            </tr>
-          </thead>
-          <tbody id="costBody"></tbody>
-        </table>
-      </section>
+
 
     <section id="scheduleTab" class="section hidden">
 
@@ -1166,7 +1148,7 @@
     </section>
       
       
-      <div id="costSection" class="tab-section" style="display:none;">
+      <section id="costTab" class="section hidden">
 
           <!-- KPI CARDS -->
           <div class="executive-kpi-grid">
@@ -1231,14 +1213,14 @@
                       </tr>
                   </thead>
 
-                  <tbody id="costTableBody">
+                  <tbody id="costBody">
                   </tbody>
 
               </table>
 
           </div>
 
-      </div>
+      </section>
       
       </section>
     </section>
@@ -1671,6 +1653,7 @@ function normalizeFieldName(name) {
     }                
       function renderCost(items) {
         const tbody = el("costBody");
+        
 
         if (!items.length) {
           tbody.innerHTML = `<tr><td colspan="10" class="empty">No Cost Performance items found.</td></tr>`;
@@ -1934,110 +1917,13 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
     }
 
 
-    async function loadCostPerformance(){
-
-        const endpoint = `
-    https://${SHAREPOINT_HOSTNAME}${SITE_PATH}/_api/web/lists/getbytitle('${COST_LIST_NAME}')/items
-    ?$top=5000
-    `;
-
-        const response = await fetch(endpoint,{
-            headers:{
-                "Accept":"application/json;odata=verbose",
-                "Authorization":"Bearer " + accessToken
-            }
-        });
-
-        const data = await response.json();
-
-        const items = data.d.results;
-
-        renderCostPerformance(items);
-
-    }
-
     function formatKWD(value){
 
         return "KWD " + Number(value).toLocaleString();
 
     }
 
-    function renderCostPerformance(items){
-
-        const tbody = document.getElementById("costTableBody");
-
-        tbody.innerHTML = "";
-
-        let totalPlanned = 0;
-        let totalActual = 0;
-        let totalVO = 0;
-
-        items.forEach((item,index)=>{
-
-            const planned = Number(item.Planned || 0);
-            const actual = Number(item.Actual || 0);
-            const vo = Number(item.VO || 0);
-            const total = Number(item.Total || 0);
-            const variance = Number(item.Var || 0);
-            const cpi = Number(item.CPI || 0);
-
-            totalPlanned += planned;
-            totalActual += total;
-            totalVO += vo;
-
-            tbody.innerHTML += `
-            <tr>
-
-                <td>${index+1}</td>
-
-                <td>
-                    <strong>${item.Title || "-"}</strong>
-                </td>
-
-                <td>${item["Store_x0020_Type"] || "-"}</td>
-
-                <td>${item.Meter || "-"}</td>
-
-                <td>${formatKWD(planned)}</td>
-
-                <td>${formatKWD(actual)}</td>
-
-                <td>${formatKWD(vo)}</td>
-
-                <td>
-                    <strong>${formatKWD(total)}</strong>
-                </td>
-
-                <td style="color:${variance < 0 ? '#16a34a' : '#ef4444'}">
-                    ${formatKWD(variance)}
-                </td>
-
-                <td style="font-weight:700;color:${cpi >= 1 ? '#16a34a' : '#ef4444'}">
-                    ${cpi}
-                </td>
-
-            </tr>
-            `;
-
-        });
-
-        document.getElementById("costStoresCount").innerText =
-            items.length;
-
-        document.getElementById("totalPlannedKWD").innerText =
-            formatKWD(totalPlanned);
-
-        document.getElementById("totalActualKWD").innerText =
-            formatKWD(totalActual);
-
-        document.getElementById("totalVOKWD").innerText =
-            formatKWD(totalVO);
-
-        document.getElementById("portfolioSaving").innerText =
-            formatKWD(totalPlanned - totalActual);
-
-    }
-
+  
     function switchTab(tabName) {
       document.querySelectorAll(".dash-tab").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.tab === tabName);
