@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trolley BD Dashboard - SharePoint Login</title>
+
+  <!-- MSAL Browser: Microsoft Authentication Library for browser-based apps -->
+  <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --orange: #ff8200;
+      --black: #181818;
+      --bg: #f7f4ef;
+      --card: #ffffff;
+      --border: #e8e1d8;
+      --muted: #6b7280;
+      --green: #18a058;
+      --blue: #2563eb;
+      --red: #b91c1c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--black);
+    }
+
+    header {
+      background: var(--orange);
+      color: white;
+      padding: 18px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.12);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: .5px;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      opacity: .92;
+    }
+
+    .rightbrand p {
+       width: 100%;
+      font-size: 12px;
+      opacity: .92;
+    }
+
+    .user-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      font-size: 13px;
+    }
+  .user-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+  }
+
+  .dev-text {
+    font-size: 10px;
+    color: rgba(255,255,255,0.85);
+    text-align: center;
+    white-space: nowrap;
+}
+
+
+    #userInfo {
+        font-size: 13px;
+        font-weight: 600;
+        color: white;
+    }
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    #lastUpdated {
+  font-size: 15px;
+}
+
+    button:hover { transform: translateY(-1px); }
+
+    .btn-dark { background: var(--black); color: white; }
+    .btn-light { background: white; color: var(--black); }
+    .btn-blue { background: var(--blue); color: white; }
+    .btn-orange { background: var(--orange); color: white; }
+    .btn-red { background: var(--red); color: white; }
+
+    main {
+      max-width: 1250px;
+      margin: 28px auto;
+      padding: 0 18px 40px;
+    }
+
+    #loginBtn,
+    #logoutBtn {
+        margin-top: 4px;
+    }
+
+    .login-card,
+    .config-card,
+    .section,
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.06);
+    }
+
+    .login-card {
+      max-width: 720px;
+      margin: 70px auto;
+      padding: 34px;
+      text-align: center;
+    }
+
+    .login-card h2 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    .login-card p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .warning {
+      margin-top: 18px;
+      padding: 14px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 12px;
+      font-size: 13px;
+      color: #7c2d12;
+      text-align: left;
+    }
+
+    .hidden { display: none !important; }
+
+    .config-card {
+      padding: 22px;
+      margin-bottom: 22px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font-size: 14px;
+      background: white;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      align-items: center;
+    }
+
+    .status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .dot.ok { background: var(--green); }
+    .dot.error { background: var(--red); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin: 24px 0;
+    }
+
+    .stat {
+      background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%);
+      border: 1px solid #eadfd4;
+      border-left: 5px solid var(--orange);
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 118px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+    }
+
+      .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: #fff0df;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      }
+
+      .stat span {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+      }
+
+    .stat strong {
+      display: block;
+      font-size: 30px;
+      line-height: 1.1;
+      color: var(--orange);
+    }
+
+    .stat small {
+      display: block;
+      margin-top: 5px;
+      font-size: 11px;
+      color: #8a8a8a;
+    }
+
+    @media (max-width: 1000px) {
+    .stats {
+    grid-template-columns: repeat(2, 1fr);
+    }
+    }
+
+    @media (max-width: 600px) {
+    .stats {
+    grid-template-columns: 1fr;
+    }
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .tab {
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--black);
+    }
+
+    .tab.active {
+      background: var(--orange);
+      color: white;
+      border-color: var(--orange);
+    }
+
+    .section {
+      padding: 22px;
+      overflow-x: auto;
+    }
+
+    .section h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      letter-spacing: .7px;
+      text-transform: uppercase;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    th, td {
+      padding: 13px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: 13px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #fafafa;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--muted);
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 44px 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge.green { background: #dcfce7; color: #166534; }
+    .badge.blue { background: #dbeafe; color: #1e40af; }
+    .badge.orange { background: #ffedd5; color: #9a3412; }
+    .badge.red { background: #fee2e2; color: #991b1b; }
+
+    @media (max-width: 900px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .grid, .stats { grid-template-columns: 1fr; }
+    }
+
+    .project-summary-bar {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      background: linear-gradient(135deg, #151515 0%, #242424 100%);
+      border: 1px solid #2e2e2e;
+      border-bottom: 5px solid var(--orange);
+      border-radius: 18px 18px 0 0;
+      overflow: hidden;
+      margin-bottom: 22px;
+    }
+
+    .summary-item,
+    .project-percent-card {
+      padding: 24px 18px;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .summary-item strong,
+    .project-percent-card strong {
+      display: block;
+      font-size: 34px;
+      line-height: 1;
+      color: var(--orange);
+    }
+
+    .project-percent-card strong.green { color: #22c55e; }
+    .project-percent-card strong.blue { color: #3b82f6; }
+    .project-percent-card strong.yellow { color: #facc15; }
+
+    .summary-item span,
+    .project-percent-card span {
+      display: block;
+      color: #b9b9b9;
+      font-size: 13px;
+      margin-top: 9px;
+      letter-spacing: 0.3px;
+    }
+
+    .project-percent-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .hint-text {
+      color: #777;
+      font-size: 13px;
+      letter-spacing: 4px;
+      font-weight: 700;
+    }
+
+    .project-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .project-card {
+      background: white;
+      border: 1px solid #eadfd4;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .project-card-main {
+      display: grid;
+      grid-template-columns: 70px 90px 1fr 330px 40px;
+      gap: 16px;
+      align-items: center;
+      padding: 22px;
+    }
+
+    .status-dot-big {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #facc15;
+      margin: auto;
+    }
+
+    .status-dot-big.green { background: #22c55e; }
+    .status-dot-big.blue { background: #3b82f6; }
+    .status-dot-big.red { background: #ef4444; }
+
+    .progress-circle {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 8px solid #eee4d8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #111;
+      flex-direction: column;
+    }
+
+    .progress-circle small {
+      font-size: 10px;
+      font-weight: 400;
+      color: #777;
+    }
+
+    .project-title h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .project-title p {
+      margin: 0 0 8px;
+      color: #777;
+      font-size: 13px;
+    }
+
+    .project-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .project-date-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      text-align: center;
+      gap: 14px;
+    }
+
+    .project-date-grid strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .project-date-grid span {
+      display: block;
+      font-size: 11px;
+      color: #777;
+    }
+
+    .expand-icon {
+      background: #fff3df;
+      color: var(--orange);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    .project-details {
+      display: none;
+      border-top: 3px solid var(--orange);
+      padding: 22px;
+      grid-template-columns: 260px 1fr;
+      gap: 22px;
+    }
+
+    .project-card.expanded .project-details {
+      display: grid;
+    }
+
+    .details-box {
+      border: 1px solid #eadfd4;
+      border-radius: 12px;
+      padding: 16px;
+      background: #fffaf5;
+    }
+
+    .details-box h4 {
+      margin: 0 0 14px;
+      color: var(--orange);
+      letter-spacing: 3px;
+      font-size: 12px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #eadfd4;
+      padding: 8px 0;
+      gap: 10px;
+    }
+
+    .detail-row span {
+      color: #777;
+    }
+
+    .detail-row strong {
+      text-align: right;
+    }
+
+    .notes-box {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #ecfdf5;
+      border-left: 4px solid #22c55e;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .user-section {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-details {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+    }
+
+    .dev-text {
+        font-size: 10px;
+        color: rgba(255,255,255,0.82);
+    }
+
+    .blocker-box {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #fffbeb;
+      border-left: 4px solid var(--orange);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .project-photos h4 {
+      margin: 0 0 14px;
+      color: #777;
+      letter-spacing: 4px;
+      font-size: 12px;
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .photo-placeholder {
+      height: 210px;
+      border-radius: 12px;
+      background: #f3f4f6;
+      display: grid;
+      place-items: center;
+      color: #999;
+      font-weight: 700;
+    }
+
+    .schedule-kpis {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .schedule-kpi {
+      background: #fff;
+      border: 1px solid #eadfd4;
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+    }
+
+    .schedule-kpi strong {
+      display: block;
+      font-size: 28px;
+      color: var(--orange);
+      line-height: 1.1;
+    }
+
+    .schedule-kpi span {
+      display: block;
+      margin-top: 6px;
+      color: #777;
+      font-size: 12px;
+    }
+
+    .schedule-kpi.green strong { color: #22c55e; }
+    .schedule-kpi.blue strong { color: #3b82f6; }
+    .schedule-kpi.red strong { color: #ef4444; }
+    .schedule-kpi.yellow strong { color: #facc15; }
+
+    .schedule-card {
+      border: 1px solid #eadfd4;
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+    }
+
+    .schedule-header {
+      background: var(--orange);
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .schedule-header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .schedule-header span {
+      font-size: 12px;
+      opacity: 0.95;
+    }
+
+    .schedule-table-wrap {
+      overflow-x: auto;
+    }
+
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1050px;
+    }
+
+    .schedule-table th {
+      background: #fff7ed;
+      color: #9a4b00;
+      font-size: 12px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .schedule-table td,
+    .schedule-table th {
+      padding: 12px;
+      border-bottom: 1px solid #eadfd4;
+      font-size: 13px;
+    }
+
+    .schedule-row-store {
+      font-weight: 800;
+    }
+
+    .type-pill,
+    .status-pill {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .type-pill {
+      background: #fff3df;
+      color: #9a4b00;
+    }
+
+    .status-pill.late {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+    }
+
+    .status-pill.early {
+      background: #dcfce7;
+      color: #16a34a;
+      border: 1px solid #86efac;
+    }
+
+    .status-pill.ontime {
+      background: #dbeafe;
+      color: #2563eb;
+      border: 1px solid #93c5fd;
+    }
+
+    .status-pill.pending {
+      background: #ffedd5;
+      color: #ea580c;
+      border: 1px solid #fdba74;
+    }
+
+    .delay-late {
+      color: #ef4444;
+      font-weight: 800;
+    }
+
+    .delay-early {
+      color: #22c55e;
+      font-weight: 800;
+    }
+
+    .delay-ontime {
+      color: #2563eb;
+      font-weight: 800;
+    }
+
+    .timeline-track {
+      position: relative;
+      width: 260px;
+      height: 20px;
+      background: #f1e8dd;
+      border-radius: 5px;
+    }
+
+    .timeline-marker {
+      position: absolute;
+      top: 2px;
+      width: 14px;
+      height: 16px;
+      border-radius: 4px;
+    }
+
+    .timeline-marker.planned {
+      background: transparent;
+      border: 2px solid #f97316;
+    }
+
+    .timeline-marker.actual.late {
+      background: #ef4444;
+    }
+
+    .timeline-marker.actual.early {
+      background: #22c55e;
+    }
+
+    .timeline-marker.actual.ontime {
+      background: #3b82f6;
+    }
+
+    .timeline-marker.actual.pending {
+      background: transparent;
+      border: 2px solid #f59e0b;
+    }
+
+    .timeline-today {
+      position: absolute;
+      top: -2px;
+      bottom: -2px;
+      width: 2px;
+      background: #ef4444;
+      left: 40%;
+    }
+
+    @media (max-width: 1000px) {
+      .schedule-kpis {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+          
+    .dashboard-tabs {
+      display: flex;
+      gap: 12px;
+      margin: 26px auto 24px auto;
+      padding: 10px;
+      background: #ffffff;
+      border: 1px solid #eadfd4;
+      border-radius: 22px;
+      width: fit-content;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    }
+
+    .dash-tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 130px;
+      justify-content: center;
+      padding: 13px 18px;
+      border-radius: 14px;
+      background: transparent;
+      color: #1f2937;
+      border: 1px solid transparent;
+      font-weight: 800;
+    }
+
+    .dash-tab:hover {
+      background: #fff7ed;
+      color: var(--orange);
+    }
+
+    .dash-tab.active {
+      background: var(--orange);
+      color: white;
+      border-color: var(--orange);
+      box-shadow: 0 8px 20px rgba(255,130,0,0.25);
+    }
+
+    .tab-icon {
+      font-size: 15px;
+    }
+  
+    .dashboard-black-bar {
+      background: linear-gradient(135deg, #151515 0%, #242424 100%);
+      border: 1px solid #2e2e2e;
+      border-bottom: 5px solid var(--orange);
+      border-radius: 18px 18px 0 0;
+      overflow: hidden;
+    }
+
+      .executive-kpi-grid{
+          display:grid;
+          grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+          gap:18px;
+          margin-bottom:24px;
+      }
+
+      .executive-kpi-card{
+          background:#ffffff;
+          border-radius:18px;
+          padding:26px;
+          text-align:center;
+          border:1px solid #eadfd4;
+          box-shadow:0 8px 20px rgba(0,0,0,0.05);
+      }
+
+      .executive-kpi-value{
+          font-size:42px;
+          font-weight:800;
+          color:#ff8500;
+          margin-bottom:8px;
+      }
+
+      .executive-kpi-value.dark{
+          color:#101010;
+      }
+
+      .executive-kpi-value.green{
+          color:#4cd46f;
+      }
+
+      .executive-kpi-value.orange{
+          color:#ff8500;
+      }
+
+      .executive-kpi-label{
+          font-size:14px;
+          color:#777;
+          letter-spacing:1px;
+          text-transform:uppercase;
+      }
+      .executive-section-header{
+          background:#121212;
+          color:#fff;
+          padding:22px 28px;
+          border-radius:18px 18px 0 0;
+
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+      }
+
+      .executive-header-left{
+          font-size:28px;
+          font-weight:700;
+      }
+
+      .executive-header-right{
+          font-size:14px;
+          opacity:.85;
+      }
+
+            
+      .executive-table-container{
+          background:#fff;
+          border-radius:0 0 18px 18px;
+          overflow:hidden;
+          border:1px solid #eadfd4;
+      }
+
+      .executive-table{
+          width:100%;
+          border-collapse:collapse;
+      }
+
+      .executive-table thead{
+          background:#f7f7f7;
+      }
+
+      .executive-table th{
+          padding:18px;
+          text-align:left;
+          font-size:13px;
+          text-transform:uppercase;
+          letter-spacing:1px;
+          color:#666;
+      }
+
+      .executive-table td{
+          padding:18px;
+          border-top:1px solid #eee;
+          font-size:15px;
+      }
+
+      .executive-table tbody tr:hover{
+          background:#fffaf3;
+      }
+
+
+
+      .cost-kpis {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+      .cost-kpi {
+        background: #fff;
+        border: 1px solid #eadfd4;
+        border-radius: 12px;
+        padding: 14px 12px;
+        text-align: center;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+      }
+
+      .cost-kpi strong {
+        display: block;
+        font-size: 22px;
+        color: var(--orange);
+        line-height: 1.2;
+        font-weight: 900;
+      }
+
+      .cost-kpi.green strong {
+        color: #22c55e;
+      }
+
+      .cost-kpi.orange strong {
+        color: var(--orange);
+      }
+
+      .cost-kpi span {
+        display: block;
+        margin-top: 5px;
+        font-size: 11px;
+        color: #777;
+      }
+
+      .cost-table-card {
+        border: 1px solid #eadfd4;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+      }
+
+      .cost-table-header {
+        background: var(--orange);
+        color: #fff;
+        padding: 14px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .cost-table-header h2 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 900;
+        letter-spacing: 0;
+      }
+
+      .cost-table-header span {
+        font-size: 11px;
+        opacity: 0.95;
+      }
+
+      .cost-table-wrap {
+        overflow-x: auto;
+      }
+
+      .cost-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1150px;
+      }
+
+      .cost-table th {
+        background: #fff4e6;
+        color: #a34b00;
+        padding: 9px 10px;
+        font-size: 11px;
+        font-weight: 900;
+        text-align: left;
+        border-bottom: 1px solid #eadfd4;
+      }
+
+      .cost-table td {
+        padding: 9px 10px;
+        font-size: 12px;
+        border-bottom: 1px solid #eadfd4;
+      }
+
+      .cost-table tbody tr:hover {
+        background: #fffaf3;
+      }
+
+      .cost-store-name {
+        font-weight: 900;
+      }
+
+      .cost-good {
+        color: #16a34a;
+        font-weight: 900;
+      }
+
+      .cost-bad {
+        color: #ef4444;
+        font-weight: 900;
+      }
+
+      .cost-muted {
+        color: #b8b8b8;
+        font-weight: 700;
+      }
+
+      .cost-bar {
+        width: 120px;
+        height: 8px;
+        background: #efe5d7;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .cost-bar-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: #22c55e;
+      }
+
+      .cost-bar-fill.red {
+        background: #ef4444;
+      }
+
+      .cost-table tfoot td {
+        background: #fff4e6;
+        font-size: 13px;
+        font-weight: 900;
+        border-top: 2px solid var(--orange);
+      }
+
+          .cost-chart-card {
+      border: 1px solid #eadfd4;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+      margin-bottom: 18px;
+      }
+
+      .cost-chart-header {
+      background: #151515;
+      color: #fff;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      }
+
+      .cost-chart-header h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 900;
+      }
+
+      .cost-chart-header span {
+      font-size: 11px;
+      opacity: 0.9;
+      }
+
+      .cost-chart-body {
+      padding: 22px;
+      height: 360px;
+      background: #fffaf5;
+      }
+
+      #costSCurveChart {
+      width: 100% !important;
+      height: 100% !important;
+      }
+
+      @media (max-width: 1000px) {
+        .cost-kpis {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>Troley Business Development Dashboard</h1>
+      <p>Developed by Data Science Department</p>
+       
+      <p>version 2.3 2026-05-15</p>
+    </div>
+
+    <div class="user-section">
+
+        <div class="user-details">
+
+            <button id="loginBtn">Login with Microsoft</button>
+            <button id="logoutBtn" class="hidden">Logout</button>
+
+            <span id="userInfo">Not signed in</span>
+
+        </div>
+
+    </div>
+
+  </header>
+
+  <main>
+    <section id="loginView" class="login-card">
+      <h2>Login Required</h2>
+      <p>
+        This dashboard is designed to be published on GitHub Pages and securely read data
+        from SharePoint Lists using Microsoft Entra ID and Microsoft Graph API.
+      </p>
+      <button id="loginBtnMain" class="btn-orange">Login with Microsoft</button>
+<!-- 
+      <div class="warning">
+        <strong>Important:</strong> Do not collect SharePoint username/password inside HTML.
+        The correct and secure way is Microsoft Login using MSAL. Before publishing, IT/Admin
+        must create an App Registration and replace the placeholders inside this file.
+      </div>
+   
+-->
+ </section>
+    <section id="appView" class="hidden">
+     <div class="config-card hidden">
+        <h2>SharePoint / Microsoft Graph Configuration</h2>
+
+          <input id="tenantId" value="7a553754-2e8d-4a1f-b57a-56d5f9d1cb13" />
+          <input id="clientId" value="718a9b01-633b-4492-83d5-03634ea62d8e" />
+          <input id="hostname" value="trolleykw.sharepoint.com" />
+          <input id="sitePath" value="/sites/BusinessDevelopment" />
+          <input id="projectListName" value="Project Schedule" />
+          <input id="costListName" value="Cost Performance" />
+          <input id="scheduleListName" value="Schedule Performance" />
+          <button id="saveConfigBtn" class="btn-orange">Save Configuration</button>
+          <button id="loadBtn" class="btn-blue">Load SharePoint Data</button>
+          <span class="status-dot">
+            <span id="statusDot" class="dot"></span>
+            <span id="statusText">Waiting</span>
+          </span>
+ 
+ 
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-icon">📋</div>
+          <div>
+            <span>Project Schedule</span>
+            <strong id="totalProjects">0</strong>
+            
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-icon">💰</div>
+          <div>
+            <span>Cost Performance</span>
+            <strong id="totalCost">0</strong>
+             
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-icon">📅</div>
+          <div>
+            <span>Schedule Performance</span>
+            <strong id="totalSchedule">0</strong>
+            
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-icon">⏱️</div>
+          <div>
+            <span>Data Refresh</span>
+            <strong id="lastUpdated">-</strong>
+            
+          </div>
+        </div>
+      </div>
+
+    <div class="dashboard-tabs">
+      <button class="dash-tab active" data-tab="projects">
+        <span class="tab-icon">📋</span>
+        <span>Projects</span>
+      </button>
+
+      <button class="dash-tab" data-tab="cost">
+        <span class="tab-icon">💰</span>
+        <span>Cost</span>
+      </button>
+
+      <button class="dash-tab" data-tab="schedule">
+        <span class="tab-icon">📅</span>
+        <span>Schedule</span>
+      </button>
+    </div>
+
+      <section id="projectsTab" class="section">
+        <div class="project-summary-bar">
+          <div class="summary-item">
+            <strong id="activeProjectsCount">0</strong>
+            <span>Active Projects</span>
+          </div>
+          <div id="projectPercentSummary" class="project-percent-summary"></div>
+        </div>
+
+        <p class="hint-text">
+          CLICK ANY CARD TO EXPAND · CLICK AGAIN TO COLLAPSE
+        </p>
+
+        <div id="projectsBody" class="project-list"></div>
+      </section>
+
+
+
+    <section id="scheduleTab" class="section hidden">
+
+      <div class="schedule-kpis">
+        <div class="schedule-kpi">
+          <strong id="scheduleTotalStores">0</strong>
+          <span>Total Stores</span>
+        </div>
+
+        <div class="schedule-kpi green">
+          <strong id="scheduleCompleted">0</strong>
+          <span>Completed</span>
+        </div>
+
+        <div class="schedule-kpi blue">
+          <strong id="scheduleOnTime">0</strong>
+          <span>On Time / Early</span>
+        </div>
+
+        <div class="schedule-kpi red">
+          <strong id="scheduleDelayed">0</strong>
+          <span>Delayed</span>
+        </div>
+
+        <div class="schedule-kpi yellow">
+          <strong id="schedulePending">0</strong>
+          <span>Pending / TBD</span>
+        </div>
+      </div>
+
+      <div class="schedule-card">
+        <div class="schedule-header">
+          <h2>Schedule Performance — Planned vs Actual</h2>
+          <span id="scheduleDateLabel">Live Data from SharePoint</span>
+        </div>
+
+        <div class="schedule-table-wrap">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Store Name</th>
+                <th>Type</th>
+                <th>Planned Date</th>
+                <th>Actual Date</th>
+                <th>Delay</th>
+                <th>Status</th>
+                <th>Timeline</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+              
+              
+        <section id="costTab" class="section hidden">
+
+          <div class="cost-kpis">
+            <div class="cost-kpi">
+              <strong id="costStoresCount">0</strong>
+              <span>Costed Stores</span>
+            </div>
+
+
+
+            <div class="cost-kpi">
+              <strong id="totalPlannedKWD">KWD 0</strong>
+              <span>Total Planned</span>
+            </div>
+
+            <div class="cost-kpi green">
+              <strong id="totalActualKWD">KWD 0</strong>
+              <span>Actual (incl. VO)</span>
+            </div>
+
+            <div class="cost-kpi orange">
+              <strong id="totalVOKWD">KWD 0</strong>
+              <span>Variation Orders</span>
+            </div>
+
+            <div class="cost-kpi green">
+              <strong id="portfolioSaving">KWD 0</strong>
+              <span>Portfolio Saving</span>
+            </div>
+          </div>
+
+
+        <div class="cost-chart-card">
+          <div class="cost-chart-header">
+            <h2>📈 Cost Performance S-Curve — Planned vs Actual (incl. VO)</h2>
+            <span>Cumulative per store · All values KWD</span>
+          </div>
+
+          <div class="cost-chart-body">
+            <canvas id="costSCurveChart"></canvas>
+          </div>
+        </div>
+
+
+
+          <div class="cost-table-card">
+            <div class="cost-table-header">
+              <h2>💰 Store Cost Summary — All Stores</h2>
+              <span>CPI = Planned ÷ Total · Green = good · Red = over</span>
+            </div>
+
+            <div class="cost-table-wrap">
+              <table class="cost-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Store Name</th>
+                    <th>Type</th>
+                    <th>m²</th>
+                    <th>Planned (KWD)</th>
+                    <th>Actual (KWD)</th>
+                    <th>VO (KWD)</th>
+                    <th>Total A+VO</th>
+                    <th>Variance</th>
+                    <th>CPI</th>
+                    <th>Bar</th>
+                  </tr>
+                </thead>
+
+                <tbody id="costBody"></tbody>
+
+                <tfoot>
+                  <tr>
+                    <td colspan="4">PORTFOLIO TOTAL</td>
+                    <td id="footerPlanned">KWD 0</td>
+                    <td id="footerActual">KWD 0</td>
+                    <td id="footerVO">KWD 0</td>
+                    <td id="footerTotal">KWD 0</td>
+                    <td id="footerVariance">KWD 0</td>
+                    <td id="footerCPI">0.00</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+        </section>
+      
+      </section>
+    </section>
+  </main>
+
+  <script>
+    /*
+      BEFORE USING:
+      1. Create an App Registration in Microsoft Entra ID.
+      2. Platform type: Single-page application (SPA).
+      3. Add redirect URI:
+         - Local testing: http://localhost:5500/index.html
+         - GitHub Pages: https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/
+      4. API Permissions:
+         - Microsoft Graph delegated permission: Sites.Read.All
+         - or Sites.ReadWrite.All if you later need create/update/delete.
+      5. Replace tenantId and clientId below, or fill them on the page and Save Configuration.
+    */
+
+    const GRAPH_BASE = "https://graph.microsoft.com/v1.0";
+
+    const defaultConfig = {
+      tenantId: "7a553754-2e8d-4a1f-b57a-56d5f9d1cb13",
+      clientId: "718a9b01-633b-4492-83d5-03634ea62d8e",
+      hostname: "trolleykw.sharepoint.com",
+      sitePath: "/sites/BusinessDevelopment",
+      projectListName: "Project Schedule",
+      costListName: "Cost Performance",
+      scheduleListName: "Schedule Performance"
+    };
+
+    let msalInstance = null;
+    let activeAccount = null;
+    let costSCurveChart = null;
+    let siteId = null;
+
+    const scopes = ["User.Read", "Sites.Read.All"];
+
+    const el = (id) => document.getElementById(id);
+
+    function setStatus(message, type = "waiting") {
+      el("statusText").textContent = message;
+      el("statusDot").className = "dot";
+      if (type === "ok") el("statusDot").classList.add("ok");
+      if (type === "error") el("statusDot").classList.add("error");
+    }
+
+    function loadConfigFromStorage() {
+      return { ...defaultConfig };
+    }
+
+    function getConfigFromForm() {
+      return { ...defaultConfig };
+    }
+    
+    function saveConfig() {
+      initializeMsal();
+    }
+
+    function initializeMsal() {
+      const config = getConfigFromForm();
+
+      if (!config.tenantId || !config.clientId || config.tenantId.startsWith("REPLACE") || config.clientId.startsWith("REPLACE")) {
+        console.warn("Tenant ID and Client ID are not configured yet.");
+        return false;
+      }
+
+      msalInstance = new msal.PublicClientApplication({
+        auth: {
+          clientId: config.clientId,
+          authority: `https://login.microsoftonline.com/${config.tenantId}`,
+          redirectUri: window.location.origin + window.location.pathname
+        },
+        cache: {
+          cacheLocation: "localStorage",
+          storeAuthStateInCookie: false
+        }
+      });
+
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length > 0) {
+        activeAccount = accounts[0];
+        msalInstance.setActiveAccount(activeAccount);
+        showApp();
+      }
+
+      return true;
+    }
+
+    async function login() {
+      if (!initializeMsal()) {
+        alert("Please enter Tenant ID and Client ID first, then click Save Configuration.");
+        return;
+      }
+
+      try {
+        const response = await msalInstance.loginPopup({ scopes });
+        activeAccount = response.account;
+        msalInstance.setActiveAccount(activeAccount);
+        showApp();
+      } catch (error) {
+        console.error(error);
+        alert("Login failed. Check App Registration, redirect URI, permissions, and popup blocker.");
+      }
+    }
+
+    function logout() {
+      if (!msalInstance) return;
+      msalInstance.logoutPopup({ account: activeAccount });
+    }
+
+    function showApp() {
+      el("loginView").classList.add("hidden");
+      el("appView").classList.remove("hidden");
+      el("loginBtn").classList.add("hidden");
+      el("logoutBtn").classList.remove("hidden");
+      el("userInfo").textContent = activeAccount?.username || activeAccount?.name || "Signed in";
+
+      loadAllData();
+    }
+
+    async function getAccessToken() {
+      if (!msalInstance || !activeAccount) {
+        throw new Error("User is not logged in.");
+      }
+
+      try {
+        const silent = await msalInstance.acquireTokenSilent({
+          scopes,
+          account: activeAccount
+        });
+        return silent.accessToken;
+      } catch (silentError) {
+        const popup = await msalInstance.acquireTokenPopup({ scopes });
+        return popup.accessToken;
+      }
+    }
+
+    async function graphGet(url) {
+      const token = await getAccessToken();
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`${response.status} ${response.statusText}: ${errorText}`);
+      }
+
+      return await response.json();
+    }
+
+    async function getSiteId() {
+      const config = getConfigFromForm();
+
+      if (siteId) return siteId;
+
+      const url = `${GRAPH_BASE}/sites/${config.hostname}:${config.sitePath}`;
+      const site = await graphGet(url);
+      siteId = site.id;
+      return siteId;
+    }
+
+    async function getListItems(listName) {
+      const currentSiteId = await getSiteId();
+
+      /*
+        Microsoft Graph lets us get list items and expand their fields.
+        Spaces in list titles are encoded automatically by encodeURIComponent.
+      */
+      const url = `${GRAPH_BASE}/sites/${currentSiteId}/lists/${encodeURIComponent(listName)}/items?$expand=fields&$top=5000`;
+      const data = await graphGet(url);
+      return data.value || [];
+    }
+
+function normalizeFieldName(name) {
+  return String(name || "")
+    .replace(/_x0020_/gi, " ")
+    .replace(/_x0025_/gi, "%")
+    .replace(/_x002f_/gi, "/")
+    .replace(/[^a-zA-Z0-9%]/g, "")
+    .toLowerCase();
+}
+
+  function field(fields, names) {
+    if (!fields) return "";
+
+    for (const name of names) {
+      if (fields[name] !== undefined && fields[name] !== null && fields[name] !== "") {
+        return fields[name];
+      }
+    }
+
+    const fieldKeys = Object.keys(fields);
+
+    for (const requestedName of names) {
+      const requestedNormalized = normalizeFieldName(requestedName);
+
+      const matchedKey = fieldKeys.find(key =>
+        normalizeFieldName(key) === requestedNormalized
+      );
+
+      if (matchedKey && fields[matchedKey] !== undefined && fields[matchedKey] !== null && fields[matchedKey] !== "") {
+        return fields[matchedKey];
+      }
+    }
+
+    return "";
+  }
+
+    function formatValue(value) {
+      if (value === null || value === undefined || value === "") return "";
+      if (typeof value === "number") return value.toLocaleString();
+      return String(value);
+    }
+
+    function statusBadge(value) {
+      const text = formatValue(value);
+      const lower = text.toLowerCase();
+
+      let cls = "";
+      if (lower.includes("complete") || lower.includes("done")) cls = "green";
+      else if (lower.includes("progress")) cls = "blue";
+      else if (lower.includes("pending") || lower.includes("hold")) cls = "orange";
+      else if (lower.includes("delay") || lower.includes("risk")) cls = "red";
+
+      return `<span class="badge ${cls}">${text || "-"}</span>`;
+    }
+
+    function renderEmpty(tbody, colSpan, message) {
+      tbody.innerHTML = `<tr><td colspan="${colSpan}" class="empty">${message}</td></tr>`;
+    }
+
+      function formatSPDate(value) {
+      if (!value) return "";
+
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+
+      return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }).replace(/ /g, "-");
+    }
+
+
+    function renderProjects(items) {
+      const container = el("projectsBody");
+
+      const activeProjects = items.filter(item => {
+        const f = item.fields || {};
+        console.log("FIELDS:", f);
+        console.log("Project Fields:", f);
+        const status = field(f, ["Status"]);
+        return !String(status).toLowerCase().includes("complete");
+      });
+
+      el("activeProjectsCount").textContent = activeProjects.length;
+
+      el("projectPercentSummary").innerHTML = activeProjects.slice(0, 4).map(item => {
+        const f = item.fields || {};
+/*
+        const activityName = field(f, [
+          "Activity",
+          "Activity Name",
+          "Activity_x0020_Name",
+          "Activity_x0020_Name0",
+          "ActivityName"
+        ]);
+*/
+        const activityName = field(f, ["Activity"]);
+        const meterArea = field(f, ["Meter / Area"]);
+
+        const pctRaw = field(f, ["Progress %"]);
+
+        const pct = Number(String(pctRaw).replace("%", "")) || 0; 
+
+        const activityId = field(f, ["Title"]);
+        
+
+        let cls = "yellow";
+        if (pct >= 90) cls = "green";
+        else if (pct >= 70) cls = "blue";
+
+        return `
+          <div class="project-percent-card">
+            <strong class="${cls}">${pct}%</strong>
+            <span>${formatValue(activityName || activityId)}</span>
+          </div>
+        `;
+      }).join("");
+
+      if (!activeProjects.length) {
+        container.innerHTML = `<div class="empty">No active projects found.</div>`;
+        return;
+      }
+
+      container.innerHTML = activeProjects.map(item => {
+        const f = item.fields || {};
+
+        const activityId = field(f, ["Title"]);
+        const duration = field(f, ["Duration"]);
+        
+      const activityName = field(f, ["Activity"]);
+      const pctRaw = field(f, ["Progress %"]);
+
+      const meterArea = field(f, ["Meter / Area"]);
+
+ 
+      const pct = Number(String(pctRaw).replace("%", "")) || 0;
+
+      const start = formatSPDate(field(f, ["Start"]));
+      const end = formatSPDate(field(f, ["End"]));
+      const actualDate = formatSPDate(field(f, [
+        "ActualDate",
+        "Actual_x0020_Date",
+        "Actual Date"
+      ]));
+
+
+        const status = field(f, ["Status"]);
+        const contractor = field(f, ["Contractor"]);
+        const storeType = field(f, ["Store_x0020_Type", "StoreType"]);
+
+
+
+
+        const stage = field(f, ["Stage"]);
+        const plannedBudget = field(f, ["Planned_x0020_Budget", "PlannedBudget"]);
+        const actualCost = field(f, ["Actual_x0020_Cost", "ActualCost"]);
+        const notes = field(f, ["Notes"]);
+
+        let dotClass = "";
+        if (pct >= 90) dotClass = "green";
+        else if (pct >= 70) dotClass = "blue";
+        else if (String(status).toLowerCase().includes("delay")) dotClass = "red";
+
+        return `
+          <article class="project-card" onclick="this.classList.toggle('expanded')">
+            <div class="project-card-main">
+              <div class="status-dot-big ${dotClass}"></div>
+
+              <div class="progress-circle">
+                ${pct}%
+                <small>done</small>
+              </div>
+
+              <div class="project-title">
+                <h3>${formatValue(activityName || activityId)}</h3>
+                <p>
+                  ${formatValue(stage)}
+                  ${contractor ? " · " + formatValue(contractor) : ""}
+                  ${activityId ? " · " + formatValue(activityId) : ""}
+                </p>
+
+                <div class="project-badges">
+                  <span class="badge orange">${formatValue(status || "No Status")}</span>
+                  <span class="badge">${formatValue(storeType || "Store Type N/A")}</span>
+                  <span class="badge">${formatValue(meterArea || "Meter / Area N/A")}</span>
+                  <span class="badge">${formatValue(duration)} days</span>
+                  <span class="badge">Budget: ${formatValue(plannedBudget)}</span>
+                </div>
+              </div>
+
+              <div class="project-date-grid">
+                <div>
+                  <strong>${formatValue(start)}</strong>
+                  <span>Start</span>
+                </div>
+                <div>
+                  <strong>${formatValue(end)}</strong>
+                  <span>Finish</span>
+                </div>
+                <div>
+                  <strong>${formatValue(actualDate)}</strong>
+                  <span>Actual</span>
+                </div>
+              </div>
+
+              <div class="expand-icon">▼</div>
+            </div>
+
+            <div class="project-details">
+              <div>
+                <div class="details-box">
+                  <h4>PROJECT DETAILS</h4>
+                  <div class="detail-row"><span>Activity ID</span><strong>${formatValue(activityId)}</strong></div>
+                  <div class="detail-row"><span>Activity Name</span><strong>${formatValue(activityName)}</strong></div>
+                  <div class="detail-row"><span>Contractor</span><strong>${formatValue(contractor)}</strong></div>
+                  <div class="detail-row"><span>Store Type</span><strong>${formatValue(storeType)}</strong></div>
+                  <div class="detail-row"><span>Meter / Area</span><strong>${formatValue(meterArea)}</strong></div>
+                  <div class="detail-row"><span>Duration</span><strong>${formatValue(duration)} days</strong></div>
+                  <div class="detail-row"><span>Stage</span><strong>${formatValue(stage)}</strong></div>
+                  <div class="detail-row"><span>Progress</span><strong>${pct}%</strong></div>
+                  <div class="detail-row"><span>Planned Budget</span><strong>${formatValue(plannedBudget)}</strong></div>
+                  <div class="detail-row"><span>Actual Cost</span><strong>${formatValue(actualCost)}</strong></div>
+                  <div class="detail-row"><span>Status</span><strong>${formatValue(status)}</strong></div>
+                </div>
+
+                <div class="notes-box">
+                  <strong>SITE NOTES</strong><br>
+                  ${formatValue(notes || "No notes available")}
+                </div>
+              </div>
+
+              <div class="project-photos">
+                <h4>SITE PHOTOS — ${formatValue(activityName || activityId)}</h4>
+                <div class="photos-grid">
+                  <div class="photo-placeholder">Attachment / Photo 1</div>
+                  <div class="photo-placeholder">Attachment / Photo 2</div>
+                  <div class="photo-placeholder">Attachment / Photo 3</div>
+                </div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+          }
+
+    function formatNumber(value) {
+      return Number(value || 0).toLocaleString();
+    }
+
+    function formatKWD(value) {
+      return "KWD " + Number(value || 0).toLocaleString();
+    }                
+      
+
+    function renderCostSCurveChart(rows) {
+        const canvas = document.getElementById("costSCurveChart");
+        if (!canvas) return;
+
+        let plannedCum = 0;
+        let actualCum = 0;
+
+        const labels = ["Start"];
+        const plannedData = [0];
+        const actualData = [0];
+
+        rows.forEach(row => {
+          plannedCum += row.planned;
+          actualCum += row.total;
+
+          labels.push(row.shortName);
+          plannedData.push(plannedCum);
+          actualData.push(actualCum);
+        });
+
+        labels.push("Total");
+        plannedData.push(plannedCum);
+        actualData.push(actualCum);
+
+        if (costSCurveChart) {
+          costSCurveChart.destroy();
+        }
+
+        costSCurveChart = new Chart(canvas, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Planned Cumulative",
+                data: plannedData,
+                borderColor: "#ff8200",
+                backgroundColor: "rgba(255,130,0,0.10)",
+                borderWidth: 4,
+                tension: 0.25,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                fill: true
+              },
+              {
+                label: "Actual + VO Cumulative",
+                data: actualData,
+                borderColor: "#2563eb",
+                backgroundColor: "rgba(37,99,235,0.08)",
+                borderWidth: 4,
+                tension: 0.25,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                fill: false
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  usePointStyle: true,
+                  boxWidth: 10,
+                  font: {
+                    size: 12,
+                    weight: "bold"
+                  }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.dataset.label}: ${formatKWD(context.raw)}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: value => "KWD " + Number(value).toLocaleString()
+                },
+                grid: {
+                  color: "#efe3d5"
+                }
+              },
+              x: {
+                grid: {
+                  color: "#f3eadf"
+                },
+                ticks: {
+                  maxRotation: 45,
+                  minRotation: 35
+                }
+              }
+            }
+          }
+        });
+      }
+
+    function renderCost(items) {
+        const tbody = el("costBody");
+
+        if (!items.length) {
+          tbody.innerHTML = `<tr><td colspan="11" class="empty">No Cost Performance items found.</td></tr>`;
+          return;
+        }
+
+        let totalPlanned = 0;
+        let totalActual = 0;
+        let totalVO = 0;
+        let totalCost = 0;
+        
+        const chartRows = [];
+
+        tbody.innerHTML = items.map((item, index) => {
+          const f = item.fields || {};
+
+          const storeName = field(f, ["Title", "Store Name"]);
+          const storeType = field(f, ["Store Type"]);
+          const meter = Number(field(f, ["Meter"])) || 0;
+          const planned = Number(field(f, ["Planned"])) || 0;
+          const actual = Number(field(f, ["Actual"])) || 0;
+          const vo = Number(field(f, ["VO"])) || 0;
+          const total = Number(field(f, ["Total"])) || actual + vo;
+          const variance = Number(field(f, ["Var"])) || planned - total;
+          const cpi = Number(field(f, ["CPI"])) || (total ? planned / total : 0);
+
+          totalPlanned += planned;
+          totalActual += actual;
+          totalVO += vo;
+          totalCost += total;
+
+          const cpiWidth = Math.min(100, Math.max(5, cpi * 55));
+          const barClass = cpi >= 1 ? "" : "red";
+          chartRows.push({
+            shortName: String(storeName || "").split(" ")[0],
+            planned,
+            total
+          });            
+          return `
+            <tr>
+              <td>${index + 1}</td>
+              <td class="cost-store-name">${formatValue(storeName)}</td>
+              <td><span class="type-pill">${formatValue(storeType)}</span></td>
+              <td>${formatNumber(meter)}</td>
+              <td>${formatNumber(planned)}</td>
+              <td>${formatNumber(actual)}</td>
+              <td>${vo ? formatNumber(vo) : "—"}</td>
+              <td><strong>${formatNumber(total)}</strong></td>
+              <td class="${variance >= 0 ? "cost-good" : "cost-bad"}">${formatNumber(variance)}</td>
+              <td class="${cpi >= 1 ? "cost-good" : "cost-bad"}">${cpi ? cpi.toFixed(2) : "—"}</td>
+              <td>
+                <div class="cost-bar">
+                  <div class="cost-bar-fill ${barClass}" style="width:${cpiWidth}%"></div>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
+
+        const saving = totalPlanned - totalCost;
+        const portfolioCPI = totalCost ? totalPlanned / totalCost : 0;
+
+        el("costStoresCount").textContent = items.length;
+        el("totalPlannedKWD").textContent = formatKWD(totalPlanned);
+        el("totalActualKWD").textContent = formatKWD(totalCost);
+        el("totalVOKWD").textContent = formatKWD(totalVO);
+        el("portfolioSaving").textContent = formatKWD(saving);
+
+        el("footerPlanned").textContent = formatKWD(totalPlanned);
+        el("footerActual").textContent = formatKWD(totalActual);
+        el("footerVO").textContent = formatKWD(totalVO);
+        el("footerTotal").textContent = formatKWD(totalCost);
+        el("footerVariance").textContent = formatKWD(saving);
+        el("footerVariance").className = saving >= 0 ? "cost-good" : "cost-bad";
+        el("footerCPI").textContent = portfolioCPI.toFixed(2);
+        el("footerCPI").className = portfolioCPI >= 1 ? "cost-good" : "cost-bad";
+        renderCostSCurveChart(chartRows);
+      }
+
+
+    function renderSchedule(items) {
+      const tbody = el("scheduleBody");
+
+      if (!items.length) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty">No Schedule Performance items found.</td></tr>`;
+        return;
+      }
+
+      const rows = items.map((item, index) => {
+        const f = item.fields || {};
+
+        const storeName = field(f, ["Title", "Store Name"]);
+        const storeType = field(f, ["Store Type"]);
+        const plannedRaw = field(f, ["Planned Date"]);
+        const actualRaw = field(f, ["Actual Date"]);
+        const statusRaw = field(f, ["Status"]);
+
+        const plannedDate = parseDateValue(plannedRaw);
+        const actualDate = parseDateValue(actualRaw);
+
+        const plannedText = formatSPDate(plannedRaw) || "TBD";
+        const actualText = formatSPDate(actualRaw) || "TBD";
+
+        const delayDays = calculateDelayDays(plannedDate, actualDate);
+        const statusInfo = getScheduleStatus(statusRaw, plannedDate, actualDate, delayDays);
+
+        return {
+          index: index + 1,
+          storeName,
+          storeType,
+          plannedDate,
+          actualDate,
+          plannedText,
+          actualText,
+          delayDays,
+          statusInfo
+        };
+      });
+
+      updateScheduleKpis(rows);
+
+      tbody.innerHTML = rows.map(row => {
+        const delayText = getDelayText(row.delayDays, row.statusInfo.key);
+        const timeline = buildTimeline(row.plannedDate, row.actualDate, row.statusInfo.key);
+
+        return `
+          <tr>
+            <td>${row.index}</td>
+            <td class="schedule-row-store">${formatValue(row.storeName)}</td>
+            <td><span class="type-pill">${formatValue(row.storeType)}</span></td>
+            <td>${row.plannedText}</td>
+            <td>${row.actualText}</td>
+            <td class="${row.statusInfo.delayClass}">${delayText}</td>
+            <td><span class="status-pill ${row.statusInfo.key}">${row.statusInfo.label}</span></td>
+            <td>${timeline}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function parseDateValue(value) {
+      if (!value) return null;
+
+      const date = new Date(value);
+
+      if (!Number.isNaN(date.getTime())) {
+        return date;
+      }
+
+      return null;
+    }
+
+    function calculateDelayDays(plannedDate, actualDate) {
+      if (!plannedDate || !actualDate) return null;
+
+      const oneDay = 1000 * 60 * 60 * 24;
+      const planned = Date.UTC(plannedDate.getFullYear(), plannedDate.getMonth(), plannedDate.getDate());
+      const actual = Date.UTC(actualDate.getFullYear(), actualDate.getMonth(), actualDate.getDate());
+
+      return Math.round((actual - planned) / oneDay);
+    }
+
+    function getScheduleStatus(statusRaw, plannedDate, actualDate, delayDays) {
+      const status = String(statusRaw || "").toLowerCase();
+
+      if (status.includes("pending") || !actualDate) {
+        return {
+          key: "pending",
+          label: "Pending",
+          delayClass: ""
+        };
+      }
+
+      if (status.includes("complete") || status.includes("done")) {
+        return {
+          key: "ontime",
+          label: "Completed",
+          delayClass: "delay-ontime"
+        };
+      }
+
+      if (delayDays === null) {
+        return {
+          key: "pending",
+          label: "Pending",
+          delayClass: ""
+        };
+      }
+
+      if (delayDays > 0) {
+        return {
+          key: "late",
+          label: "Late",
+          delayClass: "delay-late"
+        };
+      }
+
+      if (delayDays < 0) {
+        return {
+          key: "early",
+          label: "Early",
+          delayClass: "delay-early"
+        };
+      }
+
+      return {
+        key: "ontime",
+        label: "On Time",
+        delayClass: "delay-ontime"
+      };
+    }
+
+    function getDelayText(delayDays, statusKey) {
+      if (statusKey === "pending") return "—";
+      if (delayDays === null) return "—";
+      if (delayDays > 0) return `+${delayDays}d late`;
+      if (delayDays < 0) return `${Math.abs(delayDays)}d early`;
+      return "✓ On Time";
+    }
+
+    function updateScheduleKpis(rows) {
+      const total = rows.length;
+      const completed = rows.filter(r => r.actualDate).length;
+      const pending = rows.filter(r => r.statusInfo.key === "pending").length;
+      const delayed = rows.filter(r => r.statusInfo.key === "late").length;
+      const onTime = rows.filter(r => r.statusInfo.key === "early" || r.statusInfo.key === "ontime").length;
+
+      el("scheduleTotalStores").textContent = total;
+      el("scheduleCompleted").textContent = completed;
+      el("scheduleOnTime").textContent = onTime;
+      el("scheduleDelayed").textContent = delayed;
+      el("schedulePending").textContent = pending;
+
+      el("scheduleDateLabel").textContent = `Live Data · ${new Date().toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }).replace(/ /g, "-")}`;
+    }
+
+function buildTimeline(plannedDate, actualDate, statusKey) {
+  if (!plannedDate && !actualDate) {
+    return `<div class="timeline-track"><span style="color:#999; padding-left:8px;">TBD</span></div>`;
+  }
+
+  const baseStart = new Date("2026-01-01");
+  const baseEnd = new Date("2026-12-31");
+  const total = baseEnd - baseStart;
+
+  const plannedPos = plannedDate ? Math.max(0, Math.min(95, ((plannedDate - baseStart) / total) * 100)) : 50;
+  const actualPos = actualDate ? Math.max(0, Math.min(95, ((actualDate - baseStart) / total) * 100)) : plannedPos;
+
+  return `
+    <div class="timeline-track">
+      <div class="timeline-today"></div>
+      <span class="timeline-marker planned" style="left:${plannedPos}%"></span>
+      <span class="timeline-marker actual ${statusKey}" style="left:${actualPos}%"></span>
+    </div>
+  `;
+}
+
+    async function loadAllData() {
+      try {
+        setStatus("Loading SharePoint data...");
+        siteId = null;
+
+        const config = getConfigFromForm();
+
+        const [projects, cost, schedule] = await Promise.all([
+          getListItems(config.projectListName),
+          getListItems(config.costListName),
+          getListItems(config.scheduleListName)
+        ]);
+
+        renderProjects(projects);
+        renderCost(cost);
+        renderSchedule(schedule);
+
+        el("totalProjects").textContent = projects.length;
+        el("totalCost").textContent = cost.length;
+        el("totalSchedule").textContent = schedule.length;
+        el("lastUpdated").textContent = new Date().toLocaleString();
+
+        setStatus("Connected and data loaded", "ok");
+      } catch (error) {
+        console.error(error);
+        setStatus("Error loading data", "error");
+        alert("Error loading SharePoint data. Check console for details. Most common issues: permissions, wrong list name, wrong internal fields, or missing admin consent.");
+      }
+    }
+
+
+    function formatKWD(value){
+
+        return "KWD " + Number(value).toLocaleString();
+
+    }
+
+  
+    function switchTab(tabName) {
+      document.querySelectorAll(".dash-tab").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tabName);
+      });
+
+      el("projectsTab").classList.toggle("hidden", tabName !== "projects");
+      el("costTab").classList.toggle("hidden", tabName !== "cost");
+      el("scheduleTab").classList.toggle("hidden", tabName !== "schedule");
+    }
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadConfigFromStorage();
+      initializeMsal();
+
+      el("loginBtn").addEventListener("click", login);
+      el("loginBtnMain").addEventListener("click", login);
+      el("logoutBtn").addEventListener("click", logout);
+      el("saveConfigBtn").addEventListener("click", saveConfig);
+      el("loadBtn").addEventListener("click", loadAllData);
+
+      document.querySelectorAll(".dash-tab").forEach(btn => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+      });
+    
+    
+    });
+  </script>
+</body>
+</html>
