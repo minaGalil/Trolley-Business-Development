@@ -193,6 +193,26 @@
       box-shadow: 0 14px 32px rgba(0,0,0,0.08);
     }
 
+    .coming-soon-card{
+        max-width:900px;
+        margin:40px auto;
+        background:#fff;
+        border-radius:24px;
+        padding:60px;
+        text-align:center;
+        box-shadow:0 10px 30px rgba(0,0,0,.08);
+    }
+
+    .coming-soon-card h2{
+        color:#ff8500;
+        margin-bottom:15px;
+    }
+
+    .coming-soon-card p{
+        color:#666;
+        font-size:18px;
+    }
+
     .main-tab {
       min-width: 210px;
       padding: 15px 22px;
@@ -1356,7 +1376,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 3.3 2026-06-11</p>
+      <p>version 3.4 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -1412,43 +1432,7 @@
  
       </div>
 
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-icon">📋</div>
-          <div>
-            <span>Project Schedule</span>
-            <strong id="totalProjects">0</strong>
-            
-          </div>
-        </div>
 
-        <div class="stat">
-          <div class="stat-icon">💰</div>
-          <div>
-            <span>Cost Performance</span>
-            <strong id="totalCost">0</strong>
-             
-          </div>
-        </div>
-
-        <div class="stat">
-          <div class="stat-icon">📅</div>
-          <div>
-            <span>Schedule Performance</span>
-            <strong id="totalSchedule">0</strong>
-            
-          </div>
-        </div>
-
-        <div class="stat">
-          <div class="stat-icon">⏱️</div>
-          <div>
-            <span>Data Refresh</span>
-            <strong id="lastUpdated">-</strong>
-            
-          </div>
-        </div>
-      </div>
  
 
     <div class="main-tabs">
@@ -1466,30 +1450,75 @@
     </div>
 
     <section id="realestateMainTab" class="main-tab-content hidden">
-      <div class="placeholder-card">
-        <h2>Real Estate</h2>
-        <p>This section will be added later.</p>
+
+      <div class="sub-tabs">
+          <button class="sub-tab active">🇰🇼 Kuwait</button>
+          <button class="sub-tab">🇸🇦 KSA</button>
       </div>
+
+      <div class="coming-soon-card">
+          <h2>🏢 Real Estate</h2>
+          <p>This section will be added later.</p>
+      </div>
+
     </section>
 
 <section id="constructionMainTab" class="main-tab-content">
 
-  <div class="dashboard-tabs">
-    <button class="dash-tab active" data-tab="projects">
-      <span class="tab-icon">📋</span>
-      <span>Projects</span>
-    </button>
+    <div class="dashboard-tabs">
+      <button class="dash-tab active" data-tab="projects">
+        <span class="tab-icon">📋</span>
+        <span>Projects</span>
+      </button>
 
-    <button class="dash-tab" data-tab="cost">
-      <span class="tab-icon">💰</span>
-      <span>Cost</span>
-    </button>
+      <button class="dash-tab" data-tab="cost">
+        <span class="tab-icon">💰</span>
+        <span>Cost</span>
+      </button>
 
-    <button class="dash-tab" data-tab="schedule">
-      <span class="tab-icon">📅</span>
-      <span>Schedule</span>
-    </button>
-  </div>
+      <button class="dash-tab" data-tab="schedule">
+        <span class="tab-icon">📅</span>
+        <span>Schedule</span>
+      </button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-icon">📋</div>
+        <div>
+          <span>Project Schedule</span>
+          <strong id="totalProjects">0</strong>
+          
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-icon">💰</div>
+        <div>
+          <span>Cost Performance</span>
+          <strong id="totalCost">0</strong>
+            
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-icon">📅</div>
+        <div>
+          <span>Schedule Performance</span>
+          <strong id="totalSchedule">0</strong>
+          
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-icon">⏱️</div>
+        <div>
+          <span>Data Refresh</span>
+          <strong id="lastUpdated">-</strong>
+          
+        </div>
+      </div>
+    </div>
 
   <!-- Projects section here -->
       <section id="projectsTab" class="section">
