@@ -1356,7 +1356,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 2.7 2026-06-11</p>
+      <p>version 2.8 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -2577,11 +2577,18 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         try {
           const config = getConfigFromForm();
 
-          const openingExcelRows = await getExcelTableRows(
+          const rows  = await getExcelTableRows(
             config.storeOpeningDrivePath,
             config.storeOpeningTableName
+
           );
 
+          console.log("STORE OPENING ROWS");
+          console.log(rows);
+          console.log(rows[0]);
+          console.log(rows[0].values);
+
+          
           const openingRows = normalizeOpeningRows(openingExcelRows);
           renderOpening(openingRows);
 
