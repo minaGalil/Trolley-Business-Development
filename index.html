@@ -163,6 +163,28 @@
       margin-bottom: 22px;
     }
 
+
+
+    .country-cards{
+          display:flex;
+          justify-content:center;
+          gap:25px;
+          margin-top:30px;
+      }
+
+      .country-card{
+          width:220px;
+          background:#fafafa;
+          border:1px solid #eee;
+          border-radius:20px;
+          padding:30px;
+          text-align:center;
+      }
+
+      .country-card .flag{
+          font-size:40px;
+          margin-bottom:10px;
+      }
     .grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(180px, 1fr));
@@ -1376,7 +1398,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 3.4 2026-06-11</p>
+      <p>version 3.5 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -1456,10 +1478,27 @@
           <button class="sub-tab">🇸🇦 KSA</button>
       </div>
 
-      <div class="coming-soon-card">
-          <h2>🏢 Real Estate</h2>
-          <p>This section will be added later.</p>
-      </div>
+        <div class="coming-soon-card">
+
+            <h2>🏢 Real Estate</h2>
+
+            <div class="country-cards">
+
+                <div class="country-card">
+                    <div class="flag">🇰🇼</div>
+                    <h3>Kuwait</h3>
+                    <p>Coming Soon</p>
+                </div>
+
+                <div class="country-card">
+                    <div class="flag">🇸🇦</div>
+                    <h3>KSA</h3>
+                    <p>Coming Soon</p>
+                </div>
+
+            </div>
+
+        </div>
 
     </section>
 
