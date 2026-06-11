@@ -1439,6 +1439,298 @@
       height: 100% !important;
       }
 
+
+
+      .opening-gantt-legend {
+        display: flex;
+        justify-content: flex-end;
+        gap: 18px;
+        margin-bottom: 18px;.opening-gantt-legend {
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+  margin-bottom: 18px;
+  font-size: 11px;
+  color: #666;
+  flex-wrap: wrap;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.legend-dot.start { background: #ff8200; }
+.legend-dot.estimate { background: #2563eb; }
+.legend-dot.actual { background: #22c55e; }
+.legend-dot.overdue { background: #ef4444; }
+.legend-dot.pending { background: #f59e0b; }
+
+.opening-gantt-row {
+  display: grid;
+  grid-template-columns: 280px 1fr 105px;
+  gap: 18px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #eadfd4;
+}
+
+.opening-store-info strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.opening-store-info span {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #777;
+}
+
+.opening-store-info small {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #999;
+}
+
+.opening-timeline {
+  position: relative;
+  height: 34px;
+  background: #f1e8dd;
+  border-radius: 999px;
+  overflow: visible;
+}
+
+.opening-plan-bar {
+  position: absolute;
+  top: 9px;
+  height: 16px;
+  border-radius: 999px;
+  background: #f59e0b;
+}
+
+.opening-plan-bar.ontime,
+.opening-plan-bar.early {
+  background: #22c55e;
+}
+
+.opening-plan-bar.overdue {
+  background: #ef4444;
+}
+
+.opening-plan-bar.pending {
+  background: #f59e0b;
+}
+
+.date-marker {
+  position: absolute;
+  top: 4px;
+  width: 2px;
+  height: 26px;
+}
+
+.date-marker span {
+  position: absolute;
+  top: -18px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.marker-start {
+  background: #ff8200;
+}
+
+.marker-start span {
+  color: #ff8200;
+}
+
+.marker-estimate {
+  background: #2563eb;
+}
+
+.marker-estimate span {
+  color: #2563eb;
+}
+
+.marker-actual {
+  background: #22c55e;
+}
+
+.marker-actual span {
+  color: #22c55e;
+}
+
+.opening-status-pill {
+  text-align: center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.opening-status-pill.ontime,
+.opening-status-pill.early {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.opening-status-pill.overdue {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.opening-status-pill.pending {
+  background: #ffedd5;
+  color: #ea580c;
+}
+        font-size: 11px;
+        color: #666;
+        flex-wrap: wrap;
+      }
+
+      .legend-dot {
+        display: inline-block;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        margin-right: 6px;
+      }
+
+      .legend-dot.start { background: #ff8200; }
+      .legend-dot.estimate { background: #2563eb; }
+      .legend-dot.actual { background: #22c55e; }
+      .legend-dot.overdue { background: #ef4444; }
+      .legend-dot.pending { background: #f59e0b; }
+
+      .opening-gantt-row {
+        display: grid;
+        grid-template-columns: 280px 1fr 105px;
+        gap: 18px;
+        align-items: center;
+        padding: 14px 0;
+        border-bottom: 1px solid #eadfd4;
+      }
+
+      .opening-store-info strong {
+        display: block;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .opening-store-info span {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+        color: #777;
+      }
+
+      .opening-store-info small {
+        display: block;
+        margin-top: 4px;
+        font-size: 11px;
+        color: #999;
+      }
+
+      .opening-timeline {
+        position: relative;
+        height: 34px;
+        background: #f1e8dd;
+        border-radius: 999px;
+        overflow: visible;
+      }
+
+      .opening-plan-bar {
+        position: absolute;
+        top: 9px;
+        height: 16px;
+        border-radius: 999px;
+        background: #f59e0b;
+      }
+
+      .opening-plan-bar.ontime,
+      .opening-plan-bar.early {
+        background: #22c55e;
+      }
+
+      .opening-plan-bar.overdue {
+        background: #ef4444;
+      }
+
+      .opening-plan-bar.pending {
+        background: #f59e0b;
+      }
+
+      .date-marker {
+        position: absolute;
+        top: 4px;
+        width: 2px;
+        height: 26px;
+      }
+
+      .date-marker span {
+        position: absolute;
+        top: -18px;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .marker-start {
+        background: #ff8200;
+      }
+
+      .marker-start span {
+        color: #ff8200;
+      }
+
+      .marker-estimate {
+        background: #2563eb;
+      }
+
+      .marker-estimate span {
+        color: #2563eb;
+      }
+
+      .marker-actual {
+        background: #22c55e;
+      }
+
+      .marker-actual span {
+        color: #22c55e;
+      }
+
+      .opening-status-pill {
+        text-align: center;
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .opening-status-pill.ontime,
+      .opening-status-pill.early {
+        background: #dcfce7;
+        color: #16a34a;
+      }
+
+      .opening-status-pill.overdue {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      .opening-status-pill.pending {
+        background: #ffedd5;
+        color: #ea580c;
+      }
+
       @media (max-width: 1000px) {
         .cost-kpis {
           grid-template-columns: repeat(2, 1fr);
@@ -1453,7 +1745,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 3.6 2026-06-11</p>
+      <p>version 3.7 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -2804,40 +3096,127 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         `).join("");
       }
 
-        function renderOpeningGantt(rows) {
-          const container = el("openingGantt");
+      function renderOpeningGantt(rows) {
+        const container = el("openingGantt");
 
-          const baseStart = new Date("2026-01-01");
-          const baseEnd = new Date("2026-12-31");
-          const totalRange = baseEnd - baseStart;
+        const validDates = rows.flatMap(row => [
+          parseDateValue(row.startingDate),
+          parseDateValue(row.estimatedOpeningDate),
+          parseDateValue(row.actualOpeningDate)
+        ]).filter(Boolean);
 
-          container.innerHTML = rows.map(row => {
+        const baseStart = validDates.length
+          ? new Date(Math.min(...validDates.map(d => d.getTime())))
+          : new Date("2026-01-01");
+
+        const baseEnd = validDates.length
+          ? new Date(Math.max(...validDates.map(d => d.getTime())))
+          : new Date("2026-12-31");
+
+        baseStart.setDate(baseStart.getDate() - 15);
+        baseEnd.setDate(baseEnd.getDate() + 30);
+
+        const totalRange = baseEnd - baseStart;
+
+        container.innerHTML = `
+          <div class="opening-gantt-legend">
+            <span><b class="legend-dot start"></b> Starting Date</span>
+            <span><b class="legend-dot estimate"></b> Estimated Opening</span>
+            <span><b class="legend-dot actual"></b> Actual Opening</span>
+            <span><b class="legend-dot overdue"></b> Overdue</span>
+            <span><b class="legend-dot pending"></b> Pending</span>
+          </div>
+
+          ${rows.map(row => {
             const startDate = parseDateValue(row.startingDate);
-            const endDate =
-              parseDateValue(row.estimatedOpeningDate) ||
-              parseDateValue(row.actualOpeningDate);
+            const estimatedDate = parseDateValue(row.estimatedOpeningDate);
+            const actualDate = parseDateValue(row.actualOpeningDate);
 
-            const left = startDate ? Math.max(0, ((startDate - baseStart) / totalRange) * 100) : 0;
-            const width = startDate && endDate ? Math.max(4, ((endDate - startDate) / totalRange) * 100) : 6;
+            const today = new Date();
 
-            const phase = String(row.currentPhase || "").toLowerCase();
-            const cls = phase.includes("opened") ? "opened" : "pending";
+            let statusKey = "pending";
+            let statusLabel = "Pending";
+
+            if (actualDate && estimatedDate) {
+              const diff = calculateDelayDays(estimatedDate, actualDate);
+
+              if (diff > 0) {
+                statusKey = "overdue";
+                statusLabel = `Late +${diff}d`;
+              } else if (diff < 0) {
+                statusKey = "early";
+                statusLabel = `Early ${Math.abs(diff)}d`;
+              } else {
+                statusKey = "ontime";
+                statusLabel = "On Time";
+              }
+            } else if (!actualDate && estimatedDate && today > estimatedDate) {
+              statusKey = "overdue";
+              statusLabel = "Overdue";
+            } else if (!actualDate) {
+              statusKey = "pending";
+              statusLabel = "Pending";
+            }
+
+            const startPos = dateToPercent(startDate, baseStart, totalRange);
+            const estimatedPos = dateToPercent(estimatedDate, baseStart, totalRange);
+            const actualPos = dateToPercent(actualDate, baseStart, totalRange);
+
+            const barStart = startPos;
+            const barEnd = actualDate ? actualPos : estimatedPos;
+            const width = Math.max(3, barEnd - barStart);
 
             return `
-              <div class="gantt-row">
-                <div class="gantt-store">
-                  ${formatValue(row.storeName)}
-                  <small>${formatValue(row.storeCode)} · ${formatValue(row.storeType)}</small>
+              <div class="opening-gantt-row">
+
+                <div class="opening-store-info">
+                  <strong>${formatValue(row.storeName)}</strong>
+                  <span>${formatValue(row.storeType)} · ${formatValue(row.currentPhase || "No Phase")}</span>
+                  <small>${formatValue(row.storeCode)} · ${formatValue(row.blockerDelay || "")}</small>
                 </div>
 
-                <div class="gantt-track">
-                  <div class="gantt-bar ${cls}" style="left:${left}%; width:${width}%"></div>
+                <div class="opening-timeline">
+
+                  <div class="opening-plan-bar ${statusKey}" style="left:${barStart}%; width:${width}%"></div>
+
+                  ${startDate ? `
+                    <div class="date-marker marker-start" style="left:${startPos}%">
+                      <span>${formatSPDate(startDate)}</span>
+                    </div>
+                  ` : ""}
+
+                  ${estimatedDate ? `
+                    <div class="date-marker marker-estimate" style="left:${estimatedPos}%">
+                      <span>${formatSPDate(estimatedDate)}</span>
+                    </div>
+                  ` : ""}
+
+                  ${actualDate ? `
+                    <div class="date-marker marker-actual" style="left:${actualPos}%">
+                      <span>${formatSPDate(actualDate)}</span>
+                    </div>
+                  ` : ""}
+
                 </div>
+
+                <div class="opening-status-pill ${statusKey}">
+                  ${statusLabel}
+                </div>
+
               </div>
             `;
-          }).join("");
-        }
+          }).join("")}
+        `;
+      }
 
+      function dateToPercent(date, baseStart, totalRange) {
+        if (!date || !totalRange) return 0;
+
+        return Math.max(
+          0,
+          Math.min(96, ((date - baseStart) / totalRange) * 100)
+        );
+      }
 
         function renderOpeningTable(rows) {
           const tbody = el("openingTableBody");
