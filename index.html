@@ -1356,7 +1356,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 2.6 2026-06-11</p>
+      <p>version 2.7 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -1746,7 +1746,7 @@
         costListName: "Cost Performance",
         scheduleListName: "Schedule Performance",
 
-        storeOpeningDrivePath: "/Shared Documents/Store Opening/Development Department - Store Opening Workflow.xlsx",
+        storeOpeningDrivePath: "/Store Opening/Development Department - Store Opening Workflow.xlsx",
         storeOpeningTableName: "StoreOpeningPlan"
       };
 
@@ -2614,23 +2614,31 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
           }
         }
 
-      async function getExcelTableRows(filePath, tableName) {
-        const currentSiteId = await getSiteId();
+        async function getExcelTableRows(filePath, tableName) {
+          const currentSiteId = await getSiteId();
 
-        const encodedPath = filePath
-          .split("/")
-          .map(part => encodeURIComponent(part))
-          .join("/");
+          const cleanPath = filePath.startsWith("/") ? filePath : "/" + filePath;
 
-        const driveItemUrl = `${GRAPH_BASE}/sites/${currentSiteId}/drive/root:${encodedPath}`;
-        const driveItem = await graphGet(driveItemUrl);
+          const driveItemUrl =
+            `${GRAPH_BASE}/sites/${currentSiteId}/drive/root:${cleanPath}`;
 
-        const rowsUrl = `${GRAPH_BASE}/sites/${currentSiteId}/drive/items/${driveItem.id}/workbook/tables/${tableName}/rows`;
-        const rowsData = await graphGet(rowsUrl);
+          console.log("Excel DriveItem URL:", driveItemUrl);
 
-        return rowsData.value || [];
-      }
+          const driveItem = await graphGet(driveItemUrl);
 
+          console.log("Excel DriveItem:", driveItem);
+
+          const rowsUrl =
+            `${GRAPH_BASE}/sites/${currentSiteId}/drive/items/${driveItem.id}/workbook/tables/${tableName}/rows`;
+
+          console.log("Excel Rows URL:", rowsUrl);
+
+          const rowsData = await graphGet(rowsUrl);
+
+          console.log("Excel Rows:", rowsData);
+
+          return rowsData.value || [];
+        }
 
       function normalizeOpeningRows(excelRows) {
         const headers = [
