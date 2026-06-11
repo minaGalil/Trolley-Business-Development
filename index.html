@@ -215,6 +215,136 @@
       box-shadow: 0 8px 22px rgba(255,130,0,0.28);
     }
 
+        .opening-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .opening-kpi {
+      background: #fff;
+      border: 1px solid #eadfd4;
+      border-left: 5px solid var(--orange);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+    }
+
+    .opening-kpi strong {
+      display: block;
+      font-size: 26px;
+      color: var(--orange);
+    }
+
+    .opening-kpi span {
+      display: block;
+      margin-top: 5px;
+      font-size: 12px;
+      color: #777;
+    }
+
+    .opening-card {
+      background: #fff;
+      border: 1px solid #eadfd4;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+    }
+
+    .opening-header {
+      background: #151515;
+      color: #fff;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .opening-header h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .opening-header span {
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .opening-gantt {
+      padding: 18px;
+      overflow-x: auto;
+    }
+
+    .gantt-row {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .gantt-store {
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .gantt-track {
+      position: relative;
+      height: 28px;
+      background: #f1e8dd;
+      border-radius: 999px;
+      min-width: 700px;
+    }
+
+    .gantt-bar {
+      position: absolute;
+      top: 5px;
+      height: 18px;
+      border-radius: 999px;
+      background: var(--orange);
+    }
+
+    .gantt-bar.opened {
+      background: #22c55e;
+    }
+
+    .gantt-bar.pending {
+      background: #f59e0b;
+    }
+
+    .gantt-label {
+      position: absolute;
+      top: -18px;
+      font-size: 10px;
+      color: #777;
+    }
+
+    .opening-table-wrap {
+      overflow-x: auto;
+    }
+
+    .opening-table {
+      width: 100%;
+      min-width: 1300px;
+      border-collapse: collapse;
+    }
+
+    .opening-table th {
+      background: #fff4e6;
+      color: #a34b00;
+      padding: 9px 10px;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .opening-table td {
+      padding: 9px 10px;
+      font-size: 12px;
+      border-bottom: 1px solid #eadfd4;
+    }
+
     .dashboard-tabs {
       display: flex;
       gap: 12px;
@@ -1226,7 +1356,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 2.4 2026-06-11</p>
+      <p>version 2.5 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -1258,7 +1388,6 @@
         The correct and secure way is Microsoft Login using MSAL. Before publishing, IT/Admin
         must create an App Registration and replace the placeholders inside this file.
       </div>
-   
 -->
  </section>
     <section id="appView" class="hidden">
@@ -1397,10 +1526,48 @@
 
 
       <section id="openingMainTab" class="main-tab-content hidden">
-        <div class="placeholder-card">
-          <h2>Store's Opening</h2>
-          <p>This section will be added later.</p>
+
+        <div class="opening-kpis" id="openingKpis"></div>
+
+        <div class="opening-card">
+          <div class="opening-header">
+            <h2>🏪 Store Opening Plan — Gantt View</h2>
+            <span>Live Data from Excel / SharePoint</span>
+          </div>
+
+          <div id="openingGantt" class="opening-gantt"></div>
         </div>
+
+        <div class="opening-card">
+          <div class="opening-header">
+            <h2>📋 Store Opening Data Table</h2>
+            <span>Opening Plan Details</span>
+          </div>
+
+          <div class="opening-table-wrap">
+            <table class="opening-table">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Month</th>
+                  <th>Company</th>
+                  <th>Store Code</th>
+                  <th>Store Name</th>
+                  <th>Store Size</th>
+                  <th>Store Type</th>
+                  <th>Starting Date</th>
+                  <th>Estimated Opening</th>
+                  <th>Handover Date</th>
+                  <th>Current Phase</th>
+                  <th>Blocker / Delay</th>
+                  <th>Actual Opening</th>
+                </tr>
+              </thead>
+              <tbody id="openingTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
       </section>
 
     <section id="scheduleTab" class="section hidden">
@@ -1576,7 +1743,11 @@
       sitePath: "/sites/BusinessDevelopment",
       projectListName: "Project Schedule",
       costListName: "Cost Performance",
-      scheduleListName: "Schedule Performance"
+      scheduleListName: "Schedule Performance",
+      
+      storeOpeningDrivePath: "/Shared Documents/Store Opening/Development Department - Store Opening Workflow.xlsx",
+      storeOpeningTableName: "StoreOpeningPlan"
+
     };
 
     let msalInstance = null;
@@ -2355,15 +2526,19 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
         const config = getConfigFromForm();
 
-        const [projects, cost, schedule] = await Promise.all([
+        const [projects, cost, schedule, openingExcelRows] = await Promise.all([
           getListItems(config.projectListName),
           getListItems(config.costListName),
-          getListItems(config.scheduleListName)
+          getListItems(config.scheduleListName),
+          getExcelTableRows(config.storeOpeningDrivePath, config.storeOpeningTableName)
         ]);
+
+        const openingRows = normalizeOpeningRows(openingExcelRows);
 
         renderProjects(projects);
         renderCost(cost);
         renderSchedule(schedule);
+        renderOpening(openingRows);
 
         el("totalProjects").textContent = projects.length;
         el("totalCost").textContent = cost.length;
@@ -2406,6 +2581,133 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       el("openingMainTab").classList.toggle("hidden", tabName !== "opening");
     }
 
+      async function getExcelTableRows(filePath, tableName) {
+        const currentSiteId = await getSiteId();
+
+        const encodedPath = filePath
+          .split("/")
+          .map(part => encodeURIComponent(part))
+          .join("/");
+
+        const driveItemUrl = `${GRAPH_BASE}/sites/${currentSiteId}/drive/root:${encodedPath}`;
+        const driveItem = await graphGet(driveItemUrl);
+
+        const rowsUrl = `${GRAPH_BASE}/sites/${currentSiteId}/drive/items/${driveItem.id}/workbook/tables/${tableName}/rows`;
+        const rowsData = await graphGet(rowsUrl);
+
+        return rowsData.value || [];
+      }
+
+
+      function normalizeOpeningRows(excelRows) {
+        const headers = [
+          "Year",
+          "Month",
+          "Company",
+          "Store Code",
+          "Store Name",
+          "Store Size",
+          "Store Type",
+          "Starting date",
+          "Estimated Opening Date",
+          "Handover to merchandising Date",
+          "Current Phase",
+          "Blocker or Delay",
+          "Actual Opening Date"
+        ];
+
+        return excelRows.map(row => {
+          const values = row.values[0];
+          const obj = {};
+
+          headers.forEach((header, index) => {
+            obj[header] = values[index] ?? "";
+          });
+
+          return obj;
+        });
+      }
+
+      function renderOpening(rows) {
+        renderOpeningKpis(rows);
+        renderOpeningGantt(rows);
+        renderOpeningTable(rows);
+      }
+
+      function renderOpeningKpis(rows) {
+        const container = el("openingKpis");
+
+        const grouped = {};
+
+        rows.forEach(row => {
+          const month = Number(row["Month"]);
+          const quarter = month <= 3 ? "Q1" : month <= 6 ? "Q2" : month <= 9 ? "Q3" : "Q4";
+          const phase = row["Current Phase"] || "No Phase";
+          const key = `${quarter} · ${phase}`;
+
+          grouped[key] = (grouped[key] || 0) + 1;
+        });
+
+        container.innerHTML = Object.entries(grouped).map(([key, count]) => `
+          <div class="opening-kpi">
+            <strong>${count}</strong>
+            <span>${key}</span>
+          </div>
+        `).join("");
+      }
+
+      function renderOpeningGantt(rows) {
+        const container = el("openingGantt");
+
+        const baseStart = new Date("2026-01-01");
+        const baseEnd = new Date("2026-12-31");
+        const totalRange = baseEnd - baseStart;
+
+        container.innerHTML = rows.map(row => {
+          const storeName = row["Store Name"] || "-";
+          const startDate = parseDateValue(row["Starting date"]);
+          const endDate = parseDateValue(row["Estimated Opening Date"]) || parseDateValue(row["Actual Opening Date"]);
+          const phase = String(row["Current Phase"] || "").toLowerCase();
+
+          const left = startDate ? Math.max(0, ((startDate - baseStart) / totalRange) * 100) : 0;
+          const width = startDate && endDate ? Math.max(3, ((endDate - startDate) / totalRange) * 100) : 5;
+
+          const cls = phase.includes("opened") ? "opened" : "pending";
+
+          return `
+            <div class="gantt-row">
+              <div class="gantt-store">${formatValue(storeName)}</div>
+              <div class="gantt-track">
+                <span class="gantt-label" style="left:${left}%">${formatSPDate(startDate)}</span>
+                <div class="gantt-bar ${cls}" style="left:${left}%; width:${width}%"></div>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+
+      function renderOpeningTable(rows) {
+        const tbody = el("openingTableBody");
+
+        tbody.innerHTML = rows.map(row => `
+          <tr>
+            <td>${formatValue(row["Year"])}</td>
+            <td>${formatValue(row["Month"])}</td>
+            <td>${formatValue(row["Company"])}</td>
+            <td>${formatValue(row["Store Code"])}</td>
+            <td><strong>${formatValue(row["Store Name"])}</strong></td>
+            <td>${formatValue(row["Store Size"])}</td>
+            <td>${formatValue(row["Store Type"])}</td>
+            <td>${formatSPDate(row["Starting date"])}</td>
+            <td>${formatSPDate(row["Estimated Opening Date"])}</td>
+            <td>${formatSPDate(row["Handover to merchandising Date"])}</td>
+            <td>${formatValue(row["Current Phase"])}</td>
+            <td>${formatValue(row["Blocker or Delay"])}</td>
+            <td>${formatSPDate(row["Actual Opening Date"])}</td>
+          </tr>
+        `).join("");
+      }
 
     document.addEventListener("DOMContentLoaded", () => {
       loadConfigFromStorage();
