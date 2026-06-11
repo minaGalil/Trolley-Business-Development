@@ -179,78 +179,6 @@
       margin-bottom: 6px;
     }
 
-    .main-tabs {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 14px;
-      margin: 28px auto 20px auto;
-      padding: 10px;
-      background: #ffffff;
-      border: 1px solid #eadfd4;
-      border-radius: 24px;
-      width: fit-content;
-      box-shadow: 0 14px 32px rgba(0,0,0,0.08);
-    }
-
-    .main-tab {
-      min-width: 210px;
-      padding: 15px 22px;
-      border-radius: 16px;
-      background: transparent;
-      color: #1f2937;
-      font-weight: 900;
-      font-size: 15px;
-      border: 1px solid transparent;
-    }
-
-    .main-tab:hover {
-      background: #fff7ed;
-      color: var(--orange);
-    }
-
-    .main-tab.active {
-      background: var(--orange);
-      color: white;
-      box-shadow: 0 8px 22px rgba(255,130,0,0.28);
-    }
-
-    .dashboard-tabs {
-      display: flex;
-      gap: 12px;
-      margin: 18px auto 26px auto;
-      padding: 9px;
-      background: #ffffff;
-      border: 1px solid #eadfd4;
-      border-radius: 20px;
-      width: fit-content;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 10px 26px rgba(0,0,0,0.06);
-    }
-
-    .placeholder-card {
-      background: #ffffff;
-      border: 1px solid #eadfd4;
-      border-radius: 18px;
-      padding: 40px;
-      text-align: center;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.06);
-    }
-
-    @media (max-width: 900px) {
-      .main-tabs,
-      .dashboard-tabs {
-        width: 100%;
-        flex-direction: column;
-      }
-
-      .main-tab,
-      .dash-tab {
-        width: 100%;
-      }
-    }
-
     input {
       width: 100%;
       border: 1px solid var(--border);
@@ -1226,7 +1154,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 2.4 2026-06-11</p>
+      <p>version 2.3 2026-05-15</p>
     </div>
 
     <div class="user-section">
@@ -1319,47 +1247,6 @@
           </div>
         </div>
       </div>
-<!-- 
-    <div class="dashboard-tabs">
-      <button class="dash-tab active" data-tab="projects">
-        <span class="tab-icon">📋</span>
-        <span>Projects</span>
-      </button>
-
-      <button class="dash-tab" data-tab="cost">
-        <span class="tab-icon">💰</span>
-        <span>Cost</span>
-      </button>
-
-      <button class="dash-tab" data-tab="schedule">
-        <span class="tab-icon">📅</span>
-        <span>Schedule</span>
-      </button>
-    </div>
-  -->
-
-    <div class="main-tabs">
-    <button class="main-tab" data-main-tab="realestate">
-      <span>🏢</span> Real Estate
-    </button>
-
-    <button class="main-tab active" data-main-tab="construction">
-      <span>🏗️</span> Construction & Fit-out
-    </button>
-
-    <button class="main-tab" data-main-tab="opening">
-      <span>🏪</span> Store's Opening
-    </button>
-  </div>
-
-    <section id="realestateMainTab" class="main-tab-content hidden">
-      <div class="placeholder-card">
-        <h2>Real Estate</h2>
-        <p>This section will be added later.</p>
-      </div>
-    </section>
-
-  <section id="constructionMainTab" class="main-tab-content">
 
     <div class="dashboard-tabs">
       <button class="dash-tab active" data-tab="projects">
@@ -1377,7 +1264,6 @@
         <span>Schedule</span>
       </button>
     </div>
-
 
       <section id="projectsTab" class="section">
         <div class="project-summary-bar">
@@ -1396,12 +1282,6 @@
       </section>
 
 
-      <section id="openingMainTab" class="main-tab-content hidden">
-        <div class="placeholder-card">
-          <h2>Store's Opening</h2>
-          <p>This section will be added later.</p>
-        </div>
-      </section>
 
     <section id="scheduleTab" class="section hidden">
 
@@ -2396,16 +2276,6 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       el("scheduleTab").classList.toggle("hidden", tabName !== "schedule");
     }
 
-    function switchMainTab(tabName) {
-      document.querySelectorAll(".main-tab").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.mainTab === tabName);
-      });
-
-      el("realestateMainTab").classList.toggle("hidden", tabName !== "realestate");
-      el("constructionMainTab").classList.toggle("hidden", tabName !== "construction");
-      el("openingMainTab").classList.toggle("hidden", tabName !== "opening");
-    }
-
 
     document.addEventListener("DOMContentLoaded", () => {
       loadConfigFromStorage();
@@ -2419,10 +2289,6 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
       document.querySelectorAll(".dash-tab").forEach(btn => {
         btn.addEventListener("click", () => switchTab(btn.dataset.tab));
-      });
-
-      document.querySelectorAll(".main-tab").forEach(btn => {
-        btn.addEventListener("click", () => switchMainTab(btn.dataset.mainTab));
       });
     
     
