@@ -1356,7 +1356,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 3.2 2026-06-11</p>
+      <p>version 3.3 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -2564,39 +2564,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
     let openingDataLoaded = false;
 
-    
-    async function loadStoreOpeningData() {
-      if (openingDataLoaded) return;
-
-      try {
-        const config = getConfigFromForm();
-
-        const rows = await getExcelTableRows(
-          config.storeOpeningDrivePath,
-          config.storeOpeningTableName
-        );
-
-        console.log("STORE OPENING RAW ROWS:", rows);
-
-        const openingRows = normalizeOpeningRows(rows);
-
-        console.log("STORE OPENING NORMALIZED ROWS:", openingRows);
-
-        renderOpening(openingRows);
-
-        openingDataLoaded = true;
-
-      } catch (error) {
-        console.error("Store Opening Error:", error);
-
-        el("openingKpis").innerHTML = `
-          <div class="opening-kpi">
-            <strong>!</strong>
-            <span>Unable to load Store Opening Excel file</span>
-          </div>
-        `;
-      }
-    }
+     
 
         function switchMainTab(tabName) {
           document.querySelectorAll(".main-tab").forEach(btn => {
@@ -2761,34 +2729,40 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
 
 
+ 
 
-        async function loadStoreOpeningData() {
-          try {
-            const config = getConfigFromForm();
+    async function loadStoreOpeningData() {
+      if (openingDataLoaded) return;
 
-            const openingExcelRows = await getExcelTableRows(
-              config.storeOpeningDrivePath,
-              config.storeOpeningTableName
-            );
+      try {
+        const config = getConfigFromForm();
 
-            const openingRows = normalizeOpeningRows(rows);
+        const rows = await getExcelTableRows(
+          config.storeOpeningDrivePath,
+          config.storeOpeningTableName
+        );
 
-            console.log("Normalized Store Opening Rows:", openingRows);
+        console.log("STORE OPENING RAW ROWS:", rows);
 
-            renderOpening(openingRows);
+        const openingRows = normalizeOpeningRows(rows);
 
-          } catch (error) {
-            console.error("Store Opening Error:", error);
+        console.log("STORE OPENING NORMALIZED ROWS:", openingRows);
 
-            el("openingKpis").innerHTML = `
-              <div class="opening-kpi">
-                <strong>!</strong>
-                <span>Unable to load Store Opening Excel file</span>
-              </div>
-            `;
-          }
-        }
+        renderOpening(openingRows);
 
+        openingDataLoaded = true;
+
+      } catch (error) {
+        console.error("Store Opening Error:", error);
+
+        el("openingKpis").innerHTML = `
+          <div class="opening-kpi">
+            <strong>!</strong>
+            <span>Unable to load Store Opening Excel file</span>
+          </div>
+        `;
+      }
+    }
 
 
     document.addEventListener("DOMContentLoaded", () => {
