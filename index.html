@@ -181,6 +181,61 @@
           text-align:center;
       }
 
+
+      .country-cards{
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    margin-top:35px;
+    flex-wrap:wrap;
+}
+
+.country-card{
+    width:260px;
+    background:#ffffff;
+    border:1px solid #ece5dc;
+    border-radius:22px;
+    padding:35px 25px;
+    text-align:center;
+    transition:all .3s ease;
+    cursor:pointer;
+}
+
+.country-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.country-flag{
+    font-size:42px;
+    margin-bottom:12px;
+}
+
+.country-name{
+    font-size:20px;
+    font-weight:700;
+    color:#1d2b44;
+    margin-bottom:12px;
+}
+
+.country-status{
+    display:inline-block;
+    background:#fff3e6;
+    color:#ff8500;
+    padding:8px 18px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.coming-soon-subtitle{
+    margin-top:10px;
+    margin-bottom:10px;
+    color:#666;
+    font-size:16px;
+}
+
+
       .country-card .flag{
           font-size:40px;
           margin-bottom:10px;
@@ -216,13 +271,13 @@
     }
 
     .coming-soon-card{
-        max-width:900px;
+        max-width:1000px;
         margin:40px auto;
         background:#fff;
-        border-radius:24px;
+        border-radius:28px;
         padding:60px;
         text-align:center;
-        box-shadow:0 10px 30px rgba(0,0,0,.08);
+        box-shadow:0 10px 30px rgba(0,0,0,.06);
     }
 
     .coming-soon-card h2{
@@ -1398,7 +1453,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 3.5 2026-06-11</p>
+      <p>version 3.6 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -1473,33 +1528,46 @@
 
     <section id="realestateMainTab" class="main-tab-content hidden">
 
-      <div class="sub-tabs">
-          <button class="sub-tab active">🇰🇼 Kuwait</button>
-          <button class="sub-tab">🇸🇦 KSA</button>
-      </div>
+    <div class="coming-soon-card">
 
-        <div class="coming-soon-card">
+        <h2>🏢 Real Estate Portfolio</h2>
 
-            <h2>🏢 Real Estate</h2>
+        <p class="coming-soon-subtitle">
+            Select a country to view future Real Estate dashboards
+        </p>
 
-            <div class="country-cards">
+        <div class="country-cards">
 
-                <div class="country-card">
-                    <div class="flag">🇰🇼</div>
-                    <h3>Kuwait</h3>
-                    <p>Coming Soon</p>
+            <div class="country-card">
+
+                <div class="country-flag">🇰🇼</div>
+
+                <div class="country-name">Kuwait</div>
+
+                <div class="country-status">
+                    Coming Soon
                 </div>
 
-                <div class="country-card">
-                    <div class="flag">🇸🇦</div>
-                    <h3>KSA</h3>
-                    <p>Coming Soon</p>
+            </div>
+
+            <div class="country-card">
+
+                <div class="country-flag">🇸🇦</div>
+
+                <div class="country-name">Kingdom of Saudi Arabia</div>
+
+                <div class="country-status">
+                    Coming Soon
                 </div>
 
             </div>
 
         </div>
 
+    </div>
+
+
+      
     </section>
 
 <section id="constructionMainTab" class="main-tab-content">
