@@ -1356,7 +1356,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 2.5 2026-06-11</p>
+      <p>version 2.6 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -1736,19 +1736,19 @@
 
     const GRAPH_BASE = "https://graph.microsoft.com/v1.0";
 
-    const defaultConfig = {
-      tenantId: "7a553754-2e8d-4a1f-b57a-56d5f9d1cb13",
-      clientId: "718a9b01-633b-4492-83d5-03634ea62d8e",
-      hostname: "trolleykw.sharepoint.com",
-      sitePath: "/sites/BusinessDevelopment",
-      projectListName: "Project Schedule",
-      costListName: "Cost Performance",
-      scheduleListName: "Schedule Performance",
-      
-      storeOpeningDrivePath: "/Shared Documents/Store Opening/Development Department - Store Opening Workflow.xlsx",
-      storeOpeningTableName: "StoreOpeningPlan"
+      const defaultConfig = {
+        tenantId: "7a553754-2e8d-4a1f-b57a-56d5f9d1cb13",
+        clientId: "718a9b01-633b-4492-83d5-03634ea62d8e",
+        hostname: "trolleykw.sharepoint.com",
+        sitePath: "/sites/BusinessDevelopment",
 
-    };
+        projectListName: "Project Schedule",
+        costListName: "Cost Performance",
+        scheduleListName: "Schedule Performance",
+
+        storeOpeningDrivePath: "/Shared Documents/Store Opening/Development Department - Store Opening Workflow.xlsx",
+        storeOpeningTableName: "StoreOpeningPlan"
+      };
 
     let msalInstance = null;
     let activeAccount = null;
@@ -2526,19 +2526,16 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
         const config = getConfigFromForm();
 
-        const [projects, cost, schedule, openingExcelRows] = await Promise.all([
+        const [projects, cost, schedule] = await Promise.all([
           getListItems(config.projectListName),
           getListItems(config.costListName),
-          getListItems(config.scheduleListName),
-          getExcelTableRows(config.storeOpeningDrivePath, config.storeOpeningTableName)
+          getListItems(config.scheduleListName)
         ]);
-
-        const openingRows = normalizeOpeningRows(openingExcelRows);
 
         renderProjects(projects);
         renderCost(cost);
         renderSchedule(schedule);
-        renderOpening(openingRows);
+        
 
         el("totalProjects").textContent = projects.length;
         el("totalCost").textContent = cost.length;
@@ -2571,15 +2568,51 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       el("scheduleTab").classList.toggle("hidden", tabName !== "schedule");
     }
 
-    function switchMainTab(tabName) {
-      document.querySelectorAll(".main-tab").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.mainTab === tabName);
-      });
 
-      el("realestateMainTab").classList.toggle("hidden", tabName !== "realestate");
-      el("constructionMainTab").classList.toggle("hidden", tabName !== "construction");
-      el("openingMainTab").classList.toggle("hidden", tabName !== "opening");
-    }
+    let openingDataLoaded = false;
+
+      async function loadStoreOpeningData() {
+        if (openingDataLoaded) return;
+
+        try {
+          const config = getConfigFromForm();
+
+          const openingExcelRows = await getExcelTableRows(
+            config.storeOpeningDrivePath,
+            config.storeOpeningTableName
+          );
+
+          const openingRows = normalizeOpeningRows(openingExcelRows);
+          renderOpening(openingRows);
+
+          openingDataLoaded = true;
+
+        } catch (error) {
+          console.error("Store Opening Error:", error);
+
+          el("openingKpis").innerHTML = `
+            <div class="opening-kpi">
+              <strong>!</strong>
+              <span>Unable to load Store Opening Excel file</span>
+            </div>
+          `;
+        }
+      }
+
+
+        function switchMainTab(tabName) {
+          document.querySelectorAll(".main-tab").forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.mainTab === tabName);
+          });
+
+          el("realestateMainTab").classList.toggle("hidden", tabName !== "realestate");
+          el("constructionMainTab").classList.toggle("hidden", tabName !== "construction");
+          el("openingMainTab").classList.toggle("hidden", tabName !== "opening");
+
+          if (tabName === "opening") {
+            loadStoreOpeningData();
+          }
+        }
 
       async function getExcelTableRows(filePath, tableName) {
         const currentSiteId = await getSiteId();
@@ -2708,7 +2741,29 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
           </tr>
         `).join("");
       }
+      async function loadStoreOpeningData() {
+        try {
+          const config = getConfigFromForm();
 
+          const openingExcelRows = await getExcelTableRows(
+            config.storeOpeningDrivePath,
+            config.storeOpeningTableName
+          );
+
+          const openingRows = normalizeOpeningRows(openingExcelRows);
+          renderOpening(openingRows);
+
+        } catch (error) {
+          console.error("Store Opening Error:", error);
+
+          el("openingKpis").innerHTML = `
+            <div class="opening-kpi">
+              <strong>!</strong>
+              <span>Unable to load Excel file. Check Console details.</span>
+            </div>
+          `;
+        }
+      }
     document.addEventListener("DOMContentLoaded", () => {
       loadConfigFromStorage();
       initializeMsal();
