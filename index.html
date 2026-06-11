@@ -1356,7 +1356,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 2.9 2026-06-11</p>
+      <p>version 3.0 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -1507,25 +1507,11 @@
       </button>
     </div>
 
-
-      <section id="projectsTab" class="section">
-        <div class="project-summary-bar">
-          <div class="summary-item">
-            <strong id="activeProjectsCount">0</strong>
-            <span>Active Projects</span>
-          </div>
-          <div id="projectPercentSummary" class="project-percent-summary"></div>
-        </div>
-
-        <p class="hint-text">
-          CLICK ANY CARD TO EXPAND · CLICK AGAIN TO COLLAPSE
-        </p>
-
-        <div id="projectsBody" class="project-list"></div>
-      </section>
+  </section>
 
 
-      <section id="openingMainTab" class="main-tab-content hidden">
+  
+<section id="openingMainTab" class="main-tab-content hidden">
 
         <div class="opening-kpis" id="openingKpis"></div>
 
@@ -1569,6 +1555,46 @@
         </div>
 
       </section>
+
+
+In-Progress
+Delayed
+Finished
+Not Started
+TRANSACTION EXPLORER 
+
+
+Detailed View of All Transactions 
+
+
+Dear Mina I have replied on May 3rd for same. Pasting again for your reference.
+
+Dear Mina, Kindly make note of my suggestions for chapters. we can discuss further in coming meeting
+
+1. Intext citation is missing in both chapters
+2. I remember we decided to stick on 5 objectives, still feel free to retain 7 if required
+3. Would suggest adding infographics, statistics if permitted as per thesis guideline from university.
+4. Variable explanation in chapter2 can be in detail, also conceptual framework with hypothesis connection is appreciated.
+
+
+      <section id="projectsTab" class="section">
+        <div class="project-summary-bar">
+          <div class="summary-item">
+            <strong id="activeProjectsCount">0</strong>
+            <span>Active Projects</span>
+          </div>
+          <div id="projectPercentSummary" class="project-percent-summary"></div>
+        </div>
+
+        <p class="hint-text">
+          CLICK ANY CARD TO EXPAND · CLICK AGAIN TO COLLAPSE
+        </p>
+
+        <div id="projectsBody" class="project-list"></div>
+      </section>
+
+
+      
 
     <section id="scheduleTab" class="section hidden">
 
@@ -2678,16 +2704,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         });
       }
 
-        return excelRows.map(row => {
-          const values = row.values[0];
-          const obj = {};
-
-          headers.forEach((header, index) => {
-            obj[header] = values[index] ?? "";
-          });
-
-          return obj;
-        });
+      
   
 
       function renderOpening(rows) {
