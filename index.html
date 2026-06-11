@@ -1356,7 +1356,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 3.0 2026-06-11</p>
+      <p>version 3.1 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -1389,7 +1389,8 @@
         must create an App Registration and replace the placeholders inside this file.
       </div>
 -->
- </section>
+    </section>
+
     <section id="appView" class="hidden">
      <div class="config-card hidden">
         <h2>SharePoint / Microsoft Graph Configuration</h2>
@@ -1448,24 +1449,7 @@
           </div>
         </div>
       </div>
-<!-- 
-    <div class="dashboard-tabs">
-      <button class="dash-tab active" data-tab="projects">
-        <span class="tab-icon">📋</span>
-        <span>Projects</span>
-      </button>
-
-      <button class="dash-tab" data-tab="cost">
-        <span class="tab-icon">💰</span>
-        <span>Cost</span>
-      </button>
-
-      <button class="dash-tab" data-tab="schedule">
-        <span class="tab-icon">📅</span>
-        <span>Schedule</span>
-      </button>
-    </div>
-  -->
+ 
 
     <div class="main-tabs">
     <button class="main-tab" data-main-tab="realestate">
@@ -1479,7 +1463,7 @@
     <button class="main-tab" data-main-tab="opening">
       <span>🏪</span> Store's Opening
     </button>
-  </div>
+    </div>
 
     <section id="realestateMainTab" class="main-tab-content hidden">
       <div class="placeholder-card">
@@ -1488,95 +1472,26 @@
       </div>
     </section>
 
-  <section id="constructionMainTab" class="main-tab-content">
+<section id="constructionMainTab" class="main-tab-content">
 
-    <div class="dashboard-tabs">
-      <button class="dash-tab active" data-tab="projects">
-        <span class="tab-icon">📋</span>
-        <span>Projects</span>
-      </button>
+  <div class="dashboard-tabs">
+    <button class="dash-tab active" data-tab="projects">
+      <span class="tab-icon">📋</span>
+      <span>Projects</span>
+    </button>
 
-      <button class="dash-tab" data-tab="cost">
-        <span class="tab-icon">💰</span>
-        <span>Cost</span>
-      </button>
+    <button class="dash-tab" data-tab="cost">
+      <span class="tab-icon">💰</span>
+      <span>Cost</span>
+    </button>
 
-      <button class="dash-tab" data-tab="schedule">
-        <span class="tab-icon">📅</span>
-        <span>Schedule</span>
-      </button>
-    </div>
+    <button class="dash-tab" data-tab="schedule">
+      <span class="tab-icon">📅</span>
+      <span>Schedule</span>
+    </button>
+  </div>
 
-  </section>
-
-
-  
-<section id="openingMainTab" class="main-tab-content hidden">
-
-        <div class="opening-kpis" id="openingKpis"></div>
-
-        <div class="opening-card">
-          <div class="opening-header">
-            <h2>🏪 Store Opening Plan — Gantt View</h2>
-            <span>Live Data from Excel / SharePoint</span>
-          </div>
-
-          <div id="openingGantt" class="opening-gantt"></div>
-        </div>
-
-        <div class="opening-card">
-          <div class="opening-header">
-            <h2>📋 Store Opening Data Table</h2>
-            <span>Opening Plan Details</span>
-          </div>
-
-          <div class="opening-table-wrap">
-            <table class="opening-table">
-              <thead>
-                <tr>
-                  <th>Year</th>
-                  <th>Month</th>
-                  <th>Company</th>
-                  <th>Store Code</th>
-                  <th>Store Name</th>
-                  <th>Store Size</th>
-                  <th>Store Type</th>
-                  <th>Starting Date</th>
-                  <th>Estimated Opening</th>
-                  <th>Handover Date</th>
-                  <th>Current Phase</th>
-                  <th>Blocker / Delay</th>
-                  <th>Actual Opening</th>
-                </tr>
-              </thead>
-              <tbody id="openingTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-      </section>
-
-
-In-Progress
-Delayed
-Finished
-Not Started
-TRANSACTION EXPLORER 
-
-
-Detailed View of All Transactions 
-
-
-Dear Mina I have replied on May 3rd for same. Pasting again for your reference.
-
-Dear Mina, Kindly make note of my suggestions for chapters. we can discuss further in coming meeting
-
-1. Intext citation is missing in both chapters
-2. I remember we decided to stick on 5 objectives, still feel free to retain 7 if required
-3. Would suggest adding infographics, statistics if permitted as per thesis guideline from university.
-4. Variable explanation in chapter2 can be in detail, also conceptual framework with hypothesis connection is appreciated.
-
-
+  <!-- Projects section here -->
       <section id="projectsTab" class="section">
         <div class="project-summary-bar">
           <div class="summary-item">
@@ -1593,66 +1508,6 @@ Dear Mina, Kindly make note of my suggestions for chapters. we can discuss furth
         <div id="projectsBody" class="project-list"></div>
       </section>
 
-
-      
-
-    <section id="scheduleTab" class="section hidden">
-
-      <div class="schedule-kpis">
-        <div class="schedule-kpi">
-          <strong id="scheduleTotalStores">0</strong>
-          <span>Total Stores</span>
-        </div>
-
-        <div class="schedule-kpi green">
-          <strong id="scheduleCompleted">0</strong>
-          <span>Completed</span>
-        </div>
-
-        <div class="schedule-kpi blue">
-          <strong id="scheduleOnTime">0</strong>
-          <span>On Time / Early</span>
-        </div>
-
-        <div class="schedule-kpi red">
-          <strong id="scheduleDelayed">0</strong>
-          <span>Delayed</span>
-        </div>
-
-        <div class="schedule-kpi yellow">
-          <strong id="schedulePending">0</strong>
-          <span>Pending / TBD</span>
-        </div>
-      </div>
-
-      <div class="schedule-card">
-        <div class="schedule-header">
-          <h2>Schedule Performance — Planned vs Actual</h2>
-          <span id="scheduleDateLabel">Live Data from SharePoint</span>
-        </div>
-
-        <div class="schedule-table-wrap">
-          <table class="schedule-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Store Name</th>
-                <th>Type</th>
-                <th>Planned Date</th>
-                <th>Actual Date</th>
-                <th>Delay</th>
-                <th>Status</th>
-                <th>Timeline</th>
-              </tr>
-            </thead>
-            <tbody id="scheduleBody"></tbody>
-          </table>
-        </div>
-      </div>
-
-    </section>
-              
-              
         <section id="costTab" class="section hidden">
 
           <div class="cost-kpis">
@@ -1741,9 +1596,121 @@ Dear Mina, Kindly make note of my suggestions for chapters. we can discuss furth
           </div>
 
         </section>
-      
-      </section>
+
+
+  <!-- Schedule section here -->
+ <section id="scheduleTab" class="section hidden">
+
+      <div class="schedule-kpis">
+        <div class="schedule-kpi">
+          <strong id="scheduleTotalStores">0</strong>
+          <span>Total Stores</span>
+        </div>
+
+        <div class="schedule-kpi green">
+          <strong id="scheduleCompleted">0</strong>
+          <span>Completed</span>
+        </div>
+
+        <div class="schedule-kpi blue">
+          <strong id="scheduleOnTime">0</strong>
+          <span>On Time / Early</span>
+        </div>
+
+        <div class="schedule-kpi red">
+          <strong id="scheduleDelayed">0</strong>
+          <span>Delayed</span>
+        </div>
+
+        <div class="schedule-kpi yellow">
+          <strong id="schedulePending">0</strong>
+          <span>Pending / TBD</span>
+        </div>
+      </div>
+
+      <div class="schedule-card">
+        <div class="schedule-header">
+          <h2>Schedule Performance — Planned vs Actual</h2>
+          <span id="scheduleDateLabel">Live Data from SharePoint</span>
+        </div>
+
+        <div class="schedule-table-wrap">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Store Name</th>
+                <th>Type</th>
+                <th>Planned Date</th>
+                <th>Actual Date</th>
+                <th>Delay</th>
+                <th>Status</th>
+                <th>Timeline</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody"></tbody>
+          </table>
+        </div>
+      </div>
+
     </section>
+
+</section>
+
+
+
+  
+      
+  <section id="openingMainTab" class="main-tab-content hidden">
+
+          <div class="opening-kpis" id="openingKpis"></div>
+
+          <div class="opening-card">
+            <div class="opening-header">
+              <h2>🏪 Store Opening Plan — Gantt View</h2>
+              <span>Live Data from Excel / SharePoint</span>
+            </div>
+
+            <div id="openingGantt" class="opening-gantt"></div>
+          </div>
+
+          <div class="opening-card">
+            <div class="opening-header">
+              <h2>📋 Store Opening Data Table</h2>
+              <span>Opening Plan Details</span>
+            </div>
+
+            <div class="opening-table-wrap">
+              <table class="opening-table">
+                <thead>
+                  <tr>
+                    <th>Year</th>
+                    <th>Month</th>
+                    <th>Company</th>
+                    <th>Store Code</th>
+                    <th>Store Name</th>
+                    <th>Store Size</th>
+                    <th>Store Type</th>
+                    <th>Starting Date</th>
+                    <th>Estimated Opening</th>
+                    <th>Handover Date</th>
+                    <th>Current Phase</th>
+                    <th>Blocker / Delay</th>
+                    <th>Actual Opening</th>
+                  </tr>
+                </thead>
+                <tbody id="openingTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+  </section>
+
+  
+
+      
+</section>
+
   </main>
 
   <script>
@@ -2806,7 +2773,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
               config.storeOpeningTableName
             );
 
-            const openingRows = normalizeOpeningRows(openingExcelRows);
+            const openingRows = normalizeOpeningRows(rows);
 
             console.log("Normalized Store Opening Rows:", openingRows);
 
