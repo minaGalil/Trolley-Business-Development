@@ -1356,7 +1356,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 3.1 2026-06-11</p>
+      <p>version 3.2 2026-06-11</p>
     </div>
 
     <div class="user-section">
@@ -2564,41 +2564,39 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
     let openingDataLoaded = false;
 
-      async function loadStoreOpeningData() {
-        if (openingDataLoaded) return;
+    
+    async function loadStoreOpeningData() {
+      if (openingDataLoaded) return;
 
-        try {
-          const config = getConfigFromForm();
+      try {
+        const config = getConfigFromForm();
 
-          const rows  = await getExcelTableRows(
-            config.storeOpeningDrivePath,
-            config.storeOpeningTableName
+        const rows = await getExcelTableRows(
+          config.storeOpeningDrivePath,
+          config.storeOpeningTableName
+        );
 
-          );
+        console.log("STORE OPENING RAW ROWS:", rows);
 
-          console.log("STORE OPENING ROWS");
-          console.log(rows);
-          console.log(rows[0]);
-          console.log(rows[0].values);
+        const openingRows = normalizeOpeningRows(rows);
 
-          
-          const openingRows = normalizeOpeningRows(openingExcelRows);
-          renderOpening(openingRows);
+        console.log("STORE OPENING NORMALIZED ROWS:", openingRows);
 
-          openingDataLoaded = true;
+        renderOpening(openingRows);
 
-        } catch (error) {
-          console.error("Store Opening Error:", error);
+        openingDataLoaded = true;
 
-          el("openingKpis").innerHTML = `
-            <div class="opening-kpi">
-              <strong>!</strong>
-              <span>Unable to load Store Opening Excel file</span>
-            </div>
-          `;
-        }
+      } catch (error) {
+        console.error("Store Opening Error:", error);
+
+        el("openingKpis").innerHTML = `
+          <div class="opening-kpi">
+            <strong>!</strong>
+            <span>Unable to load Store Opening Excel file</span>
+          </div>
+        `;
       }
-
+    }
 
         function switchMainTab(tabName) {
           document.querySelectorAll(".main-tab").forEach(btn => {
