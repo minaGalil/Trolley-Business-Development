@@ -1891,7 +1891,151 @@
         color: #ea580c;
       }
 
+      .gantt-card {
+        background: #fff;
+        border: 1px solid #eadfd4;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+      }
 
+      .gantt-header {
+        background: #151515;
+        color: #fff;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .gantt-header h2 {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 900;
+      }
+
+      .gantt-header span {
+        font-size: 12px;
+        opacity: 0.9;
+      }
+
+      .gantt-summary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        background: #1f1f1f;
+        border-bottom: 4px solid var(--orange);
+      }
+
+      .gantt-summary-item {
+        padding: 20px;
+        text-align: center;
+        border-right: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .gantt-summary-item strong {
+        display: block;
+        font-size: 28px;
+        color: var(--orange);
+      }
+
+      .gantt-summary-item span {
+        display: block;
+        margin-top: 6px;
+        font-size: 12px;
+        color: #bbb;
+      }
+
+      .gantt-table-wrap {
+        overflow-x: auto;
+      }
+
+      .gantt-table {
+        width: 100%;
+        min-width: 1250px;
+        border-collapse: collapse;
+      }
+
+      .gantt-table th {
+        background: #333;
+        color: white;
+        font-size: 12px;
+        padding: 11px;
+        border: 1px solid #555;
+      }
+
+      .gantt-table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        font-size: 12px;
+      }
+
+      .gantt-act-id {
+        font-family: monospace;
+        color: #555;
+      }
+
+      .gantt-activity-name {
+        font-weight: 900;
+      }
+
+      .gantt-status {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .gantt-status.progress { background: #dbeafe; color: #075985; }
+      .gantt-status.done { background: #dcfce7; color: #166534; }
+      .gantt-status.hold { background: #fee2e2; color: #991b1b; }
+      .gantt-status.pending { background: #ffedd5; color: #9a3412; }
+
+      .gantt-timeline {
+        position: relative;
+        height: 24px;
+        background: repeating-linear-gradient(
+          to right,
+          #eeeeee 0,
+          #eeeeee 28px,
+          #dddddd 29px
+        );
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        min-width: 520px;
+      }
+
+      .gantt-bar {
+        position: absolute;
+        top: 4px;
+        height: 14px;
+        border-radius: 3px;
+        background: #5aa9e6;
+      }
+
+      .gantt-bar.done { background: #22c55e; }
+      .gantt-bar.hold { background: #ef4444; }
+      .gantt-bar.pending { background: #f59e0b; }
+
+      .gantt-finish-marker {
+        position: absolute;
+        top: 1px;
+        width: 14px;
+        height: 14px;
+        background: var(--orange);
+        transform: rotate(45deg);
+        border: 2px solid white;
+      }
+
+      .gantt-percent-label {
+        position: absolute;
+        top: 3px;
+        color: white;
+        font-size: 10px;
+        font-weight: 900;
+        left: 50%;
+        transform: translateX(-50%);
+      }
 
       @media (max-width: 1000px) {
         .cost-kpis {
@@ -1907,7 +2051,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 4.2 2026-06-12</p>
+      <p>version 4.3 2026-06-12</p>
     </div>
 
     <div class="user-section">
@@ -2027,10 +2171,16 @@
 <section id="constructionMainTab" class="main-tab-content">
 
     <div class="dashboard-tabs">
+
       <button class="dash-tab active" data-tab="projects">
         <span class="tab-icon">📋</span>
         <span>Projects</span>
       </button>
+
+    <button class="dash-tab" data-tab="gantt">
+      <span class="tab-icon">📊</span>
+      <span>Gantt View</span>
+    </button>
 
       <button class="dash-tab" data-tab="cost">
         <span class="tab-icon">💰</span>
@@ -2097,6 +2247,38 @@
 
         <div id="projectsBody" class="project-list"></div>
       </section>
+
+    <section id="ganttTab" class="section hidden">
+
+      <div class="gantt-card">
+        <div class="gantt-header">
+          <h2>📊 Primavera P6 Style Gantt — Project Schedule</h2>
+          <span id="ganttDateLabel">Live Data from SharePoint</span>
+        </div>
+
+        <div class="gantt-summary" id="ganttSummary"></div>
+
+        <div class="gantt-table-wrap">
+          <table class="gantt-table">
+            <thead>
+              <tr>
+                <th>Act ID</th>
+                <th>Activity Name</th>
+                <th>Dur</th>
+                <th>Start</th>
+                <th>Finish</th>
+                <th>Status</th>
+                <th>%</th>
+                <th>Timeline</th>
+              </tr>
+            </thead>
+            <tbody id="ganttBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
 
         <section id="costTab" class="section hidden">
 
@@ -3143,9 +3325,10 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         ]);
 
         renderProjects(projects);
+        renderGantt(projects);
         renderCost(cost);
         renderSchedule(schedule);
-        
+
 
         el("totalProjects").textContent = projects.length;
         el("totalCost").textContent = cost.length;
@@ -3174,8 +3357,10 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       });
 
       el("projectsTab").classList.toggle("hidden", tabName !== "projects");
+      el("ganttTab").classList.toggle("hidden", tabName !== "gantt");
       el("costTab").classList.toggle("hidden", tabName !== "cost");
       el("scheduleTab").classList.toggle("hidden", tabName !== "schedule");
+
     }
 
 
@@ -3601,6 +3786,112 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         renderOpeningCards(filteredRows);
         renderOpeningTable(filteredRows);
       }
+
+      function renderGantt(items) {
+        const tbody = el("ganttBody");
+
+        if (!items.length) {
+          tbody.innerHTML = `<tr><td colspan="8" class="empty">No project schedule data found.</td></tr>`;
+          return;
+        }
+
+        const rows = items.map(item => {
+          const f = item.fields || {};
+
+          const activityId = field(f, ["Title"]);
+          const activityName = field(f, ["Activity"]);
+          const duration = Number(field(f, ["Duration"])) || 0;
+          const startDate = parseDateValue(field(f, ["Start"]));
+          const endDate = parseDateValue(field(f, ["End"]));
+          const status = field(f, ["Status"]);
+          const pct = Number(String(field(f, ["Progress %"])).replace("%", "")) || 0;
+
+          return {
+            activityId,
+            activityName,
+            duration,
+            startDate,
+            endDate,
+            status,
+            pct
+          };
+        });
+
+        const validDates = rows.flatMap(r => [r.startDate, r.endDate]).filter(Boolean);
+
+        const minDate = validDates.length
+          ? new Date(Math.min(...validDates.map(d => d.getTime())))
+          : new Date("2026-01-01");
+
+        const maxDate = validDates.length
+          ? new Date(Math.max(...validDates.map(d => d.getTime())))
+          : new Date("2026-12-31");
+
+        minDate.setDate(minDate.getDate() - 15);
+        maxDate.setDate(maxDate.getDate() + 30);
+
+        const totalRange = maxDate - minDate;
+
+        const inProgress = rows.filter(r => String(r.status).toLowerCase().includes("progress")).length;
+        const completed = rows.filter(r => r.pct >= 100 || String(r.status).toLowerCase().includes("done")).length;
+        const onHold = rows.filter(r => String(r.status).toLowerCase().includes("hold")).length;
+        const latestFinish = validDates.length ? formatSPDate(maxDate) : "-";
+
+        el("ganttSummary").innerHTML = `
+          <div class="gantt-summary-item">
+            <strong>${rows.length}</strong>
+            <span>Total Activities</span>
+          </div>
+          <div class="gantt-summary-item">
+            <strong style="color:#22c55e">${inProgress}</strong>
+            <span>In Progress</span>
+          </div>
+          <div class="gantt-summary-item">
+            <strong style="color:#3b82f6">${completed}</strong>
+            <span>Completed</span>
+          </div>
+          <div class="gantt-summary-item">
+            <strong style="color:#ef4444">${onHold}</strong>
+            <span>On Hold / TBD</span>
+          </div>
+        `;
+
+        el("ganttDateLabel").textContent = `Live Data · ${new Date().toLocaleDateString("en-GB").replace(/\//g, "-")}`;
+
+        tbody.innerHTML = rows.map(row => {
+          const startPos = dateToPercent(row.startDate, minDate, totalRange);
+          const endPos = dateToPercent(row.endDate, minDate, totalRange);
+          const width = Math.max(3, endPos - startPos);
+
+          const statusLower = String(row.status || "").toLowerCase();
+
+          let statusClass = "pending";
+          if (statusLower.includes("progress")) statusClass = "progress";
+          if (statusLower.includes("done") || row.pct >= 100) statusClass = "done";
+          if (statusLower.includes("hold")) statusClass = "hold";
+
+          return `
+            <tr>
+              <td class="gantt-act-id">${formatValue(row.activityId)}</td>
+              <td class="gantt-activity-name">${formatValue(row.activityName || row.activityId)}</td>
+              <td>${formatValue(row.duration)}d</td>
+              <td>${formatSPDate(row.startDate)}</td>
+              <td>${formatSPDate(row.endDate)}</td>
+              <td><span class="gantt-status ${statusClass}">${formatValue(row.status || "Pending")}</span></td>
+              <td><strong>${row.pct}%</strong></td>
+              <td>
+                <div class="gantt-timeline">
+                  <div class="gantt-bar ${statusClass}" style="left:${startPos}%; width:${width}%">
+                    <span class="gantt-percent-label">${row.pct}%</span>
+                  </div>
+                  <div class="gantt-finish-marker" style="left:${endPos}%"></div>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
 
     document.addEventListener("DOMContentLoaded", () => {
       loadConfigFromStorage();
