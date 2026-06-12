@@ -1440,6 +1440,69 @@
       }
 
 
+    .opening-project-list {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .opening-project-card {
+      border: 1px solid #eadfd4;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .opening-project-main {
+      display: grid;
+      grid-template-columns: 70px 1fr 320px 40px;
+      gap: 16px;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .opening-project-title h3 {
+      margin: 0 0 6px;
+      font-size: 19px;
+    }
+
+    .opening-project-title p {
+      margin: 0 0 8px;
+      color: #777;
+      font-size: 13px;
+    }
+
+    .opening-date-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      text-align: center;
+      gap: 12px;
+    }
+
+    .opening-date-grid strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .opening-date-grid span {
+      display: block;
+      font-size: 11px;
+      color: #777;
+    }
+
+    .opening-project-details {
+      display: none;
+      border-top: 3px solid var(--orange);
+      padding: 20px;
+      grid-template-columns: 300px 1fr;
+      gap: 20px;
+    }
+
+    .opening-project-card.expanded .opening-project-details {
+      display: grid;
+    }
 
       .opening-gantt-legend {
         display: flex;
@@ -1745,7 +1808,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 3.7 2026-06-11</p>
+      <p>version 3.8 2026-06-12</p>
     </div>
 
     <div class="user-section">
@@ -2101,6 +2164,17 @@
 
             <div id="openingGantt" class="opening-gantt"></div>
           </div>
+
+
+          <div class="opening-card">
+            <div class="opening-header">
+              <h2>🏪 Store Opening Projects</h2>
+              <span>Click any store to expand details</span>
+            </div>
+
+            <div id="openingCards" class="opening-project-list"></div>
+          </div>
+
 
           <div class="opening-card">
             <div class="opening-header">
@@ -3069,10 +3143,11 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
   
 
       function renderOpening(rows) {
-        renderOpeningKpis(rows);
-        renderOpeningGantt(rows);
-        renderOpeningTable(rows);
-      }
+      renderOpeningKpis(rows);
+      renderOpeningGantt(rows);
+      renderOpeningCards(rows);
+      renderOpeningTable(rows);
+    }
 
       function renderOpeningKpis(rows) {
         const container = el("openingKpis");
@@ -3278,6 +3353,100 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         `;
       }
     }
+
+    function renderOpeningCards(rows) {
+      const container = el("openingCards");
+
+      container.innerHTML = rows.map(row => {
+        const startDate = formatSPDate(row.startingDate);
+        const estimatedDate = formatSPDate(row.estimatedOpeningDate);
+        const actualDate = formatSPDate(row.actualOpeningDate);
+
+        const estimated = parseDateValue(row.estimatedOpeningDate);
+        const actual = parseDateValue(row.actualOpeningDate);
+
+        let status = "Pending";
+        let badgeClass = "orange";
+
+        if (actual && estimated) {
+          const delay = calculateDelayDays(estimated, actual);
+          if (delay > 0) {
+            status = `Late +${delay}d`;
+            badgeClass = "red";
+          } else if (delay < 0) {
+            status = `Early ${Math.abs(delay)}d`;
+            badgeClass = "green";
+          } else {
+            status = "On Time";
+            badgeClass = "green";
+          }
+        } else if (actual) {
+          status = "Opened";
+          badgeClass = "green";
+        }
+
+        return `
+          <article class="opening-project-card" onclick="this.classList.toggle('expanded')">
+
+            <div class="opening-project-main">
+              <div class="status-dot-big ${badgeClass === "green" ? "green" : badgeClass === "red" ? "red" : ""}"></div>
+
+              <div class="opening-project-title">
+                <h3>${formatValue(row.storeName)}</h3>
+                <p>
+                  ${formatValue(row.storeType)}
+                  ${row.currentPhase ? " · " + formatValue(row.currentPhase) : ""}
+                  ${row.storeCode ? " · " + formatValue(row.storeCode) : ""}
+                </p>
+
+                <div class="project-badges">
+                  <span class="badge ${badgeClass}">${status}</span>
+                  <span class="badge">${formatValue(row.company)}</span>
+                  <span class="badge">Size: ${formatValue(row.storeSize)}</span>
+                </div>
+              </div>
+
+              <div class="opening-date-grid">
+                <div>
+                  <strong>${startDate || "TBD"}</strong>
+                  <span>Start</span>
+                </div>
+                <div>
+                  <strong>${estimatedDate || "TBD"}</strong>
+                  <span>Estimated</span>
+                </div>
+                <div>
+                  <strong>${actualDate || "TBD"}</strong>
+                  <span>Actual</span>
+                </div>
+              </div>
+
+              <div class="expand-icon">▼</div>
+            </div>
+
+            <div class="opening-project-details">
+              <div class="details-box">
+                <h4>STORE OPENING DETAILS</h4>
+                <div class="detail-row"><span>Year</span><strong>${formatValue(row.year)}</strong></div>
+                <div class="detail-row"><span>Month</span><strong>${formatValue(row.month)}</strong></div>
+                <div class="detail-row"><span>Company</span><strong>${formatValue(row.company)}</strong></div>
+                <div class="detail-row"><span>Store Code</span><strong>${formatValue(row.storeCode)}</strong></div>
+                <div class="detail-row"><span>Store Type</span><strong>${formatValue(row.storeType)}</strong></div>
+                <div class="detail-row"><span>Store Size</span><strong>${formatValue(row.storeSize)}</strong></div>
+                <div class="detail-row"><span>Current Phase</span><strong>${formatValue(row.currentPhase)}</strong></div>
+              </div>
+
+              <div class="blocker-box">
+                <strong>BLOCKER / DELAY</strong><br>
+                ${formatValue(row.blockerDelay || "No blocker available")}
+              </div>
+            </div>
+
+          </article>
+        `;
+      }).join("");
+    }
+
 
 
     document.addEventListener("DOMContentLoaded", () => {
