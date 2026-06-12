@@ -312,34 +312,90 @@
       box-shadow: 0 8px 22px rgba(255,130,0,0.28);
     }
 
-        .opening-kpis {
+    .opening-top-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-      margin-bottom: 18px;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 22px;
     }
 
-    .opening-kpi {
-      background: #fff;
+    .opening-filter-card {
+      background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%);
       border: 1px solid #eadfd4;
       border-left: 5px solid var(--orange);
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.06);
     }
 
-    .opening-kpi strong {
+    .opening-filter-card label {
       display: block;
-      font-size: 26px;
-      color: var(--orange);
-    }
-
-    .opening-kpi span {
-      display: block;
-      margin-top: 5px;
       font-size: 12px;
-      color: #777;
+      font-weight: 900;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
     }
+
+    .opening-filter-card select {
+      width: 100%;
+      border: 1px solid #eadfd4;
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-size: 14px;
+      font-weight: 900;
+      background: #fffaf5;
+    }
+
+    .opening-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+        .opening-kpi {
+          background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%);
+          border: 1px solid #eadfd4;
+          border-left: 5px solid var(--orange);
+          border-radius: 18px;
+          padding: 20px;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          min-height: 112px;
+          box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+        }
+
+        .opening-kpi::before {
+          content: "🏪";
+          width: 48px;
+          height: 48px;
+          border-radius: 14px;
+          background: #fff0df;
+          display: grid;
+          place-items: center;
+          font-size: 22px;
+          flex-shrink: 0;
+        }
+
+        .opening-kpi strong {
+          display: block;
+          font-size: 30px;
+          line-height: 1.1;
+          color: var(--orange);
+        }
+
+        .opening-kpi span {
+          display: block;
+          margin-top: 6px;
+          font-size: 12px;
+          font-weight: 800;
+          color: #6b7280;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
 
     .opening-card {
       background: #fff;
@@ -567,6 +623,12 @@
       color: #8a8a8a;
     }
 
+
+    @media (max-width: 900px) {
+      .opening-top-row {
+        grid-template-columns: 1fr;
+      }
+    }
     @media (max-width: 1000px) {
     .stats {
     grid-template-columns: repeat(2, 1fr);
@@ -1837,7 +1899,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 3.9 2026-06-12</p>
+      <p>version 4.0 2026-06-12</p>
     </div>
 
     <div class="user-section">
@@ -2183,6 +2245,8 @@
       
   <section id="openingMainTab" class="main-tab-content hidden">
 
+      <div class="opening-top-row">
+
         <div class="opening-filter-card">
           <label for="openingStatusFilter">Store Status</label>
 
@@ -2190,6 +2254,10 @@
             <option value="ALL">All Stores</option>
           </select>
         </div>
+
+        <div class="opening-kpis" id="openingKpis"></div>
+
+      </div>
 
           <div class="opening-kpis" id="openingKpis"></div>
 
