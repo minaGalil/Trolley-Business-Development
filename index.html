@@ -312,23 +312,6 @@
       box-shadow: 0 8px 22px rgba(255,130,0,0.28);
     }
 
-    .opening-top-row {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 18px;
-      align-items: stretch;
-      margin-bottom: 22px;
-    }
-
-    .opening-filter-card {
-      background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%);
-      border: 1px solid #eadfd4;
-      border-left: 5px solid var(--orange);
-      border-radius: 18px;
-      padding: 20px;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.06);
-    }
-
     .opening-filter-card label {
       display: block;
       font-size: 12px;
@@ -349,25 +332,67 @@
       background: #fffaf5;
     }
 
-    .opening-kpis {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-    }
 
-        .opening-kpi {
-          background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%);
-          border: 1px solid #eadfd4;
-          border-left: 5px solid var(--orange);
-          border-radius: 18px;
-          padding: 20px;
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          min-height: 112px;
-          box-shadow: 0 10px 28px rgba(0,0,0,0.06);
-        }
+      .opening-top-row {
+        max-width: 1250px;
+        margin: 0 auto 24px auto;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 18px;
+        align-items: stretch;
+      }
 
+      .opening-filter-card {
+        background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%);
+        border: 1px solid #eadfd4;
+        border-left: 5px solid var(--orange);
+        border-radius: 18px;
+        padding: 20px;
+        min-height: 118px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+      }
+
+      .opening-filter-card label {
+        display: block;
+        font-size: 12px;
+        font-weight: 900;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+      }
+
+      .opening-filter-card select {
+        width: 100%;
+        border: 1px solid #eadfd4;
+        border-radius: 14px;
+        padding: 13px 14px;
+        font-size: 14px;
+        font-weight: 900;
+        background: #fffaf5;
+      }
+
+      .opening-kpis {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+        gap: 18px;
+      }
+
+      .opening-kpi {
+        background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%);
+        border: 1px solid #eadfd4;
+        border-left: 5px solid var(--orange);
+        border-radius: 18px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        min-height: 118px;
+        box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+      }
         .opening-kpi::before {
           content: "🏪";
           width: 48px;
@@ -428,6 +453,16 @@
     .opening-gantt {
       padding: 18px;
       overflow-x: auto;
+    }
+
+    @media (max-width: 900px) {
+      .opening-top-row {
+        grid-template-columns: 1fr;
+      }
+
+      .opening-kpis {
+        grid-template-columns: 1fr;
+      }
     }
 
     .gantt-row {
@@ -1856,34 +1891,7 @@
         color: #ea580c;
       }
 
-            .opening-filter-card {
-        max-width: 420px;
-        margin: 0 auto 18px auto;
-        background: #fff;
-        border: 1px solid #eadfd4;
-        border-radius: 16px;
-        padding: 16px 18px;
-        box-shadow: 0 8px 22px rgba(0,0,0,0.05);
-      }
 
-      .opening-filter-card label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 11px;
-        font-weight: 900;
-        color: #777;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
-
-      .opening-filter-card select {
-        width: 100%;
-        border: 1px solid #eadfd4;
-        border-radius: 12px;
-        padding: 11px 12px;
-        font-weight: 800;
-        background: #fffaf5;
-      }
 
       @media (max-width: 1000px) {
         .cost-kpis {
@@ -1899,7 +1907,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 4.1 2026-06-12</p>
+      <p>version 4.2 2026-06-12</p>
     </div>
 
     <div class="user-section">
