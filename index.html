@@ -1794,6 +1794,35 @@
         color: #ea580c;
       }
 
+            .opening-filter-card {
+        max-width: 420px;
+        margin: 0 auto 18px auto;
+        background: #fff;
+        border: 1px solid #eadfd4;
+        border-radius: 16px;
+        padding: 16px 18px;
+        box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+      }
+
+      .opening-filter-card label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 11px;
+        font-weight: 900;
+        color: #777;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .opening-filter-card select {
+        width: 100%;
+        border: 1px solid #eadfd4;
+        border-radius: 12px;
+        padding: 11px 12px;
+        font-weight: 800;
+        background: #fffaf5;
+      }
+
       @media (max-width: 1000px) {
         .cost-kpis {
           grid-template-columns: repeat(2, 1fr);
@@ -1808,7 +1837,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 3.8 2026-06-12</p>
+      <p>version 3.9 2026-06-12</p>
     </div>
 
     <div class="user-section">
@@ -2154,6 +2183,14 @@
       
   <section id="openingMainTab" class="main-tab-content hidden">
 
+        <div class="opening-filter-card">
+          <label for="openingStatusFilter">Store Status</label>
+
+          <select id="openingStatusFilter">
+            <option value="ALL">All Stores</option>
+          </select>
+        </div>
+
           <div class="opening-kpis" id="openingKpis"></div>
 
           <div class="opening-card">
@@ -2244,6 +2281,8 @@
         storeOpeningDrivePath: "/Store Opening/Development Department - Store Opening Workflow.xlsx",
         storeOpeningTableName: "StoreOpeningPlan"
       };
+
+    let openingAllRows = [];
 
     let msalInstance = null;
     let activeAccount = null;
@@ -3336,9 +3375,15 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
         const openingRows = normalizeOpeningRows(rows);
 
+        openingAllRows = openingRows;
+        populateOpeningStatusFilter(openingAllRows);
+        applyOpeningStatusFilter();
+
+        el("openingStatusFilter").addEventListener("change", applyOpeningStatusFilter);
+
         console.log("STORE OPENING NORMALIZED ROWS:", openingRows);
 
-        renderOpening(openingRows);
+        
 
         openingDataLoaded = true;
 
@@ -3447,7 +3492,39 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       }).join("");
     }
 
+        function populateOpeningStatusFilter(rows) {
+          const filter = el("openingStatusFilter");
+          if (!filter) return;
 
+          const statuses = [...new Set(
+            rows
+              .map(row => formatValue(row.currentPhase || "No Phase"))
+              .filter(Boolean)
+          )].sort();
+
+          filter.innerHTML = `
+            <option value="ALL">All Stores</option>
+            ${statuses.map(status => `
+              <option value="${status}">${status}</option>
+            `).join("")}
+          `;
+        }
+
+      function applyOpeningStatusFilter() {
+        const filter = el("openingStatusFilter");
+        const selectedStatus = filter ? filter.value : "ALL";
+
+        const filteredRows = selectedStatus === "ALL"
+          ? openingAllRows
+          : openingAllRows.filter(row =>
+              formatValue(row.currentPhase || "No Phase") === selectedStatus
+            );
+
+        renderOpeningKpis(filteredRows);
+        renderOpeningGantt(filteredRows);
+        renderOpeningCards(filteredRows);
+        renderOpeningTable(filteredRows);
+      }
 
     document.addEventListener("DOMContentLoaded", () => {
       loadConfigFromStorage();
