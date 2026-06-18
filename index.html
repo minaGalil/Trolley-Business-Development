@@ -80,6 +80,28 @@
     white-space: nowrap;
 }
 
+      .country-status.live{
+          background:#dcfce7;
+          color:#16a34a;
+      }
+
+      .clickable-country{
+          text-decoration:none;
+          color:inherit;
+          display:block;
+      }
+
+      .clickable-country:hover{
+          transform:translateY(-6px);
+          box-shadow:0 12px 30px rgba(255,130,0,.15);
+          border-color:#ff8200;
+      }
+
+      .clickable-country .country-status{
+          background:#fff3e6;
+          color:#ff8200;
+      }
+
 
     #userInfo {
         font-size: 13px;
@@ -2081,7 +2103,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 4.4 2026-06-18</p>
+      <p>version 4.5 2026-06-18</p>
     </div>
 
     <div class="user-section">
@@ -2164,19 +2186,19 @@
             Select a country to view future Real Estate dashboards
         </p>
 
-        <div class="country-cards">
+        <a href="https://app.notion.com/p/trolleysa/The-Hub-1e8083298ec880b0a2c1c95a187c8617?source=copy_link"
+          target="_blank"
+          class="country-card clickable-country">
 
-            <div class="country-card">
+            <div class="country-flag">KW</div>
 
-                <div class="country-flag">KW</div>
+            <div class="country-name">Kuwait</div>
 
-                <div class="country-name">Kuwait</div>
+              <div class="country-status live">
+                  Open Dashboard
+              </div>
 
-                <div class="country-status">
-                    Coming Soon
-                </div>
-
-            </div>
+        </a>
 
             <div class="country-card">
 
