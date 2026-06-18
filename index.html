@@ -375,11 +375,11 @@
         background: #fffaf5;
       }
 
-      .opening-kpis {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(260px, 1fr));
-        gap: 18px;
-      }
+    .opening-kpis {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(360px, 1fr));
+      gap: 18px;
+    }
 
       .opening-kpi {
         background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%);
@@ -1986,6 +1986,36 @@
         font-weight: 900;
       }
 
+            .quarter-kpi {
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .quarter-phase-list {
+        width: 100%;
+        margin-left: 10px;
+      }
+
+      .quarter-phase-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 5px 0;
+        border-bottom: 1px solid #eadfd4;
+      }
+
+      .quarter-phase-row small {
+        color: #6b7280;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 11px;
+      }
+
+      .quarter-phase-row b {
+        color: var(--orange);
+        font-size: 14px;
+      }
+
       .gantt-status.progress { background: #dbeafe; color: #075985; }
       .gantt-status.done { background: #dcfce7; color: #166534; }
       .gantt-status.hold { background: #fee2e2; color: #991b1b; }
@@ -2051,7 +2081,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 4.3 2026-06-12</p>
+      <p>version 4.4 2026-06-18</p>
     </div>
 
     <div class="user-section">
@@ -2449,7 +2479,7 @@
 
       </div>
 
-          <div class="opening-kpis" id="openingKpis"></div>
+           
 
           <div class="opening-card">
             <div class="opening-header">
@@ -3449,27 +3479,54 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       renderOpeningTable(rows);
     }
 
-      function renderOpeningKpis(rows) {
-        const container = el("openingKpis");
+   
+   
 
-        const grouped = {};
+    function renderOpeningKpis(rows) {
+      const container = el("openingKpis");
 
-        rows.forEach(row => {
-          const month = Number(row.month);
-          const quarter = month <= 3 ? "Q1" : month <= 6 ? "Q2" : month <= 9 ? "Q3" : "Q4";
-          const phase = row.currentPhase || "No Phase";
-          const key = `${quarter} · ${phase}`;
+      const quarters = {};
 
-          grouped[key] = (grouped[key] || 0) + 1;
-        });
+      rows.forEach(row => {
+        const month = Number(row.month);
+        const quarter =
+          month <= 3 ? "Q1" :
+          month <= 6 ? "Q2" :
+          month <= 9 ? "Q3" : "Q4";
 
-        container.innerHTML = Object.entries(grouped).map(([key, count]) => `
-          <div class="opening-kpi">
-            <strong>${count}</strong>
-            <span>${key}</span>
+        const phase = formatValue(row.currentPhase || "No Phase");
+
+        if (!quarters[quarter]) {
+          quarters[quarter] = {};
+        }
+
+        quarters[quarter][phase] = (quarters[quarter][phase] || 0) + 1;
+      });
+
+      container.innerHTML = Object.entries(quarters).map(([quarter, phases]) => {
+        const total = Object.values(phases).reduce((a, b) => a + b, 0);
+
+        return `
+          <div class="opening-kpi quarter-kpi">
+            <div>
+              <strong>${total}</strong>
+              <span>${quarter}</span>
+            </div>
+
+            <div class="quarter-phase-list">
+              ${Object.entries(phases).map(([phase, count]) => `
+                <div class="quarter-phase-row">
+                  <small>${phase}</small>
+                  <b>${count}</b>
+                </div>
+              `).join("")}
+            </div>
           </div>
-        `).join("");
-      }
+        `;
+      }).join("");
+    }
+
+
 
       function renderOpeningGantt(rows) {
         const container = el("openingGantt");
@@ -3659,6 +3716,11 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         `;
       }
     }
+
+
+
+
+
 
     function renderOpeningCards(rows) {
       const container = el("openingCards");
