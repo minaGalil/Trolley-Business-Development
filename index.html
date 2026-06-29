@@ -494,12 +494,28 @@
       align-items: center;
       margin-bottom: 12px;
       }
-      .project-photo {
-        width: 100%;
-        height: 210px;
-        object-fit: cover;
-        border-radius: 12px;
-        display: block;
+      .project-photo{
+
+          width:100%;
+
+          height:220px;
+
+          object-fit:cover;
+
+          border-radius:12px;
+
+          transition:.25s;
+
+          cursor:pointer;
+
+          box-shadow:0 4px 15px rgba(0,0,0,.15);
+
+      }
+
+      .project-photo:hover{
+
+          transform:scale(1.03);
+
       }
     .gantt-store {
       font-weight: 800;
@@ -1017,10 +1033,16 @@
       font-size: 12px;
     }
 
-    .photos-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
+    .photos-grid{
+
+        display:grid;
+
+        grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+
+        gap:18px;
+
+        align-items:start;
+
     }
 
     .photo-placeholder {
@@ -2151,7 +2173,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 4.9 2026-06-29</p>
+      <p>version 5.0 2026-06-29</p>
     </div>
 
     <div class="user-section">
@@ -2896,18 +2918,35 @@ async function getSharePointAccessToken() {
         return await response.json();
       }
 
-      async function getProjectAttachments(itemId) {
-        const config = getConfigFromForm();
+          async function getProjectAttachments(itemId) {
 
-        const url =
-          `https://${config.hostname}${config.sitePath}` +
-          `/_api/web/lists/getbytitle('${config.projectListName}')` +
-          `/items(${itemId})/AttachmentFiles`;
+              const config = getConfigFromForm();
 
-        const data = await sharePointGet(url);
+              const token = await getSharePointAccessToken();
 
-        return data.value || [];
-      }
+              const response = await fetch(
+
+                  `https://${config.hostname}${config.sitePath}/_api/web/lists/getbytitle('${config.projectListName}')/items(${itemId})?$expand=AttachmentFiles`,
+
+                  {
+                      headers:{
+                          "Authorization":"Bearer " + token,
+                          "Accept":"application/json;odata=nometadata"
+                      }
+                  }
+              );
+
+              if(!response.ok){
+
+                  throw new Error(await response.text());
+
+              }
+
+              const data = await response.json();
+
+              return data.AttachmentFiles || [];
+
+          }
 /* Stop HERE */ 
 
 
@@ -3004,19 +3043,95 @@ async function getSharePointAccessToken() {
         if (pct >= 90) dotClass = "green";
         else if (pct >= 70) dotClass = "blue";
         else if (String(status).toLowerCase().includes("delay")) dotClass = "red";
-        const attachments = await getProjectAttachments(item.fields.id || item.id);
+        const attachments = await getProjectAttachments(Number(item.id));
 
-      const photoHtml = attachments.length
-        ? attachments.slice(0, 3).map(att => `
-            <a href="${att.ServerRelativeUrl}" target="_blank">
-              <img src="https://${getConfigFromForm().hostname}${att.ServerRelativeUrl}" class="project-photo" />
-            </a>
-          `).join("")
-        : `
-            <div class="photo-placeholder">Attachment / Photo 1</div>
-            <div class="photo-placeholder">Attachment / Photo 2</div>
-            <div class="photo-placeholder">Attachment / Photo 3</div>
-          `;
+        const photoHtml = attachments.length
+          ? attachments.map(file => {
+
+              const extension =
+                  file.FileName.split(".").pop().toLowerCase();
+
+              const url =
+                  "https://" +
+                  getConfigFromForm().hostname +
+                  file.ServerRelativeUrl;
+
+              if(["jpg","jpeg","png","gif","bmp","webp","svg"].includes(extension)){
+
+                  return `
+                      <a href="${url}" target="_blank">
+                          <img
+                              src="${url}"
+                              class="project-photo"
+                              loading="lazy">
+                      </a>
+                  `;
+
+              }
+
+              let icon="📄";
+
+              if(extension=="pdf") icon="📕";
+
+              if(["xls","xlsx","csv"].includes(extension))
+                  icon="📗";
+
+              if(["doc","docx"].includes(extension))
+                  icon="📘";
+
+              if(["ppt","pptx"].includes(extension))
+                  icon="📙";
+
+              if(["zip","rar","7z"].includes(extension))
+                  icon="🗜️";
+
+              if(["mp4","mov","avi","mkv"].includes(extension))
+                  icon="🎥";
+
+              return `
+
+                  <a
+                      href="${url}"
+                      target="_blank"
+                      class="photo-placeholder"
+                      style="
+                          text-decoration:none;
+                          display:flex;
+                          flex-direction:column;
+                          justify-content:center;
+                          align-items:center;
+                          color:#333;
+                      ">
+
+                      <div style="font-size:55px;">
+                          ${icon}
+                      </div>
+
+                      <div
+                          style="
+                              margin-top:12px;
+                              text-align:center;
+                              word-break:break-word;
+                              padding:0 10px;
+                          ">
+
+                          ${file.FileName}
+
+                      </div>
+
+                  </a>
+
+              `;
+
+          }).join("")
+
+          :
+
+          `<div class="photo-placeholder">
+
+          No Attachments
+
+          </div>`;
         return `
           <article class="project-card" onclick="this.classList.toggle('expanded')">
             <div class="project-card-main">
@@ -3837,15 +3952,14 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
         openingDataLoaded = true;
 
-      } catch (error) {
-        console.error("Store Opening Error:", error);
+      } 
+      
+      catch (error) {
+          console.error(error);
 
-        el("openingKpis").innerHTML = `
-          <div class="opening-kpi">
-            <strong>!</strong>
-            <span>Unable to load Store Opening Excel file</span>
-          </div>
-        `;
+          alert(error.message);
+
+          setStatus(error.message, "error");
       }
     }
 
