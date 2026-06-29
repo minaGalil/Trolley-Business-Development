@@ -2173,7 +2173,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 5.2 2026-06-29</p>
+      <p>version 5.3 2026-06-29</p>
     </div>
 
     <div class="user-section">
@@ -3041,7 +3041,8 @@ function normalizeFieldName(name) {
         if (pct >= 90) dotClass = "green";
         else if (pct >= 70) dotClass = "blue";
         else if (String(status).toLowerCase().includes("delay")) dotClass = "red";
-        const attachments = await getProjectAttachments(Number(item.id));
+        // const attachments = await getProjectAttachments(Number(item.id));
+          const attachments = [];
 
         const photoHtml = attachments.length
           ? attachments.map(file => {
@@ -3198,12 +3199,41 @@ function normalizeFieldName(name) {
                 </div>
               </div>
 
-              <div class="project-photos">
-                <h4>SITE PHOTOS — ${formatValue(activityName || activityId)}</h4>
-                <div class="photos-grid">
-                  ${photoHtml}
-                </div>
+              <div class="details-box">
+                // <h4>SITE PHOTOS — ${formatValue(activityName || activityId)}</h4> 
+                
+                <h4>PROJECT INFORMATION</h4>
+                  <div class="detail-row">
+                      <span>Start Date</span>
+                      <strong>${start}</strong>
+                  </div>
+
+                  <div class="detail-row">
+                      <span>Finish Date</span>
+                      <strong>${end}</strong>
+                  </div>
+
+                  <div class="detail-row">
+                      <span>Actual Date</span>
+                      <strong>${actualDate}</strong>
+                  </div>
+
+                  <div class="detail-row">
+                      <span>Progress</span>
+                      <strong>${pct}%</strong>
+                  </div>
+
+                  <div class="detail-row">
+                      <span>Status</span>
+                      <strong>${status}</strong>
+                  </div>
+
+
+
               </div>
+
+
+
             </div>
           </article>
         `;
