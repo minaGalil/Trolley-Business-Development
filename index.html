@@ -493,8 +493,14 @@
       gap: 14px;
       align-items: center;
       margin-bottom: 12px;
-    }
-
+      }
+      .project-photo {
+        width: 100%;
+        height: 210px;
+        object-fit: cover;
+        border-radius: 12px;
+        display: block;
+      }
     .gantt-store {
       font-weight: 800;
       font-size: 13px;
@@ -2145,7 +2151,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 4.8 2026-06-18</p>
+      <p>version 4.9 2026-06-29</p>
     </div>
 
     <div class="user-section">
@@ -2645,7 +2651,11 @@
     let costSCurveChart = null;
     let siteId = null;
 
-    const scopes = ["User.Read", "Sites.Read.All"];
+    const scopes = [
+      "User.Read",
+      "Sites.Read.All",
+      "https://trolleykw.sharepoint.com/AllSites.Read"
+    ];
 
     const el = (id) => document.getElementById(id);
 
@@ -2859,8 +2869,50 @@ function normalizeFieldName(name) {
       }).replace(/ /g, "-");
     }
 
+async function getSharePointAccessToken() {
+  const response = await msalInstance.acquireTokenSilent({
+    scopes: ["https://trolleykw.sharepoint.com/AllSites.Read"],
+    account: activeAccount
+  });
 
-    function renderProjects(items) {
+  return response.accessToken;
+}
+
+      async function sharePointGet(url) {
+        const token = await getSharePointAccessToken();
+
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json;odata=nometadata"
+          }
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`${response.status}: ${errorText}`);
+        }
+
+        return await response.json();
+      }
+
+      async function getProjectAttachments(itemId) {
+        const config = getConfigFromForm();
+
+        const url =
+          `https://${config.hostname}${config.sitePath}` +
+          `/_api/web/lists/getbytitle('${config.projectListName}')` +
+          `/items(${itemId})/AttachmentFiles`;
+
+        const data = await sharePointGet(url);
+
+        return data.value || [];
+      }
+/* Stop HERE */ 
+
+
+    async function renderProjects(items) 
+    {
       const container = el("projectsBody");
 
       const activeProjects = items.filter(item => {
@@ -2868,6 +2920,8 @@ function normalizeFieldName(name) {
         console.log("FIELDS:", f);
         console.log("Project Fields:", f);
         const status = field(f, ["Status"]);
+
+
         return !String(status).toLowerCase().includes("complete");
       });
 
@@ -2911,7 +2965,7 @@ function normalizeFieldName(name) {
         return;
       }
 
-      container.innerHTML = activeProjects.map(item => {
+      container.innerHTML = await Promise.all(activeProjects.map(async item => {
         const f = item.fields || {};
 
         const activityId = field(f, ["Title"]);
@@ -2950,7 +3004,19 @@ function normalizeFieldName(name) {
         if (pct >= 90) dotClass = "green";
         else if (pct >= 70) dotClass = "blue";
         else if (String(status).toLowerCase().includes("delay")) dotClass = "red";
+        const attachments = await getProjectAttachments(item.fields.id || item.id);
 
+      const photoHtml = attachments.length
+        ? attachments.slice(0, 3).map(att => `
+            <a href="${att.ServerRelativeUrl}" target="_blank">
+              <img src="https://${getConfigFromForm().hostname}${att.ServerRelativeUrl}" class="project-photo" />
+            </a>
+          `).join("")
+        : `
+            <div class="photo-placeholder">Attachment / Photo 1</div>
+            <div class="photo-placeholder">Attachment / Photo 2</div>
+            <div class="photo-placeholder">Attachment / Photo 3</div>
+          `;
         return `
           <article class="project-card" onclick="this.classList.toggle('expanded')">
             <div class="project-card-main">
@@ -3022,15 +3088,13 @@ function normalizeFieldName(name) {
               <div class="project-photos">
                 <h4>SITE PHOTOS — ${formatValue(activityName || activityId)}</h4>
                 <div class="photos-grid">
-                  <div class="photo-placeholder">Attachment / Photo 1</div>
-                  <div class="photo-placeholder">Attachment / Photo 2</div>
-                  <div class="photo-placeholder">Attachment / Photo 3</div>
+                  ${photoHtml}
                 </div>
               </div>
             </div>
           </article>
         `;
-      }).join("");
+      })).then(html => html.join(""));
           }
 
     function formatNumber(value) {
