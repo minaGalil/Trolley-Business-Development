@@ -2173,7 +2173,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 5.0 2026-06-29</p>
+      <p>version 5.1 2026-06-29</p>
     </div>
 
     <div class="user-section">
@@ -2674,10 +2674,9 @@
     let siteId = null;
 
     const scopes = [
-      "User.Read",
-      "Sites.Read.All",
-      "https://trolleykw.sharepoint.com/AllSites.Read"
-    ];
+        "User.Read",
+        "Sites.Read.All"
+      ];
 
     const el = (id) => document.getElementById(id);
 
@@ -2762,40 +2761,35 @@
       loadAllData();
     }
 
-    async function getAccessToken() {
-      if (!msalInstance || !activeAccount) {
-        throw new Error("User is not logged in.");
-      }
+     async function getAccessToken() {
+        const account = msalInstance.getActiveAccount() || msalInstance.getAllAccounts()[0];
 
-      try {
-        const silent = await msalInstance.acquireTokenSilent({
-          scopes,
-          account: activeAccount
+        if (!account) throw new Error("User not signed in.");
+
+        const token = await msalInstance.acquireTokenSilent({
+          account,
+          scopes: ["User.Read", "Sites.Read.All"]
         });
-        return silent.accessToken;
-      } catch (silentError) {
-        const popup = await msalInstance.acquireTokenPopup({ scopes });
-        return popup.accessToken;
+
+        return token.accessToken;
       }
-    }
 
     async function graphGet(url) {
-      const token = await getAccessToken();
+        const token = await getAccessToken();
 
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json"
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`${response.status} ${response.statusText}: ${errorText}`);
         }
-      });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`${response.status} ${response.statusText}: ${errorText}`);
+        return await response.json();
       }
-
-      return await response.json();
-    }
 
     async function getSiteId() {
       const config = getConfigFromForm();
@@ -2891,14 +2885,18 @@ function normalizeFieldName(name) {
       }).replace(/ /g, "-");
     }
 
-async function getSharePointAccessToken() {
-  const response = await msalInstance.acquireTokenSilent({
-    scopes: ["https://trolleykw.sharepoint.com/AllSites.Read"],
-    account: activeAccount
-  });
+      async function getSharePointAccessToken() {
+        const account = msalInstance.getActiveAccount() || msalInstance.getAllAccounts()[0];
 
-  return response.accessToken;
-}
+        if (!account) throw new Error("User not signed in.");
+
+        const response = await msalInstance.acquireTokenSilent({
+          account,
+          scopes: ["https://trolleykw.sharepoint.com/AllSites.Read"]
+        });
+
+        return response.accessToken;
+      }
 
       async function sharePointGet(url) {
         const token = await getSharePointAccessToken();
