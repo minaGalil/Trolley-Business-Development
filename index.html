@@ -948,11 +948,9 @@
     }
 
       .project-details{
-          display:none;
-          border-top:3px solid var(--orange);
-          padding:22px;
-          grid-template-columns:320px 2fr;
-          gap:22px;
+          display:grid;
+          grid-template-columns:300px 1fr;
+          gap:25px;
       }
 
     .project-card.expanded .project-details {
@@ -1037,11 +1035,11 @@
 
         display:grid;
 
-        grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+        grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
 
-        gap:18px;
+        gap:20px;
 
-        align-items:start;
+         
 
     }
 
@@ -2173,7 +2171,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 5.5 2026-06-30</p>
+      <p>version 5.6 2026-06-30</p>
     </div>
 
     <div class="user-section">
@@ -3045,93 +3043,73 @@ function normalizeFieldName(name) {
         const attachments = await getProjectAttachments(Number(item.id));
         //  const attachments = [];
 
-        const photoHtml = attachments.length
-          ? attachments.map(file => {
 
-              const extension =
-                  file.FileName.split(".").pop().toLowerCase();
+              const photoHtml = attachments.length
+          ? `
+              <div class="project-photos">
 
-              const url =
-                  "https://" +
-                  getConfigFromForm().hostname +
-                  file.ServerRelativeUrl;
+                  <h4>SITE PHOTOS — ${activityName}</h4>
 
-              if(["jpg","jpeg","png","gif","bmp","webp","svg"].includes(extension)){
+                  <div class="photos-grid">
 
-                  return `
-                      <a href="${url}" target="_blank">
-                          <img
-                              src="${url}"
-                              class="project-photo"
-                              loading="lazy">
-                      </a>
-                  `;
+                      ${attachments.map(file => {
 
-              }
+                          const extension =
+                              file.FileName.split(".").pop().toLowerCase();
 
-              let icon="📄";
+                          const url =
+                              "https://" +
+                              getConfigFromForm().hostname +
+                              file.ServerRelativeUrl;
 
-              if(extension=="pdf") icon="📕";
+                          if (["jpg","jpeg","png","gif","bmp","webp","svg"].includes(extension)) {
 
-              if(["xls","xlsx","csv"].includes(extension))
-                  icon="📗";
+                              return `
+                                  <a href="${url}" target="_blank">
+                                      <img
+                                          src="${url}"
+                                          class="project-photo"
+                                          loading="lazy">
+                                  </a>
+                              `;
 
-              if(["doc","docx"].includes(extension))
-                  icon="📘";
+                          }
 
-              if(["ppt","pptx"].includes(extension))
-                  icon="📙";
+                          let icon = "📄";
 
-              if(["zip","rar","7z"].includes(extension))
-                  icon="🗜️";
+                          if(extension=="pdf") icon="📕";
+                          if(["xls","xlsx","csv"].includes(extension)) icon="📗";
+                          if(["doc","docx"].includes(extension)) icon="📘";
+                          if(["ppt","pptx"].includes(extension)) icon="📙";
+                          if(["zip","rar","7z"].includes(extension)) icon="🗜️";
+                          if(["mp4","mov","avi","mkv"].includes(extension)) icon="🎥";
 
-              if(["mp4","mov","avi","mkv"].includes(extension))
-                  icon="🎥";
+                          return `
+                              <a
+                                  href="${url}"
+                                  target="_blank"
+                                  class="photo-placeholder">
 
-              return `
+                                  <div style="font-size:55px">${icon}</div>
 
-                  <a
-                      href="${url}"
-                      target="_blank"
-                      class="photo-placeholder"
-                      style="
-                          text-decoration:none;
-                          display:flex;
-                          flex-direction:column;
-                          justify-content:center;
-                          align-items:center;
-                          color:#333;
-                      ">
+                                  <div style="margin-top:12px;text-align:center;word-break:break-word;padding:0 10px;">
+                                      ${file.FileName}
+                                  </div>
 
-                      <div style="font-size:55px;">
-                          ${icon}
-                      </div>
+                              </a>
+                          `;
 
-                      <div
-                          style="
-                              margin-top:12px;
-                              text-align:center;
-                              word-break:break-word;
-                              padding:0 10px;
-                          ">
+                      }).join("")}
 
-                          ${file.FileName}
+                  </div>
 
-                      </div>
-
-                  </a>
-
+              </div>
+          `
+          : `
+              <div class="photo-placeholder">
+                  No Attachments
+              </div>
               `;
-
-          }).join("")
-
-          :
-
-          `<div class="photo-placeholder">
-
-          No Attachments
-
-          </div>`;
         return `
           <article class="project-card" onclick="this.classList.toggle('expanded')">
             <div class="project-card-main">
@@ -3219,15 +3197,7 @@ function normalizeFieldName(name) {
                   <!-- RIGHT COLUMN -->
                   <div>
 
-                      <div class="project-photos">
-
-                          <h4>SITE PHOTOS</h4>
-
-                          <div class="photos-grid">
-                              ${photoHtml}
-                          </div>
-
-                      </div>
+                      ${photoHtml}
 
                       <div class="notes-box">
                           <strong>SITE NOTES</strong><br>
@@ -3238,41 +3208,7 @@ function normalizeFieldName(name) {
 
               </div>
             
-
-              <div class="details-box">
-                // <h4>SITE PHOTOS — ${formatValue(activityName || activityId)}</h4> 
-                
-                <h4>PROJECT INFORMATION</h4>
-                  <div class="detail-row">
-                      <span>Start Date</span>
-                      <strong>${start}</strong>
-                  </div>
-
-                  <div class="detail-row">
-                      <span>Finish Date</span>
-                      <strong>${end}</strong>
-                  </div>
-
-                  <div class="detail-row">
-                      <span>Actual Date</span>
-                      <strong>${actualDate}</strong>
-                  </div>
-
-                  <div class="detail-row">
-                      <span>Progress</span>
-                      <strong>${pct}%</strong>
-                  </div>
-
-                  <div class="detail-row">
-                      <span>Status</span>
-                      <strong>${status}</strong>
-                  </div>
-
-
-
-              </div>
-
-
+ 
 
             </div>
           </article>
