@@ -2186,7 +2186,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 6.0 2026-06-30</p>
+      <p>version 6.1 2026-06-30</p>
     </div>
 
     <div class="user-section">
@@ -3067,13 +3067,15 @@ function normalizeFieldName(name) {
 
                   <div class="photos-grid">
 
-                      ${(await Promise.all(attachments.map(async file => {
+                      ${attachments.map(file => {
 
                           const extension =
                               file.FileName.split(".").pop().toLowerCase();
 
-                          // const url = "https://" +  getConfigFromForm().hostname + file.ServerRelativeUrl;
-                          const url = await getAttachmentBlobUrl(file.ServerRelativeUrl);
+                          const url =
+                              "https://" +
+                              getConfigFromForm().hostname +
+                              file.ServerRelativeUrl;
 
                           if (["jpg","jpeg","png","gif","bmp","webp","svg"].includes(extension)) {
 
@@ -3112,7 +3114,7 @@ function normalizeFieldName(name) {
                               </a>
                           `;
 
-                      }))).join("")}
+                      }).join("")}
 
                   </div>
 
@@ -3707,32 +3709,6 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
           return value;
         }
-
-
-
-        async function getAttachmentBlobUrl(serverRelativeUrl) {
-          const config = getConfigFromForm();
-          const token = await getSharePointAccessToken();
-
-          const fileUrl =
-              `https://${config.hostname}${serverRelativeUrl}`;
-
-          const response = await fetch(fileUrl, {
-              headers: {
-                  Authorization: `Bearer ${token}`
-              }
-          });
-
-          if (!response.ok) {
-              console.error("Attachment failed:", fileUrl, response.status);
-              return "";
-          }
-
-          const blob = await response.blob();
-          return URL.createObjectURL(blob);
-      }
-
-
       function normalizeOpeningRows(excelRows) {
         return excelRows.map(row => {
           const v = row.values?.[0] || [];
