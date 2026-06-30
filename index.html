@@ -947,13 +947,13 @@
       font-weight: 900;
     }
 
-    .project-details {
-      display: none;
-      border-top: 3px solid var(--orange);
-      padding: 22px;
-      grid-template-columns: 260px 1fr;
-      gap: 22px;
-    }
+      .project-details{
+          display:none;
+          border-top:3px solid var(--orange);
+          padding:22px;
+          grid-template-columns:320px 2fr;
+          gap:22px;
+      }
 
     .project-card.expanded .project-details {
       display: grid;
@@ -2173,7 +2173,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 5.4 2026-06-30</p>
+      <p>version 5.5 2026-06-30</p>
     </div>
 
     <div class="user-section">
@@ -3177,60 +3177,67 @@ function normalizeFieldName(name) {
               <div class="expand-icon">▼</div>
             </div>
 
-            <div class="project-details">
-              <div>
-                <div>
 
-                    <div class="details-box">
+              <div class="project-details">
 
-                        <h4>PROJECT INFORMATION</h4>
+                  <!-- LEFT COLUMN -->
+                  <div>
 
-                        <div class="detail-row">
-                            <span>Start Date</span>
-                            <strong>${start}</strong>
-                        </div>
+                      <div class="details-box">
 
-                        <div class="detail-row">
-                            <span>Finish Date</span>
-                            <strong>${end}</strong>
-                        </div>
+                          <h4>PROJECT INFORMATION</h4>
 
-                        <div class="detail-row">
-                            <span>Actual Date</span>
-                            <strong>${actualDate}</strong>
-                        </div>
+                          <div class="detail-row">
+                              <span>Start Date</span>
+                              <strong>${start}</strong>
+                          </div>
 
-                        <div class="detail-row">
-                            <span>Progress</span>
-                            <strong>${pct}%</strong>
-                        </div>
+                          <div class="detail-row">
+                              <span>Finish Date</span>
+                              <strong>${end}</strong>
+                          </div>
 
-                        <div class="detail-row">
-                            <span>Status</span>
-                            <strong>${status}</strong>
-                        </div>
+                          <div class="detail-row">
+                              <span>Actual Date</span>
+                              <strong>${actualDate}</strong>
+                          </div>
 
-                    </div>
+                          <div class="detail-row">
+                              <span>Progress</span>
+                              <strong>${pct}%</strong>
+                          </div>
 
-                    <div class="project-photos">
+                          <div class="detail-row">
+                              <span>Status</span>
+                              <strong>${status}</strong>
+                          </div>
 
-                        <h4>SITE PHOTOS</h4>
+                      </div>
 
-                        <div class="photos-grid">
+                  </div>
 
-                            ${photoHtml}
+                  <!-- RIGHT COLUMN -->
+                  <div>
 
-                        </div>
+                      <div class="project-photos">
 
-                    </div>
+                          <h4>SITE PHOTOS</h4>
 
-                </div>
+                          <div class="photos-grid">
+                              ${photoHtml}
+                          </div>
 
-                <div class="notes-box">
-                  <strong>SITE NOTES</strong><br>
-                  ${formatValue(notes || "No notes available")}
-                </div>
+                      </div>
+
+                      <div class="notes-box">
+                          <strong>SITE NOTES</strong><br>
+                          ${formatValue(notes || "No notes available")}
+                      </div>
+
+                  </div>
+
               </div>
+            
 
               <div class="details-box">
                 // <h4>SITE PHOTOS — ${formatValue(activityName || activityId)}</h4> 
