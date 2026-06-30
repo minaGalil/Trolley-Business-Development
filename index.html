@@ -841,6 +841,22 @@
       grid-template-columns: repeat(4, 1fr);
     }
 
+
+    .details-top{
+          display:grid;
+          grid-template-columns:280px 1fr;
+          gap:25px;
+          align-items:flex-start;
+      }
+
+      .project-photos{
+          width:100%;
+      }
+
+      .notes-box{
+          margin-top:20px;
+          width:100%;
+      }
     .hint-text {
       color: #777;
       font-size: 13px;
@@ -2170,7 +2186,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 5.8 2026-06-30</p>
+      <p>version 5.9 2026-06-30</p>
     </div>
 
     <div class="user-section">
@@ -3158,58 +3174,51 @@ function normalizeFieldName(name) {
 
             </div>
 
+          <div class="project-details">
 
-              <div class="project-details">
+              <div class="details-top">
 
-                  <!-- LEFT COLUMN -->
-                  <div>
+                  <div class="details-box">
 
-                      <div class="details-box">
+                      <h4>PROJECT INFORMATION</h4>
 
-                          <h4>PROJECT INFORMATION</h4>
+                      <div class="detail-row">
+                          <span>Start Date</span>
+                          <strong>${start}</strong>
+                      </div>
 
-                          <div class="detail-row">
-                              <span>Start Date</span>
-                              <strong>${start}</strong>
-                          </div>
+                      <div class="detail-row">
+                          <span>Finish Date</span>
+                          <strong>${end}</strong>
+                      </div>
 
-                          <div class="detail-row">
-                              <span>Finish Date</span>
-                              <strong>${end}</strong>
-                          </div>
+                      <div class="detail-row">
+                          <span>Actual Date</span>
+                          <strong>${actualDate}</strong>
+                      </div>
 
-                          <div class="detail-row">
-                              <span>Actual Date</span>
-                              <strong>${actualDate}</strong>
-                          </div>
+                      <div class="detail-row">
+                          <span>Progress</span>
+                          <strong>${pct}%</strong>
+                      </div>
 
-                          <div class="detail-row">
-                              <span>Progress</span>
-                              <strong>${pct}%</strong>
-                          </div>
-
-                          <div class="detail-row">
-                              <span>Status</span>
-                              <strong>${status}</strong>
-                          </div>
-
+                      <div class="detail-row">
+                          <span>Status</span>
+                          <strong>${status}</strong>
                       </div>
 
                   </div>
 
-                  <!-- RIGHT COLUMN -->
-                  <div>
-
-                      ${photoHtml}
-
-                      <div class="notes-box">
-                          <strong>SITE NOTES</strong><br>
-                          ${formatValue(notes || "No notes available")}
-                      </div>
-
-                  </div>
+                  ${photoHtml}
 
               </div>
+
+              <div class="notes-box">
+                  <strong>SITE NOTES</strong><br>
+                  ${formatValue(notes || "No notes available")}
+              </div>
+
+          </div>
             
  
  
