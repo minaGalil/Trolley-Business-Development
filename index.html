@@ -953,9 +953,13 @@
           gap:25px;
       }
 
-    .project-card.expanded .project-details {
-      display: grid;
-    }
+      .project-details{
+          display:none;
+      }
+
+      .project-card.expanded > .project-details{
+          display:grid;
+      }
 
     .details-box {
       border: 1px solid #eadfd4;
@@ -2171,7 +2175,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 5.6 2026-06-30</p>
+      <p>version 5.7 2026-06-30</p>
     </div>
 
     <div class="user-section">
@@ -2947,7 +2951,7 @@ function normalizeFieldName(name) {
 /* Stop HERE */ 
 
 
-    async function renderProjects(items) 
+
     {
       const container = el("projectsBody");
 
@@ -3111,7 +3115,7 @@ function normalizeFieldName(name) {
               </div>
               `;
         return `
-          <article class="project-card" onclick="this.classList.toggle('expanded')">
+          <article class="project-card" onclick="toggleProject(this)">
             <div class="project-card-main">
               <div class="status-dot-big ${dotClass}"></div>
 
@@ -3190,7 +3194,7 @@ function normalizeFieldName(name) {
                               <strong>${status}</strong>
                           </div>
 
-                      </div>
+                       
 
                   </div>
 
@@ -3328,6 +3332,22 @@ function normalizeFieldName(name) {
           }
         });
       }
+
+
+      function toggleProject(card){
+
+          card.classList.toggle("expanded");
+
+          const arrow = card.querySelector(".expand-icon");
+
+          if(card.classList.contains("expanded")){
+              arrow.innerHTML = "▲";
+          }else{
+              arrow.innerHTML = "▼";
+          }
+
+      }
+
 
     function renderCost(items) {
         const tbody = el("costBody");
