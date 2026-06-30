@@ -948,18 +948,13 @@
     }
 
       .project-details{
-          display:grid;
-          grid-template-columns:300px 1fr;
-          gap:25px;
-      }
-
-      .project-details{
           display:none;
+           
       }
 
-      .project-card.expanded > .project-details{
-          display:grid;
-      }
+    .project-card.expanded .project-details {
+      display: grid;
+    }
 
     .details-box {
       border: 1px solid #eadfd4;
@@ -2175,7 +2170,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 5.7 2026-06-30</p>
+      <p>version 5.8 2026-06-30</p>
     </div>
 
     <div class="user-section">
@@ -2951,7 +2946,7 @@ function normalizeFieldName(name) {
 /* Stop HERE */ 
 
 
-
+    async function renderProjects(items) 
     {
       const container = el("projectsBody");
 
@@ -3115,48 +3110,52 @@ function normalizeFieldName(name) {
               </div>
               `;
         return `
+
+
           <article class="project-card" onclick="toggleProject(this)">
             <div class="project-card-main">
               <div class="status-dot-big ${dotClass}"></div>
 
-              <div class="progress-circle">
-                ${pct}%
-                <small>done</small>
-              </div>
+                                <div class="progress-circle">
+                                  ${pct}%
+                                  <small>done</small>
+                                </div>
 
-              <div class="project-title">
-                <h3>${formatValue(activityName || activityId)}</h3>
-                <p>
-                  ${formatValue(stage)}
-                  ${contractor ? " · " + formatValue(contractor) : ""}
-                  ${activityId ? " · " + formatValue(activityId) : ""}
-                </p>
+                                <div class="project-title">
+                                  <h3>${formatValue(activityName || activityId)}</h3>
+                                  <p>
+                                    ${formatValue(stage)}
+                                    ${contractor ? " · " + formatValue(contractor) : ""}
+                                    ${activityId ? " · " + formatValue(activityId) : ""}
+                                  </p>
 
-                <div class="project-badges">
-                  <span class="badge orange">${formatValue(status || "No Status")}</span>
-                  <span class="badge">${formatValue(storeType || "Store Type N/A")}</span>
-                  <span class="badge">${formatValue(meterArea || "Meter / Area N/A")}</span>
-                  <span class="badge">${formatValue(duration)} days</span>
-                  <span class="badge">Budget: ${formatValue(plannedBudget)}</span>
-                </div>
-              </div>
+                                  <div class="project-badges">
+                                    <span class="badge orange">${formatValue(status || "No Status")}</span>
+                                    <span class="badge">${formatValue(storeType || "Store Type N/A")}</span>
+                                    <span class="badge">${formatValue(meterArea || "Meter / Area N/A")}</span>
+                                    <span class="badge">${formatValue(duration)} days</span>
+                                    <span class="badge">Budget: ${formatValue(plannedBudget)}</span>
+                                  </div>
+                                </div>
 
-              <div class="project-date-grid">
-                <div>
-                  <strong>${formatValue(start)}</strong>
-                  <span>Start</span>
-                </div>
-                <div>
-                  <strong>${formatValue(end)}</strong>
-                  <span>Finish</span>
-                </div>
-                <div>
-                  <strong>${formatValue(actualDate)}</strong>
-                  <span>Actual</span>
-                </div>
-              </div>
+                                <div class="project-date-grid">
+                                  <div>
+                                    <strong>${formatValue(start)}</strong>
+                                    <span>Start</span>
+                                  </div>
+                                  <div>
+                                    <strong>${formatValue(end)}</strong>
+                                    <span>Finish</span>
+                                  </div>
+                                  <div>
+                                    <strong>${formatValue(actualDate)}</strong>
+                                    <span>Actual</span>
+                                  </div>
+                                </div>
 
+ 
               <div class="expand-icon">▼</div>
+
             </div>
 
 
@@ -3194,7 +3193,7 @@ function normalizeFieldName(name) {
                               <strong>${status}</strong>
                           </div>
 
-                       
+                      </div>
 
                   </div>
 
@@ -3213,8 +3212,7 @@ function normalizeFieldName(name) {
               </div>
             
  
-
-            </div>
+ 
           </article>
         `;
       })).then(html => html.join(""));
@@ -3332,22 +3330,6 @@ function normalizeFieldName(name) {
           }
         });
       }
-
-
-      function toggleProject(card){
-
-          card.classList.toggle("expanded");
-
-          const arrow = card.querySelector(".expand-icon");
-
-          if(card.classList.contains("expanded")){
-              arrow.innerHTML = "▲";
-          }else{
-              arrow.innerHTML = "▼";
-          }
-
-      }
-
 
     function renderCost(items) {
         const tbody = el("costBody");
@@ -3989,7 +3971,19 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
 
 
+      function toggleProject(card){
 
+          card.classList.toggle("expanded");
+
+          const arrow = card.querySelector(".expand-icon");
+
+          if(arrow){
+              arrow.innerHTML = card.classList.contains("expanded")
+                  ? "▲"
+                  : "▼";
+          }
+
+      }
 
 
     function renderOpeningCards(rows) {
