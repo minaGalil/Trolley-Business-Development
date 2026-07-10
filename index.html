@@ -2037,18 +2037,32 @@
       opacity:.85;
     }
 
+
     .p6-summary{
-      display:grid;
-      grid-template-columns:repeat(6,1fr);
-      background:#1f1f1f;
-      border-bottom:3px solid var(--orange);
+        display:flex;
+        flex-wrap:nowrap;
+        justify-content:space-between;
+        align-items:stretch;
+        background:#1f1f1f;
+        border-bottom:3px solid #ff8200;
     }
 
-    .p6-summary div{
-      padding:18px;
-      text-align:center;
-      border-right:1px solid rgba(255,255,255,.08);
-    }
+
+
+        .p6-summary > div{
+            flex:1;
+            min-width:0;
+            height:150px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            border-right:1px solid rgba(255,255,255,.08);
+        }
+
+        .p6-summary > div:last-child{
+            border-right:none;
+        }
 
     .p6-summary strong{
       display:block;
@@ -2507,7 +2521,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 7.3 2026-07-10</p>
+      <p>version 7.4 2026-07-10</p>
     </div>
 
     <div class="user-section">
