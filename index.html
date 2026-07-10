@@ -2507,7 +2507,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 6.9 2026-07-10</p>
+      <p>version 7.0 2026-07-10</p>
     </div>
 
     <div class="user-section">
@@ -2735,13 +2735,7 @@
                 <option value="Completed">Complete</option>
             </select>
 
-            <select id="filterStoreType">
-                <option value="">All Store Types</option>
-                <option value="Gas Station">Gas Station</option>
-                <option value="Hyper Market">Stand Alone</option>
-                <option value="Super Market">University</option>
-                <option value="Express">Express</option>
-            </select>
+ 
 
             <input
                 type="text"
@@ -4482,9 +4476,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       const statusFilter =
       document.getElementById("filterStatus")?.value || "";
 
-      const typeFilter =
-      document.getElementById("filterStoreType")?.value || "";
-
+     
       const searchText =
       (document.getElementById("filterSearch")?.value || "")
       .toLowerCase();
@@ -4498,12 +4490,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
                   field(f,["Status"]) || f.Status || ""
               );
 
-          const storeType =
-              String(
-                  field(f,["Store Type","Store_x0020_Type"]) ||
-                  f.StoreType ||
-                  ""
-              );
+         
 
           const activity =
               String(
@@ -4590,6 +4577,8 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         if (pct >= 100 || s.includes("complete") || s.includes("done")) return "complete";
         if (s.includes("hold")) return "hold";
         if (s.includes("tender")) return "tender";
+        if (s.includes("pre-tender")) return "tender";
+        if (s.includes("Pre-Tend")) return "tender";
         if (s.includes("tech")) return "tech";
         if (s.includes("review")) return "review";
         if (s.includes("progress")) return "progress";
@@ -4763,7 +4752,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
         [
             "filterStatus",
-            "filterStoreType",
+             
             "filterSearch"
         ].forEach(id=>{
 
