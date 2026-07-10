@@ -2507,7 +2507,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 6.6 2026-07-10</p>
+      <p>version 6.7 2026-07-10</p>
     </div>
 
     <div class="user-section">
@@ -3964,7 +3964,8 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         ]);
 
         renderProjects(projects);
-        renderGantt(projects);
+        window.ganttItems = projects;
+        renderGantt(window.ganttItems);
         renderCost(cost);
         renderSchedule(schedule);
 
@@ -4730,24 +4731,18 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      loadConfigFromStorage();
-      initializeMsal();
 
-      el("loginBtn").addEventListener("click", login);
-      el("loginBtnMain").addEventListener("click", login);
-      el("logoutBtn").addEventListener("click", logout);
-      el("saveConfigBtn").addEventListener("click", saveConfig);
-      el("loadBtn").addEventListener("click", loadAllData);
+        ["filterStatus","filterStoreType","filterSearch"].forEach(id => {
 
-      document.querySelectorAll(".dash-tab").forEach(btn => {
-        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
-      });
+            const ctrl = document.getElementById(id);
 
-      document.querySelectorAll(".main-tab").forEach(btn => {
-        btn.addEventListener("click", () => switchMainTab(btn.dataset.mainTab));
-      });
-    
-    
+            if (!ctrl) return;
+
+            ctrl.addEventListener("change", () => renderGantt(window.ganttItems));
+            ctrl.addEventListener("keyup",  () => renderGantt(window.ganttItems));
+
+        });
+
     });
   </script>
 
@@ -4768,7 +4763,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
                 ()=>{
 
-                    renderGantt(ganttItems);
+                    renderGantt(window.ganttItems);
 
                 }
 
