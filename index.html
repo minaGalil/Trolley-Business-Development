@@ -2507,7 +2507,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 6.5 2026-07-10</p>
+      <p>version 6.6 2026-07-10</p>
     </div>
 
     <div class="user-section">
@@ -2722,7 +2722,7 @@
 
         <div id="p6Summary" class="p6-summary"></div>
 
-
+        <br> 
         <!-- Gantt Filters -->
         <div class="gantt-filters">
 
@@ -4472,6 +4472,60 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
     function renderGantt(items) {
 
+
+      // =========================
+      // GANTT FILTERS
+      // =========================
+
+      const statusFilter =
+      document.getElementById("filterStatus")?.value || "";
+
+      const typeFilter =
+      document.getElementById("filterStoreType")?.value || "";
+
+      const searchText =
+      (document.getElementById("filterSearch")?.value || "")
+      .toLowerCase();
+
+      items = items.filter(item=>{
+
+          const f = item.fields || item;
+
+          const status =
+              String(
+                  field(f,["Status"]) || f.Status || ""
+              );
+
+          const storeType =
+              String(
+                  field(f,["Store Type","Store_x0020_Type"]) ||
+                  f.StoreType ||
+                  ""
+              );
+
+          const activity =
+              String(
+                  field(f,["Activity"]) ||
+                  f.Activity ||
+                  ""
+              ).toLowerCase();
+
+          return (
+
+              (!statusFilter || status===statusFilter)
+
+              &&
+
+              (!typeFilter || storeType===typeFilter)
+
+              &&
+
+              (!searchText || activity.includes(searchText))
+
+          );
+
+      });
+
       const container = el("p6Gantt");
       const summary = el("p6Summary");
       const meta = el("p6Meta");
@@ -4556,7 +4610,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         <div><strong style="color:#16a34a">${completed}</strong><span>Completed</span></div>
       `;
 
-      meta.textContent = `${active} Active · ${onHold} On Hold · ${completed} Complete · Data Date: 10-Jul-2026 · Rev 02`;
+      meta.textContent = `${active} Active · ${onHold} On Hold · ${completed} Complete · `;
 
       let monthsHtml = "";
       let weeksHtml = "";
@@ -4696,5 +4750,35 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
     
     });
   </script>
+
+
+    <script>
+
+    document.addEventListener("DOMContentLoaded",()=>{
+
+        [
+            "filterStatus",
+            "filterStoreType",
+            "filterSearch"
+        ].forEach(id=>{
+
+            document.getElementById(id)?.addEventListener(
+
+                "input",
+
+                ()=>{
+
+                    renderGantt(ganttItems);
+
+                }
+
+            );
+
+        });
+
+    });
+
+    </script>
+
 </body>
 </html>
