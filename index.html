@@ -2507,7 +2507,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 7.1 2026-07-10</p>
+      <p>version 7.2 2026-07-10</p>
     </div>
 
     <div class="user-section">
@@ -2716,7 +2716,7 @@
       <div class="p6-card">
 
         <div class="p6-title">
-          <h2>🧮 Primavera P6 Style Gantt — Apr to Sep 2026</h2>
+          <h2>🧮 Primavera P6 Style Gantt</h2>
           <span id="p6Meta">Live Data</span>
         </div>
 
@@ -2726,14 +2726,9 @@
         <!-- Gantt Filters -->
         <div class="gantt-filters">
 
-            <select id="filterStatus">
-                <option value="">All Status</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Tender Phase">Pre-Tender</option>
-                <option value="Tech Review">Tech Review</option>
-                <option value="On Hold">On Hold</option>
-                <option value="Completed">Complete</option>
-            </select>
+        <select id="filterStatus">
+            <option value="">All Status</option>
+        </select>
 <!--
             <select id="filterStoreType">
                 <option value="">All Store Types</option>
@@ -3966,7 +3961,9 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
         renderProjects(projects);
         window.ganttItems = projects;
+        populateGanttStatusFilter(window.ganttItems);
         renderGantt(window.ganttItems);
+
         renderCost(cost);
         renderSchedule(schedule);
 
@@ -4607,9 +4604,11 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       const onHold = rows.filter(r => String(r.status).toLowerCase().includes("hold")).length;
       const active = total - completed;
 
+
+      
       summary.innerHTML = `
         <div><strong>${total}</strong><span>Total Activities</span></div>
-        <div><strong style="color:#5dade2">${active}</strong><span>Active Projects</span></div>
+        <div><strong style="color:#5dade2">${active}</strong><span>Active Projects</span></div> 
         <div><strong style="color:#2563eb">${inProgress}</strong><span>In Progress</span></div>
         <div><strong style="color:#a78bfa">${tender}</strong><span>Tender Phase</span></div>
         <div><strong style="color:#a78bfa">${tech}</strong><span>Tech Review</span></div>
@@ -4617,7 +4616,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         <div><strong style="color:#16a34a">${completed}</strong><span>Completed</span></div>
       `;
 
-      meta.textContent = `${active} Active · ${onHold} On Hold · ${completed} Complete · `;
+      meta.textContent = `${active} Active · ${onHold} On Hold · ${completed} Completed  `;
 
       let monthsHtml = "";
       let weeksHtml = "";
@@ -4734,6 +4733,29 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
           ${body}
         </div>
       `;
+    }
+
+
+
+    function populateGanttStatusFilter(items) {
+
+        const select = document.getElementById("filterStatus");
+        if (!select) return;
+
+        const currentValue = select.value;
+
+        const statuses = [...new Set(
+            items
+                .map(item => field(item.fields || item, ["Status"]))
+                .filter(x => x && String(x).trim() !== "")
+                .map(x => String(x).trim())
+        )].sort();
+
+        select.innerHTML =
+            `<option value="">All Status</option>` +
+            statuses.map(s => `<option value="${s}">${s}</option>`).join("");
+
+        select.value = currentValue;
     }
 
     document.addEventListener("DOMContentLoaded", () => {
