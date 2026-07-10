@@ -1132,6 +1132,40 @@
       box-shadow: 0 8px 22px rgba(0,0,0,0.05);
     }
 
+
+
+    .gantt-filters{
+    display:flex;
+    gap:14px;
+    align-items:center;
+    margin:0 0 18px 0;
+    flex-wrap:wrap;
+}
+
+.gantt-filters select,
+.gantt-filters input{
+
+    height:42px;
+    padding:0 16px;
+    border:1px solid #d8d8d8;
+    border-radius:10px;
+    background:#fff;
+    font-size:14px;
+    font-weight:600;
+    outline:none;
+}
+
+.gantt-filters input{
+    width:280px;
+}
+
+.gantt-filters select:hover,
+.gantt-filters input:hover{
+
+    border-color:#ff8200;
+}
+
+
     .schedule-header {
       background: var(--orange);
       color: white;
@@ -2474,7 +2508,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 6.3 2026-07-10</p>
+      <p>version 6.4 2026-07-10</p>
     </div>
 
     <div class="user-section">
@@ -2675,6 +2709,9 @@
         <div id="projectsBody" class="project-list"></div>
       </section>
 
+
+
+
     <section id="ganttTab" class="section hidden">
 
       <div class="p6-card">
@@ -2685,6 +2722,35 @@
         </div>
 
         <div id="p6Summary" class="p6-summary"></div>
+
+
+        <!-- Gantt Filters -->
+        <div class="gantt-filters">
+
+            <select id="filterStatus">
+                <option value="">All Status</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Tender Phase">Tender Phase</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Completed">Completed</option>
+            </select>
+
+            <select id="filterStoreType">
+                <option value="">All Store Types</option>
+                <option value="Gas Station">Gas Station</option>
+                <option value="Hyper Market">Hyper Market</option>
+                <option value="Super Market">Super Market</option>
+                <option value="Express">Express</option>
+            </select>
+
+            <input
+                type="text"
+                id="filterSearch"
+                placeholder="Search Activity...">
+
+        </div>
+
+        
 
         <div id="p6Gantt" class="p6-gantt"></div>
 
@@ -3712,6 +3778,12 @@ function normalizeFieldName(name) {
         return;
       }
 
+
+
+
+
+
+
       const rows = items.map((item, index) => {
         const f = item.fields || {};
 
@@ -3763,6 +3835,33 @@ function normalizeFieldName(name) {
         `;
       }).join("");
     }
+
+
+    const statusFilter =
+        document.getElementById("filterStatus").value;
+
+    const storeTypeFilter =
+        document.getElementById("filterStoreType").value;
+
+    const search =
+        document.getElementById("filterSearch").value.toLowerCase();
+
+    const filtered = ganttItems.filter(x=>{
+
+        const status = x.Status || "";
+        const type   = x.StoreType || "";
+        const name   = x.ActivityName || "";
+
+        return (!statusFilter || status===statusFilter)
+            && (!storeTypeFilter || type===storeTypeFilter)
+            && (!search || name.toLowerCase().includes(search));
+
+    });
+
+    renderGantt(filtered);
+
+
+
 
     function parseDateValue(value) {
       if (!value) return null;
