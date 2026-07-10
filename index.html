@@ -1156,7 +1156,7 @@
 }
 
 .gantt-filters input{
-    width:600px;
+    width:280px;
 }
 
 .gantt-filters select:hover,
@@ -2038,14 +2038,16 @@
     }
 
     .p6-summary{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      background:#1f1f1f;
+      border-bottom:3px solid var(--orange);
+    }
 
     .p6-summary div{
-        min-height:110px;
-        display:flex;
-        flex-direction:column;
-        justify-content:center;
-        align-items:center;
-        border-right:1px solid rgba(255,255,255,.08);
+      padding:18px;
+      text-align:center;
+      border-right:1px solid rgba(255,255,255,.08);
     }
 
     .p6-summary strong{
@@ -2505,7 +2507,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 7.7 2026-07-10</p>
+      <p>version 7.2 2026-07-10</p>
     </div>
 
     <div class="user-section">
@@ -3957,11 +3959,10 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
           getListItems(config.scheduleListName)
         ]);
 
-        renderProjects(projects);
-        window.ganttItems = projects;
-        populateGanttStatusFilter(window.ganttItems);
-        renderGantt(window.ganttItems);
-
+            renderProjects(projects);
+    window.ganttItems = projects;
+    populateGanttStatusFilter(window.ganttItems);
+    renderGantt(window.ganttItems);
         renderCost(cost);
         renderSchedule(schedule);
 
