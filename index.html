@@ -2734,14 +2734,19 @@
                 <option value="On Hold">On Hold</option>
                 <option value="Completed">Complete</option>
             </select>
-
- 
+<!--
+            <select id="filterStoreType">
+                <option value="">All Store Types</option>
+                <option value="Gas Station">Gas Station</option>
+                <option value="Hyper Market">Stand Alone</option>
+                <option value="Super Market">University</option>
+-->                
+            </select>
 
             <input
                 type="text"
                 id="filterSearch"
-                placeholder="Search Activity..."
-                style="width:420px;">
+                placeholder="Search Activity...">
 
         </div>
 
@@ -4477,7 +4482,9 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       const statusFilter =
       document.getElementById("filterStatus")?.value || "";
 
-     
+      const typeFilter =
+      document.getElementById("filterStoreType")?.value || "";
+
       const searchText =
       (document.getElementById("filterSearch")?.value || "")
       .toLowerCase();
@@ -4491,7 +4498,12 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
                   field(f,["Status"]) || f.Status || ""
               );
 
-         
+          const storeType =
+              String(
+                  field(f,["Store Type","Store_x0020_Type"]) ||
+                  f.StoreType ||
+                  ""
+              );
 
           const activity =
               String(
@@ -4753,7 +4765,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
         [
             "filterStatus",
-             
+            "filterStoreType",
             "filterSearch"
         ].forEach(id=>{
 
