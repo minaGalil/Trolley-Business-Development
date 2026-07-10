@@ -1954,6 +1954,273 @@
   flex-wrap:wrap;
 }
 
+
+    .p6-card{
+      background:#fff;
+      border:1px solid #eadfd4;
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 10px 28px rgba(0,0,0,.08);
+    }
+
+    .p6-title{
+      background:#181818;
+      color:white;
+      padding:16px 22px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .p6-title h2{
+      margin:0;
+      font-size:17px;
+      font-weight:900;
+    }
+
+    .p6-title span{
+      font-size:12px;
+      opacity:.85;
+    }
+
+    .p6-summary{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      background:#1f1f1f;
+      border-bottom:3px solid var(--orange);
+    }
+
+    .p6-summary div{
+      padding:18px;
+      text-align:center;
+      border-right:1px solid rgba(255,255,255,.08);
+    }
+
+    .p6-summary strong{
+      display:block;
+      font-size:28px;
+      color:var(--orange);
+    }
+
+    .p6-summary span{
+      display:block;
+      margin-top:6px;
+      color:#999;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.6px;
+    }
+
+    .p6-gantt{
+      overflow:auto;
+      background:#f3f3f3;
+    }
+
+    .p6-grid{
+      min-width:max-content;
+      position:relative;
+    }
+
+    .p6-row{
+      display:grid;
+      grid-template-columns:70px 250px 60px 95px 95px 140px 55px var(--timeline-width);
+    }
+
+    .p6-head{
+      background:#363636;
+      color:#fff;
+      font-size:11px;
+      font-weight:900;
+      border-bottom:1px solid #888;
+    }
+
+    .p6-cell{
+      padding:9px 10px;
+      border-right:1px solid #c9c9c9;
+      border-bottom:1px solid #c9c9c9;
+      background:#f8f8f8;
+      font-size:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
+
+    .p6-head .p6-cell{
+      background:#363636;
+      color:white;
+    }
+
+    .p6-name{
+      font-weight:900;
+    }
+
+    .p6-id{
+      font-family:monospace;
+      color:#555;
+    }
+
+    .p6-status{
+      padding:5px 9px;
+      border-radius:6px;
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .p6-status.complete{background:#dcfce7;color:#047857;}
+    .p6-status.progress{background:#dbeafe;color:#075985;}
+    .p6-status.hold{background:#fee2e2;color:#b91c1c;}
+    .p6-status.tender{background:#ead7f5;color:#7e22ce;}
+    .p6-status.review{background:#e0f2fe;color:#0369a1;}
+
+    .p6-pct.green{color:#00a651;font-weight:900;}
+    .p6-pct.orange{color:#ff8200;font-weight:900;}
+    .p6-pct.red{color:#ef4444;font-weight:900;}
+
+    .p6-time-head{
+      position:relative;
+      background:#333;
+      height:62px;
+      border-bottom:1px solid #999;
+    }
+
+    .p6-month{
+      position:absolute;
+      top:0;
+      height:32px;
+      border-left:1px solid #aaa;
+      color:#fff;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+    }
+
+    .p6-week{
+      position:absolute;
+      top:32px;
+      height:22px;
+      border-left:1px solid #aaa;
+      color:#ddd;
+      font-size:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .p6-data-label{
+      position:absolute;
+      top:54px;
+      height:22px;
+      background:#202020;
+      color:#ff8200;
+      font-weight:900;
+      font-size:11px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .p6-timeline{
+      position:relative;
+      height:34px;
+      background:
+        repeating-linear-gradient(
+          to right,
+          #e7e7e7 0,
+          #e7e7e7 27px,
+          #cfcfcf 28px
+        );
+      border-bottom:1px solid #c9c9c9;
+    }
+
+    .p6-bar-base{
+      position:absolute;
+      top:8px;
+      height:17px;
+      background:#cfe4f3;
+      border:1px solid #9cc9e5;
+    }
+
+    .p6-bar-progress{
+      position:absolute;
+      top:8px;
+      height:17px;
+      color:white;
+      font-size:10px;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      padding-right:5px;
+    }
+
+    .p6-bar-progress.complete{background:#16a34a;}
+    .p6-bar-progress.progress{background:#5dade2;}
+    .p6-bar-progress.hold{background:#c0392b;}
+    .p6-bar-progress.tender{background:#7f8c8d;}
+    .p6-bar-progress.review{background:#8e44ad;}
+
+    .p6-milestone{
+      position:absolute;
+      top:5px;
+      width:15px;
+      height:15px;
+      background:#ff8200;
+      border:2px solid white;
+      transform:rotate(45deg);
+      box-shadow:0 1px 4px rgba(0,0,0,.35);
+    }
+
+    .p6-finish-label{
+      position:absolute;
+      top:7px;
+      font-size:10px;
+      color:#ff8200;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .p6-data-line{
+      position:absolute;
+      top:0;
+      bottom:0;
+      width:2px;
+      background:#e11d48;
+      z-index:20;
+    }
+
+    .p6-legend{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      padding:12px 18px;
+      font-size:12px;
+      background:#fffaf5;
+      border-top:1px solid #eadfd4;
+    }
+
+    .lg{
+      display:inline-block;
+      width:18px;
+      height:10px;
+      border-radius:3px;
+      margin-right:5px;
+    }
+
+    .lg.blue{background:#5dade2;}
+    .lg.orange{background:#f39c12;}
+    .lg.red{background:#c0392b;}
+    .lg.gray{background:#7f8c8d;}
+    .lg.line{
+      width:2px;
+      height:16px;
+      background:#e11d48;
+      border-radius:0;
+    }
+
+
 .country-card{
   width:260px;
   min-height:190px;
@@ -2186,7 +2453,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 6.1 2026-06-30</p>
+      <p>version 6.2 2026-07-10</p>
     </div>
 
     <div class="user-section">
@@ -2389,31 +2656,25 @@
 
     <section id="ganttTab" class="section hidden">
 
-      <div class="gantt-card">
-        <div class="gantt-header">
-          <h2>📊 Primavera P6 Style Gantt — Project Schedule</h2>
-          <span id="ganttDateLabel">Live Data from SharePoint</span>
+      <div class="p6-card">
+
+        <div class="p6-title">
+          <h2>🧮 Primavera P6 Style Gantt — Apr to Sep 2026</h2>
+          <span id="p6Meta">Live Data</span>
         </div>
 
-        <div class="gantt-summary" id="ganttSummary"></div>
+        <div id="p6Summary" class="p6-summary"></div>
 
-        <div class="gantt-table-wrap">
-          <table class="gantt-table">
-            <thead>
-              <tr>
-                <th>Act ID</th>
-                <th>Activity Name</th>
-                <th>Dur</th>
-                <th>Start</th>
-                <th>Finish</th>
-                <th>Status</th>
-                <th>%</th>
-                <th>Timeline</th>
-              </tr>
-            </thead>
-            <tbody id="ganttBody"></tbody>
-          </table>
+        <div id="p6Gantt" class="p6-gantt"></div>
+
+        <div class="p6-legend">
+          <span><b class="lg blue"></b> In Progress / Contracted</span>
+          <span><b class="lg orange"></b> Finalizing</span>
+          <span><b class="lg red"></b> On Hold</span>
+          <span><b class="lg gray"></b> Pre-Tendering</span>
+          <span><b class="lg line"></b> Data Date</span>
         </div>
+
       </div>
 
     </section>
@@ -4121,112 +4382,212 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         renderOpeningCards(filteredRows);
         renderOpeningTable(filteredRows);
       }
+ 
 
-      function renderGantt(items) {
-        const tbody = el("ganttBody");
+    function renderGantt(items) {
 
-        if (!items.length) {
-          tbody.innerHTML = `<tr><td colspan="8" class="empty">No project schedule data found.</td></tr>`;
-          return;
-        }
+      const container = el("p6Gantt");
+      const summary = el("p6Summary");
+      const meta = el("p6Meta");
 
-        const rows = items.map(item => {
-          const f = item.fields || {};
+      if (!items.length) {
+        container.innerHTML = `<div class="empty">No project schedule data found.</div>`;
+        return;
+      }
 
-          const activityId = field(f, ["Title"]);
-          const activityName = field(f, ["Activity"]);
-          const duration = Number(field(f, ["Duration"])) || 0;
-          const startDate = parseDateValue(field(f, ["Start"]));
-          const endDate = parseDateValue(field(f, ["End"]));
-          const status = field(f, ["Status"]);
-          const pct = Number(String(field(f, ["Progress %"])).replace("%", "")) || 0;
+      const DAY = 1000 * 60 * 60 * 24;
+      const DAY_WIDTH = 4;
+      const DATA_DATE = new Date("2026-07-10");
 
-          return {
-            activityId,
-            activityName,
-            duration,
-            startDate,
-            endDate,
-            status,
-            pct
-          };
-        });
+      const rows = items.map(item => {
+        const f = item.fields || {};
 
-        const validDates = rows.flatMap(r => [r.startDate, r.endDate]).filter(Boolean);
+        const activityId = field(f, ["Title"]);
+        const activityName = field(f, ["Activity"]);
+        const duration = Number(field(f, ["Duration"])) || 0;
+        const startDate = parseDateValue(field(f, ["Start"]));
+        const endDate = parseDateValue(field(f, ["End"]));
+        const status = field(f, ["Status"]);
+        const pct = Number(String(field(f, ["Progress %"])).replace("%", "")) || 0;
 
-        const minDate = validDates.length
-          ? new Date(Math.min(...validDates.map(d => d.getTime())))
-          : new Date("2026-01-01");
+        return {
+          activityId,
+          activityName,
+          duration,
+          startDate,
+          endDate,
+          status,
+          pct
+        };
+      });
 
-        const maxDate = validDates.length
-          ? new Date(Math.max(...validDates.map(d => d.getTime())))
-          : new Date("2026-12-31");
+      const validDates = rows.flatMap(r => [r.startDate, r.endDate]).filter(Boolean);
 
-        minDate.setDate(minDate.getDate() - 15);
-        maxDate.setDate(maxDate.getDate() + 30);
+      let minDate = validDates.length
+        ? new Date(Math.min(...validDates.map(d => d.getTime())))
+        : new Date("2026-01-01");
 
-        const totalRange = maxDate - minDate;
+      let maxDate = validDates.length
+        ? new Date(Math.max(...validDates.map(d => d.getTime())))
+        : new Date("2026-12-31");
 
-        const inProgress = rows.filter(r => String(r.status).toLowerCase().includes("progress")).length;
-        const completed = rows.filter(r => r.pct >= 100 || String(r.status).toLowerCase().includes("done")).length;
-        const onHold = rows.filter(r => String(r.status).toLowerCase().includes("hold")).length;
-        const latestFinish = validDates.length ? formatSPDate(maxDate) : "-";
+      minDate = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+      maxDate = new Date(maxDate.getFullYear(), maxDate.getMonth() + 1, 0);
 
-        el("ganttSummary").innerHTML = `
-          <div class="gantt-summary-item">
-            <strong>${rows.length}</strong>
-            <span>Total Activities</span>
-          </div>
-          <div class="gantt-summary-item">
-            <strong style="color:#22c55e">${inProgress}</strong>
-            <span>In Progress</span>
-          </div>
-          <div class="gantt-summary-item">
-            <strong style="color:#3b82f6">${completed}</strong>
-            <span>Completed</span>
-          </div>
-          <div class="gantt-summary-item">
-            <strong style="color:#ef4444">${onHold}</strong>
-            <span>On Hold / TBD</span>
+      const totalDays = Math.ceil((maxDate - minDate) / DAY) + 1;
+      const timelineWidth = totalDays * DAY_WIDTH;
+
+      function x(date) {
+        if (!date) return 0;
+        return Math.max(0, Math.round((date - minDate) / DAY) * DAY_WIDTH);
+      }
+
+      function statusClass(status, pct) {
+        const s = String(status || "").toLowerCase();
+
+        if (pct >= 100 || s.includes("complete") || s.includes("done")) return "complete";
+        if (s.includes("hold")) return "hold";
+        if (s.includes("tender")) return "tender";
+        if (s.includes("review")) return "review";
+        if (s.includes("progress")) return "progress";
+
+        return "progress";
+      }
+
+      const total = rows.length;
+      const completed = rows.filter(r => r.pct >= 100 || String(r.status).toLowerCase().includes("complete")).length;
+      const inProgress = rows.filter(r => String(r.status).toLowerCase().includes("progress")).length;
+      const tender = rows.filter(r => String(r.status).toLowerCase().includes("tender")).length;
+      const onHold = rows.filter(r => String(r.status).toLowerCase().includes("hold")).length;
+      const active = total - completed;
+
+      summary.innerHTML = `
+        <div><strong>${total}</strong><span>Total Activities</span></div>
+        <div><strong style="color:#5dade2">${active}</strong><span>Active Projects</span></div>
+        <div><strong style="color:#2563eb">${inProgress}</strong><span>In Progress</span></div>
+        <div><strong style="color:#a78bfa">${tender}</strong><span>Tender Phase</span></div>
+        <div><strong style="color:#ef4444">${onHold}</strong><span>On Hold</span></div>
+        <div><strong style="color:#16a34a">${completed}</strong><span>Completed</span></div>
+      `;
+
+      meta.textContent = `${active} Active · ${onHold} On Hold · ${completed} Complete · Data Date: 10-Jul-2026 · Rev 02`;
+
+      let monthsHtml = "";
+      let weeksHtml = "";
+
+      let cursor = new Date(minDate);
+
+      while (cursor <= maxDate) {
+        const monthStart = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+        const monthEnd = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0);
+
+        const left = x(monthStart);
+        const width = ((monthEnd - monthStart) / DAY + 1) * DAY_WIDTH;
+
+        monthsHtml += `
+          <div class="p6-month" style="left:${left}px;width:${width}px">
+            ${monthStart.toLocaleString("en-US", { month: "short", year: "numeric" })}
           </div>
         `;
 
-        el("ganttDateLabel").textContent = `Live Data · ${new Date().toLocaleDateString("en-GB").replace(/\//g, "-")}`;
+        let weekCursor = new Date(monthStart);
 
-        tbody.innerHTML = rows.map(row => {
-          const startPos = dateToPercent(row.startDate, minDate, totalRange);
-          const endPos = dateToPercent(row.endDate, minDate, totalRange);
-          const width = Math.max(3, endPos - startPos);
+        while (weekCursor <= monthEnd) {
+          const weekLeft = x(weekCursor);
 
-          const statusLower = String(row.status || "").toLowerCase();
-
-          let statusClass = "pending";
-          if (statusLower.includes("progress")) statusClass = "progress";
-          if (statusLower.includes("done") || row.pct >= 100) statusClass = "done";
-          if (statusLower.includes("hold")) statusClass = "hold";
-
-          return `
-            <tr>
-              <td class="gantt-act-id">${formatValue(row.activityId)}</td>
-              <td class="gantt-activity-name">${formatValue(row.activityName || row.activityId)}</td>
-              <td>${formatValue(row.duration)}d</td>
-              <td>${formatSPDate(row.startDate)}</td>
-              <td>${formatSPDate(row.endDate)}</td>
-              <td><span class="gantt-status ${statusClass}">${formatValue(row.status || "Pending")}</span></td>
-              <td><strong>${row.pct}%</strong></td>
-              <td>
-                <div class="gantt-timeline">
-                  <div class="gantt-bar ${statusClass}" style="left:${startPos}%; width:${width}%">
-                    <span class="gantt-percent-label">${row.pct}%</span>
-                  </div>
-                  <div class="gantt-finish-marker" style="left:${endPos}%"></div>
-                </div>
-              </td>
-            </tr>
+          weeksHtml += `
+            <div class="p6-week" style="left:${weekLeft}px;width:${7 * DAY_WIDTH}px">
+              ${String(weekCursor.getDate()).padStart(2, "0")}
+            </div>
           `;
-        }).join("");
+
+          weekCursor.setDate(weekCursor.getDate() + 7);
+        }
+
+        cursor.setMonth(cursor.getMonth() + 1);
       }
 
+      const dataX = x(DATA_DATE);
+
+      const header = `
+        <div class="p6-row p6-head" style="--timeline-width:${timelineWidth}px">
+          <div class="p6-cell">Act ID</div>
+          <div class="p6-cell">Activity Name</div>
+          <div class="p6-cell">Dur</div>
+          <div class="p6-cell">Start</div>
+          <div class="p6-cell">Finish</div>
+          <div class="p6-cell">Status</div>
+          <div class="p6-cell">%</div>
+
+          <div class="p6-time-head" style="width:${timelineWidth}px">
+            ${monthsHtml}
+            ${weeksHtml}
+            <div class="p6-data-label" style="left:0;width:${timelineWidth}px">
+              ▼ DATA DATE: 10-Jul-2026 ▼
+            </div>
+          </div>
+        </div>
+      `;
+
+      const body = rows.map(row => {
+        const cls = statusClass(row.status, row.pct);
+
+        const startX = x(row.startDate);
+        const endX = x(row.endDate);
+        const fullWidth = Math.max(8, endX - startX);
+        const progressWidth = Math.max(4, fullWidth * Math.min(row.pct, 100) / 100);
+
+        const pctClass =
+          row.pct >= 90 ? "green" :
+          row.pct >= 50 ? "orange" :
+          "red";
+
+        return `
+          <div class="p6-row" style="--timeline-width:${timelineWidth}px">
+
+            <div class="p6-cell p6-id">${formatValue(row.activityId)}</div>
+            <div class="p6-cell p6-name">${formatValue(row.activityName || row.activityId)}</div>
+            <div class="p6-cell">${formatValue(row.duration)}d</div>
+            <div class="p6-cell">${formatSPDate(row.startDate)}</div>
+            <div class="p6-cell">${formatSPDate(row.endDate)}</div>
+            <div class="p6-cell">
+              <span class="p6-status ${cls}">${formatValue(row.status || "Pending")}</span>
+            </div>
+            <div class="p6-cell p6-pct ${pctClass}">${row.pct}%</div>
+
+            <div class="p6-timeline" style="width:${timelineWidth}px">
+
+              <div class="p6-data-line" style="left:${dataX}px"></div>
+
+              <div class="p6-bar-base"
+                  style="left:${startX}px;width:${fullWidth}px"></div>
+
+              <div class="p6-bar-progress ${cls}"
+                  style="left:${startX}px;width:${progressWidth}px">
+                  ${row.pct}%
+              </div>
+
+              <div class="p6-milestone"
+                  style="left:${endX - 7}px"></div>
+
+              <div class="p6-finish-label"
+                  style="left:${endX + 10}px">
+                  ${formatSPDate(row.endDate).replace("-2026","")}
+              </div>
+
+            </div>
+
+          </div>
+        `;
+      }).join("");
+
+      container.innerHTML = `
+        <div class="p6-grid">
+          ${header}
+          ${body}
+        </div>
+      `;
+    }
 
     document.addEventListener("DOMContentLoaded", () => {
       loadConfigFromStorage();
