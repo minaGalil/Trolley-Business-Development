@@ -2507,7 +2507,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 6.8 2026-07-10</p>
+      <p>version 6.9 2026-07-10</p>
     </div>
 
     <div class="user-section">
@@ -2729,16 +2729,17 @@
             <select id="filterStatus">
                 <option value="">All Status</option>
                 <option value="In Progress">In Progress</option>
-                <option value="Tender Phase">Tender Phase</option>
+                <option value="Tender Phase">Pre-Tender</option>
+                <option value="Tech Review">Tech Review</option>
                 <option value="On Hold">On Hold</option>
-                <option value="Completed">Completed</option>
+                <option value="Completed">Complete</option>
             </select>
 
             <select id="filterStoreType">
                 <option value="">All Store Types</option>
                 <option value="Gas Station">Gas Station</option>
-                <option value="Hyper Market">Hyper Market</option>
-                <option value="Super Market">Super Market</option>
+                <option value="Hyper Market">Stand Alone</option>
+                <option value="Super Market">University</option>
                 <option value="Express">Express</option>
             </select>
 
@@ -4589,6 +4590,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         if (pct >= 100 || s.includes("complete") || s.includes("done")) return "complete";
         if (s.includes("hold")) return "hold";
         if (s.includes("tender")) return "tender";
+        if (s.includes("tech")) return "tech";
         if (s.includes("review")) return "review";
         if (s.includes("progress")) return "progress";
 
@@ -4599,6 +4601,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       const completed = rows.filter(r => r.pct >= 100 || String(r.status).toLowerCase().includes("complete")).length;
       const inProgress = rows.filter(r => String(r.status).toLowerCase().includes("progress")).length;
       const tender = rows.filter(r => String(r.status).toLowerCase().includes("tender")).length;
+      const tech = rows.filter(r => String(r.status).toLowerCase().includes("tech")).length;
       const onHold = rows.filter(r => String(r.status).toLowerCase().includes("hold")).length;
       const active = total - completed;
 
@@ -4607,6 +4610,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         <div><strong style="color:#5dade2">${active}</strong><span>Active Projects</span></div>
         <div><strong style="color:#2563eb">${inProgress}</strong><span>In Progress</span></div>
         <div><strong style="color:#a78bfa">${tender}</strong><span>Tender Phase</span></div>
+        <div><strong style="color:#a78bfa">${tech}</strong><span>Tech Review</span></div>
         <div><strong style="color:#ef4444">${onHold}</strong><span>On Hold</span></div>
         <div><strong style="color:#16a34a">${completed}</strong><span>Completed</span></div>
       `;
