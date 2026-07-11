@@ -844,73 +844,6 @@
       color: var(--orange);
     }
 
-
-
-
-            .opening-store-right{
-          width:100%;
-        }
-
-        .opening-store-gallery h4{
-          margin:0 0 14px;
-          color:#777;
-          font-size:12px;
-          letter-spacing:3px;
-        }
-
-        .opening-photos-grid{
-          display:grid;
-          grid-template-columns:repeat(4,minmax(160px,1fr));
-          gap:16px;
-        }
-
-        .opening-photo-link{
-          display:block;
-          overflow:hidden;
-          border-radius:12px;
-          background:#f3f4f6;
-          box-shadow:0 4px 14px rgba(0,0,0,.12);
-        }
-
-        .opening-photo{
-          display:block;
-          width:100%;
-          height:210px;
-          object-fit:cover;
-          transition:transform .25s ease;
-        }
-
-        .opening-photo-link:hover .opening-photo{
-          transform:scale(1.04);
-        }
-
-        .opening-no-photos{
-          grid-column:1/-1;
-          min-height:180px;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          border-radius:12px;
-          background:#f3f4f6;
-          color:#999;
-          font-weight:700;
-        }
-
-        @media(max-width:1100px){
-          .opening-photos-grid{
-            grid-template-columns:repeat(2,1fr);
-          }
-        }
-
-        @media(max-width:700px){
-          .opening-project-details{
-            grid-template-columns:1fr;
-          }
-
-          .opening-photos-grid{
-            grid-template-columns:1fr;
-          }
-        }
     .project-percent-card strong.green { color: #22c55e; }
     .project-percent-card strong.blue { color: #3b82f6; }
     .project-percent-card strong.yellow { color: #facc15; }
@@ -2588,7 +2521,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 7.5 2026-07-11</p>
+      <p>version 7.4 2026-07-10</p>
     </div>
 
     <div class="user-section">
@@ -3104,8 +3037,6 @@
       };
 
     let openingAllRows = [];
-    let openingFolderFiles = null;
-
 
     let msalInstance = null;
     let activeAccount = null;
@@ -4102,32 +4033,6 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
           }
         }
 
-
-        async function getStoreOpeningFolderFiles() {
-          if (openingFolderFiles) return openingFolderFiles;
-
-          const config = getConfigFromForm();
-          const currentSiteId = await getSiteId();
-
-          const folderPath = config.storeOpeningDrivePath
-            .substring(0, config.storeOpeningDrivePath.lastIndexOf("/"));
-
-          const encodedFolderPath = folderPath
-            .split("/")
-            .map(part => encodeURIComponent(part))
-            .join("/");
-
-          const url =
-            `${GRAPH_BASE}/sites/${currentSiteId}/drive/root:${encodedFolderPath}:/children` +
-            `?$select=id,name,file,webUrl,@microsoft.graph.downloadUrl&$top=999`;
-
-          const data = await graphGet(url);
-
-          openingFolderFiles = data.value || [];
-
-          return openingFolderFiles;
-        }
-
         async function getExcelTableRows(filePath, tableName) {
           const currentSiteId = await getSiteId();
 
@@ -4411,7 +4316,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
         openingAllRows = openingRows;
         populateOpeningStatusFilter(openingAllRows);
-        await applyOpeningStatusFilter();
+        applyOpeningStatusFilter();
 
         el("openingStatusFilter").addEventListener("change", applyOpeningStatusFilter);
 
@@ -4449,13 +4354,10 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
       }
 
 
-      
-      async function renderOpeningCards(rows) {
+    function renderOpeningCards(rows) {
       const container = el("openingCards");
 
-      const folderFiles = await getStoreOpeningFolderFiles();
-
-      const cards = rows.map(row => {
+      container.innerHTML = rows.map(row => {
         const startDate = formatSPDate(row.startingDate);
         const estimatedDate = formatSPDate(row.estimatedOpeningDate);
         const actualDate = formatSPDate(row.actualOpeningDate);
@@ -4468,7 +4370,6 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
         if (actual && estimated) {
           const delay = calculateDelayDays(estimated, actual);
-
           if (delay > 0) {
             status = `Late +${delay}d`;
             badgeClass = "red";
@@ -4484,66 +4385,14 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
           badgeClass = "green";
         }
 
-        const storeCode = String(row.storeCode || "").trim();
-        const photoPrefix = `${storeCode}_`;
-
-        const storePhotos = folderFiles
-          .filter(file => {
-            const fileName = String(file.name || "");
-            const extension = fileName.split(".").pop().toLowerCase();
-
-            return fileName.toLowerCase().startsWith(photoPrefix.toLowerCase()) &&
-              ["jpg", "jpeg", "png", "gif", "webp", "bmp"].includes(extension);
-          })
-          .sort((a, b) =>
-            String(a.name).localeCompare(String(b.name), undefined, {
-              numeric: true
-            })
-          )
-          .slice(0, 4);
-
-        const photosHtml = storePhotos.length
-          ? storePhotos.map(file => {
-              const photoUrl =
-                file["@microsoft.graph.downloadUrl"] || file.webUrl;
-
-              return `
-                <a href="${photoUrl}"
-                  target="_blank"
-                  class="opening-photo-link"
-                  onclick="event.stopPropagation()">
-
-                  <img src="${photoUrl}"
-                      alt="${file.name}"
-                      class="opening-photo"
-                      loading="lazy">
-
-                </a>
-              `;
-            }).join("")
-          : `
-              <div class="opening-no-photos">
-                No store photos available
-              </div>
-            `;
-
         return `
-          <article class="opening-project-card"
-                  onclick="toggleProject(this)">
+          <article class="opening-project-card" onclick="this.classList.toggle('expanded')">
 
             <div class="opening-project-main">
-
-              <div class="status-dot-big ${
-                badgeClass === "green"
-                  ? "green"
-                  : badgeClass === "red"
-                    ? "red"
-                    : ""
-              }"></div>
+              <div class="status-dot-big ${badgeClass === "green" ? "green" : badgeClass === "red" ? "red" : ""}"></div>
 
               <div class="opening-project-title">
                 <h3>${formatValue(row.storeName)}</h3>
-
                 <p>
                   ${formatValue(row.storeType)}
                   ${row.currentPhase ? " · " + formatValue(row.currentPhase) : ""}
@@ -4562,12 +4411,10 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
                   <strong>${startDate || "TBD"}</strong>
                   <span>Start</span>
                 </div>
-
                 <div>
                   <strong>${estimatedDate || "TBD"}</strong>
                   <span>Estimated</span>
                 </div>
-
                 <div>
                   <strong>${actualDate || "TBD"}</strong>
                   <span>Actual</span>
@@ -4578,93 +4425,47 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
             </div>
 
             <div class="opening-project-details">
-
               <div class="details-box">
                 <h4>STORE OPENING DETAILS</h4>
-
-                <div class="detail-row">
-                  <span>Year</span>
-                  <strong>${formatValue(row.year)}</strong>
-                </div>
-
-                <div class="detail-row">
-                  <span>Month</span>
-                  <strong>${formatValue(row.month)}</strong>
-                </div>
-
-                <div class="detail-row">
-                  <span>Company</span>
-                  <strong>${formatValue(row.company)}</strong>
-                </div>
-
-                <div class="detail-row">
-                  <span>Store Code</span>
-                  <strong>${formatValue(row.storeCode)}</strong>
-                </div>
-
-                <div class="detail-row">
-                  <span>Store Type</span>
-                  <strong>${formatValue(row.storeType)}</strong>
-                </div>
-
-                <div class="detail-row">
-                  <span>Store Size</span>
-                  <strong>${formatValue(row.storeSize)}</strong>
-                </div>
-
-                <div class="detail-row">
-                  <span>Current Phase</span>
-                  <strong>${formatValue(row.currentPhase)}</strong>
-                </div>
+                <div class="detail-row"><span>Year</span><strong>${formatValue(row.year)}</strong></div>
+                <div class="detail-row"><span>Month</span><strong>${formatValue(row.month)}</strong></div>
+                <div class="detail-row"><span>Company</span><strong>${formatValue(row.company)}</strong></div>
+                <div class="detail-row"><span>Store Code</span><strong>${formatValue(row.storeCode)}</strong></div>
+                <div class="detail-row"><span>Store Type</span><strong>${formatValue(row.storeType)}</strong></div>
+                <div class="detail-row"><span>Store Size</span><strong>${formatValue(row.storeSize)}</strong></div>
+                <div class="detail-row"><span>Current Phase</span><strong>${formatValue(row.currentPhase)}</strong></div>
               </div>
 
-              <div class="opening-store-right">
-
-                <div class="opening-store-gallery">
-                  <h4>STORE PHOTOS — ${formatValue(row.storeName)}</h4>
-
-                  <div class="opening-photos-grid">
-                    ${photosHtml}
-                  </div>
-                </div>
-
-                <div class="blocker-box">
-                  <strong>BLOCKER / DELAY</strong><br>
-                  ${formatValue(row.blockerDelay || "No blocker available")}
-                </div>
-
+              <div class="blocker-box">
+                <strong>BLOCKER / DELAY</strong><br>
+                ${formatValue(row.blockerDelay || "No blocker available")}
               </div>
-
             </div>
 
           </article>
         `;
-      });
-
-      container.innerHTML = cards.join("");
+      }).join("");
     }
 
+        function populateOpeningStatusFilter(rows) {
+          const filter = el("openingStatusFilter");
+          if (!filter) return;
 
+          const statuses = [...new Set(
+            rows
+              .map(row => formatValue(row.currentPhase || "No Phase"))
+              .filter(Boolean)
+          )].sort();
 
-    function populateOpeningStatusFilter(rows) {
-      const filter = el("openingStatusFilter");
-      if (!filter) return;
+          filter.innerHTML = `
+            <option value="ALL">All Stores</option>
+            ${statuses.map(status => `
+              <option value="${status}">${status}</option>
+            `).join("")}
+          `;
+        }
 
-      const statuses = [...new Set(
-        rows
-          .map(row => formatValue(row.currentPhase || "No Phase"))
-          .filter(Boolean)
-      )].sort();
-
-      filter.innerHTML = `
-        <option value="ALL">All Stores</option>
-        ${statuses.map(status => `
-          <option value="${status}">${status}</option>
-        `).join("")}
-      `;
-    }
-
-      async function applyOpeningStatusFilter() {
+      function applyOpeningStatusFilter() {
         const filter = el("openingStatusFilter");
         const selectedStatus = filter ? filter.value : "ALL";
 
@@ -4676,7 +4477,7 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
         renderOpeningKpis(filteredRows);
         renderOpeningGantt(filteredRows);
-        await renderOpeningCards(filteredRows);
+        renderOpeningCards(filteredRows);
         renderOpeningTable(filteredRows);
       }
  
