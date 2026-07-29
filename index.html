@@ -2642,7 +2642,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 7.9 2026-07-29</p>
+      <p>version 8.0 2026-07-29</p>
     </div>
 
     <div class="user-section">
@@ -4128,10 +4128,16 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         renderSchedule(schedule);
 
 
-        el("totalProjects").textContent = projects.length;
-        el("totalCost").textContent = cost.length;
-        el("totalSchedule").textContent = schedule.length;
-        el("lastUpdated").textContent = new Date().toLocaleString();
+      el("totalProjects").textContent = projects.length;
+
+      el("lastUpdated").textContent = new Date().toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
 
         setStatus("Connected and data loaded", "ok");
       } catch (error) {
