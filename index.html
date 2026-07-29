@@ -2588,7 +2588,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 7.5 2026-07-11</p>
+      <p>version 7.6 2026-07-29</p>
     </div>
 
     <div class="user-section">
@@ -3475,6 +3475,7 @@ function normalizeFieldName(name) {
         const stage = field(f, ["Stage"]);
         const plannedBudget = field(f, ["Planned_x0020_Budget", "PlannedBudget"]);
         const actualCost = field(f, ["Actual_x0020_Cost", "ActualCost"]);
+        
         const notes = field(f, ["Notes"]);
 
         let dotClass = "";
@@ -3574,9 +3575,10 @@ function normalizeFieldName(name) {
                                   <div class="project-badges">
                                     <span class="badge orange">${formatValue(status || "No Status")}</span>
                                     <span class="badge">${formatValue(storeType || "Store Type N/A")}</span>
-                                    <span class="badge">${formatValue(meterArea || "Meter / Area N/A")}</span>
+                                    <span class="badge">Area: ${formatValue(meterArea || "Meter / Area N/A")}</span>
                                     <span class="badge">${formatValue(duration)} days</span>
                                     <span class="badge">Budget: ${formatValue(plannedBudget)}</span>
+                                    <span class="badge">Actual: ${formatValue(actualCost)}</span>
                                   </div>
                                 </div>
 
