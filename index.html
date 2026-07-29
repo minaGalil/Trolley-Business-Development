@@ -1040,19 +1040,44 @@
     .status-dot-big.blue { background: #3b82f6; }
     .status-dot-big.red { background: #ef4444; }
 
-    .progress-circle {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      border: 8px solid #eee4d8;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      color: #111;
-      flex-direction: column;
+    .progress-circle{
+      --progress:0;
+      width:58px;
+      height:58px;
+      border-radius:50%;
+      background:
+        conic-gradient(
+          #ff8200 calc(var(--progress) * 1%),
+          #eee6dc 0
+        );
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
     }
 
+    .progress-circle-inner{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      background:#fff;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .progress-circle-inner strong{
+      font-size:16px;
+      line-height:1;
+      color:#111;
+    }
+
+    .progress-circle-inner small{
+      font-size:8px;
+      margin-top:3px;
+      color:#777;
+    }
     .progress-circle small {
       font-size: 10px;
       font-weight: 400;
@@ -2642,7 +2667,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 8.0 2026-07-29</p>
+      <p>version 8.1 2026-07-29</p>
     </div>
 
     <div class="user-section">
@@ -3635,9 +3660,11 @@ function normalizeFieldName(name) {
             <div class="project-card-main">
               <div class="status-dot-big ${dotClass}"></div>
 
-                                <div class="progress-circle">
-                                  ${pct}%
-                                  <small>done</small>
+                                <div class="progress-circle" style="--progress:${pct}">
+                                  <div class="progress-circle-inner">
+                                    <strong>${pct}%</strong>
+                                    <small>done</small>
+                                  </div>
                                 </div>
 
                                 <div class="project-title">
