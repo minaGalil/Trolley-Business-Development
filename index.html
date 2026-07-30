@@ -2667,7 +2667,7 @@
       <h1>Trolley Business Development Dashboard</h1>
       <p>Developed by Data Science Department</p>
        
-      <p>version 8.1 2026-07-29</p>
+      <p>version 8.2 2026-07-30</p>
     </div>
 
     <div class="user-section">
@@ -4859,7 +4859,19 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
       const DAY = 1000 * 60 * 60 * 24;
       const DAY_WIDTH = 4;
-      const DATA_DATE = new Date("2026-07-10");
+      const modifiedDates = items
+        .map(item =>
+          parseDateValue(
+            item.lastModifiedDateTime ||
+            item.fields?.Modified ||
+            item.fields?.modified
+          )
+        )
+        .filter(Boolean);
+
+      const DATA_DATE = modifiedDates.length
+        ? new Date(Math.max(...modifiedDates.map(d => d.getTime())))
+        : new Date();
 
       const rows = items.map(item => {
         const f = item.fields || {};
@@ -4895,6 +4907,14 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
 
       minDate = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
       maxDate = new Date(maxDate.getFullYear(), maxDate.getMonth() + 1, 0);
+
+          if (DATA_DATE > maxDate) {
+            maxDate = new Date(
+              DATA_DATE.getFullYear(),
+              DATA_DATE.getMonth() + 1,
+              0
+            );
+          }
 
       const totalDays = Math.ceil((maxDate - minDate) / DAY) + 1;
       const timelineWidth = totalDays * DAY_WIDTH;
@@ -4939,8 +4959,18 @@ function buildTimeline(plannedDate, actualDate, statusKey) {
         <div><strong style="color:#16a34a">${completed}</strong><span>Completed</span></div>
       `;
 
-      meta.textContent = `${active} Active · ${onHold} On Hold · ${completed} Completed  `;
+      // meta.textContent = `${active} Active · ${onHold} On Hold · ${completed} Completed  `;
 
+      const dataDateText = DATA_DATE.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }).replace(/ /g, "-");
+
+      meta.textContent =
+        `${active} Active · ${onHold} On Hold · ${completed} Completed · ` +
+        `Data Date: ${dataDateText}`;
+        
       let monthsHtml = "";
       let weeksHtml = "";
 
